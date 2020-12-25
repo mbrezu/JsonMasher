@@ -208,6 +208,36 @@ namespace JsonMasher.Tests
             result.Select(x => x.GetNumber()).Should().BeEquivalentTo(expectedValues);
         }
 
+        [Fact]
+        public void KeySelectorTest()
+        {
+            // Arrange
+            var data = MakeObject();
+            var op = new KeySelector { Key = "a" };
+
+            // Act
+            var result = op.RunAsSequence(data);
+
+            // Assert
+            var expectedValues = new List<double> { 1 };
+            result.Select(x => x.GetNumber()).Should().BeEquivalentTo(expectedValues);
+        }
+
+        [Fact]
+        public void IndexSelectorTest()
+        {
+            // Arrange
+            var data = MakeArray();
+            var op = new IndexSelector { Index = 1 };
+
+            // Act
+            var result = op.RunAsSequence(data);
+
+            // Assert
+            var expectedValues = new List<double> { 2 };
+            result.Select(x => x.GetNumber()).Should().BeEquivalentTo(expectedValues);
+        }
+
         private static Json MakeArray()
         {
             return Json.ArrayParams(
