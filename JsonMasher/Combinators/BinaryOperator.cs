@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 
+// TODO: extend this into n-ary operators/functions with
+// code like the one in ConstructObject.
 namespace JsonMasher.Combinators
 {
     public class BinaryOperator : IJsonMasherOperator

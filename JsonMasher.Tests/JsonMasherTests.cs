@@ -194,6 +194,27 @@ namespace JsonMasher.Tests
         }
 
         [Fact]
+        public void ConcatComponseEnumerations()
+        {
+            // Arrange
+            var data = MakeArray();
+            var op = new Compose {
+                First = Enumerate.Instance,
+                Second = new Concat {
+                    First = Identity.Instance,
+                    Second = Identity.Instance
+                }
+            };
+
+            // Act
+            var result = op.RunAsSequence(data);
+
+            // Assert
+            var expectedValues = new List<double> { 1, 1, 2, 2, 3, 3 };
+            result.Select(x => x.GetNumber()).Should().BeEquivalentTo(expectedValues);
+        }
+
+        [Fact]
         public void LiteralTest()
         {
             // Arrange
@@ -252,6 +273,79 @@ namespace JsonMasher.Tests
             var expectedValues = new List<double> { 2 };
             result.Count().Should().Be(1);
             result.First().Should().BeEquivalentTo(data);
+        }
+
+        [Fact]
+        public void ConstructObjectTest()
+        {
+            // Arrange
+            var data = MakeArray();
+            var op = new Compose {
+                First = Enumerate.Instance,
+                Second = new ConstructObject(
+                    new ConstructObject.PropertyDescriptor("a", Identity.Instance))};
+
+            // Act
+            var result = op.RunAsSequence(data);
+
+            // Assert
+            result.Count().Should().Be(3);
+            for (int i = 0; i < 3; i++)
+            {
+                var obj = result.ElementAt(i);
+                obj.Type.Should().Be(JsonValueType.Object);
+                obj.GetElementAt("a").GetNumber().Should().Be(i + 1);
+            }
+        }
+
+        [Fact]
+        public void ConstructObjectInnerEnumerate()
+        {
+            // Arrange
+            var data = MakeArray();
+            var op = new ConstructObject(
+                new ConstructObject.PropertyDescriptor("a", Identity.Instance),
+                new ConstructObject.PropertyDescriptor("b", Enumerate.Instance));
+
+            // Act
+            var result = op.RunAsSequence(data);
+
+            // Assert
+            result.Count().Should().Be(3);
+            result.Count().Should().Be(3);
+            for (int i = 0; i < 3; i++)
+            {
+                var obj = result.ElementAt(i);
+                obj.Type.Should().Be(JsonValueType.Object);
+                obj.GetElementAt("b").GetNumber().Should().Be(i + 1);
+                obj.GetElementAt("a").Type.Should().Be(JsonValueType.Array);
+                obj.GetElementAt("a").Should().BeEquivalentTo(data);
+            }
+        }
+
+        [Fact]
+        public void ConstructObjectTestTwoKeys()
+        {
+            // Arrange
+            var data = MakeArray();
+            var op = new Compose {
+                First = Enumerate.Instance,
+                Second = new ConstructObject(
+                    new ConstructObject.PropertyDescriptor("a", Identity.Instance),
+                    new ConstructObject.PropertyDescriptor("b", Identity.Instance))};
+
+            // Act
+            var result = op.RunAsSequence(data);
+
+            // Assert
+            result.Count().Should().Be(3);
+            for (int i = 0; i < 3; i++)
+            {
+                var obj = result.ElementAt(i);
+                obj.Type.Should().Be(JsonValueType.Object);
+                obj.GetElementAt("a").GetNumber().Should().Be(i + 1);
+                obj.GetElementAt("b").GetNumber().Should().Be(i + 1);
+            }
         }
 
         private static Json MakeArray()
