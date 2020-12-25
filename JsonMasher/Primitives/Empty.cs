@@ -3,12 +3,12 @@ using System.Linq;
 
 namespace JsonMasher.Primitives
 {
-    public class Empty : IJsonMasher
+    public class Empty : IJsonMasherOperator
     {
-        public IEnumerable<Json> Mash(Json json)
+        public IEnumerable<Json> Mash(Json json, IMashContext context)
             => Enumerable.Empty<Json>();
 
-        public IEnumerable<Json> Mash(IEnumerable<Json> seq)
+        public IEnumerable<Json> Mash(IEnumerable<Json> seq, IMashContext context)
             => Enumerable.Empty<Json>();
 
         private Empty()

@@ -7,7 +7,7 @@ using Xunit;
 
 namespace JsonMasher.Tests
 {
-    public class JsonMasher
+    public class JsonMasherTests
     {
         // TODO: test conversion from JsonElement to Json
         [Fact]
@@ -15,10 +15,10 @@ namespace JsonMasher.Tests
         {
             // Arrange
             JsonArray data = MakeArray();
-            var masher = Compose.AllParams();
+            var op = Compose.AllParams();
 
             // Act
-            var result = RunAsScalar(data, masher);
+            var result = RunAsScalar(data, op);
 
             // Assert
             result.Should().BeEquivalentTo(data);
@@ -29,10 +29,10 @@ namespace JsonMasher.Tests
         {
             // Arrange
             var data = MakeArray();
-            var masher = Identity.Instance;
+            var op = Identity.Instance;
 
             // Act
-            var result = RunAsScalar(data, masher);
+            var result = RunAsScalar(data, op);
 
             // Assert
             result.Should().BeEquivalentTo(data);
@@ -43,10 +43,10 @@ namespace JsonMasher.Tests
         {
             // Arrange
             var data = MakeArray();
-            var masher = Compose.AllParams(Identity.Instance);
+            var op = Compose.AllParams(Identity.Instance);
 
             // Act
-            var result = RunAsScalar(data, masher);
+            var result = RunAsScalar(data, op);
 
             // Assert
             result.Should().BeEquivalentTo(data);
@@ -57,10 +57,10 @@ namespace JsonMasher.Tests
         {
             // Arrange
             var data = MakeArray();
-            var masher = Enumerate.Instance;
+            var op = Enumerate.Instance;
 
             // Act
-            var result = RunAsSequence(data, masher);
+            var result = RunAsSequence(data, op);
 
             // Assert
             result.Count().Should().Be(3);
@@ -76,10 +76,10 @@ namespace JsonMasher.Tests
         {
             // Arrange
             var data = MakeObject();
-            var masher = Enumerate.Instance;
+            var op = Enumerate.Instance;
 
             // Act
-            var result = RunAsSequence(data, masher);
+            var result = RunAsSequence(data, op);
 
             // Assert
             result.Count().Should().Be(3);
@@ -93,10 +93,10 @@ namespace JsonMasher.Tests
         {
             // Arrange
             var data = MakeArray();
-            var masher = Length.Instance;
+            var op = Length.Instance;
 
             // Act
-            var result = RunAsScalar(data, masher);
+            var result = RunAsScalar(data, op);
 
             // Assert
             result.Should().BeEquivalentTo(Json.Number(3));
@@ -107,10 +107,10 @@ namespace JsonMasher.Tests
         {
             // Arrange
             var data = MakeObject();
-            var masher = Length.Instance;
+            var op = Length.Instance;
 
             // Act
-            var result = RunAsScalar(data, masher);
+            var result = RunAsScalar(data, op);
 
             // Assert
             result.Should().BeEquivalentTo(Json.Number(3));
@@ -121,10 +121,10 @@ namespace JsonMasher.Tests
         {
             // Arrange
             var data = MakeNestedArray();
-            var masher = new Compose { First = Enumerate.Instance, Second = Enumerate.Instance };
+            var op = new Compose { First = Enumerate.Instance, Second = Enumerate.Instance };
 
             // Act
-            var result = RunAsSequence(data, masher);
+            var result = RunAsSequence(data, op);
 
             // Assert
             result.Count().Should().Be(9);
@@ -140,10 +140,10 @@ namespace JsonMasher.Tests
         {
             // Arrange
             var data = MakeNestedArray();
-            var masher = Empty.Instance;
+            var op = Empty.Instance;
 
             // Act
-            var result = RunAsSequence(data, masher);
+            var result = RunAsSequence(data, op);
 
             // Assert
             result.Count().Should().Be(0);
@@ -154,10 +154,10 @@ namespace JsonMasher.Tests
         {
             // Arrange
             var data = MakeNestedArray();
-            var masher = new Compose { First = Empty.Instance, Second = Identity.Instance };
+            var op = Compose.AllParams(Empty.Instance, Identity.Instance);
 
             // Act
-            var result = RunAsSequence(data, masher);
+            var result = RunAsSequence(data, op);
 
             // Assert
             result.Count().Should().Be(0);
@@ -168,20 +168,35 @@ namespace JsonMasher.Tests
         {
             // Arrange
             var data = MakeNestedArray();
-            var masher = new Compose { First = Identity.Instance, Second = Empty.Instance };
+            var op = Compose.AllParams(Identity.Instance, Empty.Instance);
 
             // Act
-            var result = RunAsSequence(data, masher);
+            var result = RunAsSequence(data, op);
 
             // Assert
             result.Count().Should().Be(0);
         }
 
-        private static Json RunAsScalar(Json data, IJsonMasher masher)
-            => masher.Mash(data.AsEnumerable()).First();
+        [Fact]
+        public void ConcatEnumerations()
+        {
+            // Arrange
+            var data = MakeArray();
+            var op = Concat.AllParams(Enumerate.Instance, Enumerate.Instance);
 
-        private static IEnumerable<Json> RunAsSequence(Json data, IJsonMasher masher)
-            => masher.Mash(data.AsEnumerable());
+            // Act
+            var result = RunAsSequence(data, op);
+
+            // Assert
+            var expectedValues = new List<double> { 1, 2, 3, 1, 2, 3 };
+            result.Select(x => x.GetNumber()).Should().BeEquivalentTo(expectedValues);
+        }
+
+        private static Json RunAsScalar(Json data, IJsonMasherOperator op)
+            => RunAsSequence(data, op).First();
+
+        private static IEnumerable<Json> RunAsSequence(Json data, IJsonMasherOperator op)
+            => new JsonMasher().Mash(data.AsEnumerable(), op);
 
         private static JsonArray MakeArray()
         {

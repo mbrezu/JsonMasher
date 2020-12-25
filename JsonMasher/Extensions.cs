@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using JsonMasher.Primitives;
 
 namespace JsonMasher
 {
@@ -32,5 +33,16 @@ namespace JsonMasher
         {
             yield return json;
         }
+
+        internal static IJsonMasherOperator Fold(
+            this IEnumerable<IJsonMasherOperator> mashers,
+            Func<IJsonMasherOperator, IJsonMasherOperator, IJsonMasherOperator> combiner)
+        => mashers.Count() switch
+            {
+                0 => Identity.Instance,
+                1 => mashers.First(),
+                _ => combiner(mashers.First(), mashers.Skip(1).Fold(combiner))
+            };
+
     }
 }

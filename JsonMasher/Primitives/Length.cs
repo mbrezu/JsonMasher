@@ -4,20 +4,13 @@ using System.Linq;
 
 namespace JsonMasher.Primitives
 {
-    public class Length : IJsonMasher
+    public class Length : IJsonMasherOperator
     {
-        public IEnumerable<Json> Mash(IEnumerable<Json> seq)
-        {
-            foreach (var json in seq)
-            {
-                yield return MashOne(json);
-            }
-        }
+        public IEnumerable<Json> Mash(IEnumerable<Json> seq, IMashContext context)
+            => seq.Select(MashOne);
 
-        public IEnumerable<Json> Mash(Json json)
-        {
-            yield return MashOne(json);
-        }
+        public IEnumerable<Json> Mash(Json json, IMashContext context)
+            => MashOne(json).AsEnumerable();
 
         private Json MashOne(Json json)
             => json.Type switch {

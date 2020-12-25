@@ -1,49 +1,41 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using JsonMasher.Primitives;
 
 namespace JsonMasher.Combinators
 {
-    public class Compose : IJsonMasher
+    public class Compose : IJsonMasherOperator
     {
-        public IJsonMasher First { get; init; }
-        public IJsonMasher Second { get; init; }
+        public IJsonMasherOperator First { get; init; }
+        public IJsonMasherOperator Second { get; init; }
 
-        public IEnumerable<Json> Mash(IEnumerable<Json> seq)
+        public IEnumerable<Json> Mash(IEnumerable<Json> seq, IMashContext context)
         {
             foreach (var json in seq)
             {
-                foreach (var result in Mash(json))
+                foreach (var result in Mash(json, context))
                 {
                     yield return result;
                 }
             }
         }
 
-        public IEnumerable<Json> Mash(Json json)
+        public IEnumerable<Json> Mash(Json json, IMashContext context)
         {
-            foreach (var temp in First.Mash(json))
+            foreach (var temp in First.Mash(json, context))
             {
-                foreach (var result in Second.Mash(temp))
+                foreach (var result in Second.Mash(temp, context))
                 {
                     yield return result;
                 }
             }
         }
 
-        public static IJsonMasher AllParams(params IJsonMasher[] mashers)
+        public static IJsonMasherOperator AllParams(params IJsonMasherOperator[] mashers)
             => All(mashers);
 
-        public static IJsonMasher All(IEnumerable<IJsonMasher> mashers)
-            => mashers.Count() switch
-            {
-                0 => Identity.Instance,
-                1 => mashers.First(),
-                _ => new Compose 
-                { 
-                    First = mashers.First(), 
-                    Second = All(mashers.Skip(1))
-                }
-            };
+        public static IJsonMasherOperator All(IEnumerable<IJsonMasherOperator> mashers)
+            => mashers.Fold((m1, m2) => new Compose { First = m1, Second = m2 });
     }
 }

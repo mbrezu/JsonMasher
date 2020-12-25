@@ -2,12 +2,12 @@ using System.Collections.Generic;
 
 namespace JsonMasher.Primitives
 {
-    public class Identity : IJsonMasher
+    public class Identity : IJsonMasherOperator
     {
-        public IEnumerable<Json> Mash(IEnumerable<Json> seq) 
+        public IEnumerable<Json> Mash(IEnumerable<Json> seq, IMashContext context) 
             => seq;
 
-        public IEnumerable<Json> Mash(Json seq)
+        public IEnumerable<Json> Mash(Json seq, IMashContext context)
             => seq.AsEnumerable();
 
         private Identity()
