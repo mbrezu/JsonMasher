@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using JsonMasher.Combinators;
+using JsonMasher.Functions;
 using JsonMasher.Primitives;
 using Xunit;
 
@@ -14,11 +15,11 @@ namespace JsonMasher.Tests
         public void EmptySequence()
         {
             // Arrange
-            JsonArray data = MakeArray();
+            Json data = MakeArray();
             var op = Compose.AllParams();
 
             // Act
-            var result = RunAsScalar(data, op);
+            var result = op.RunAsScalar(data);
 
             // Assert
             result.Should().BeEquivalentTo(data);
@@ -32,7 +33,7 @@ namespace JsonMasher.Tests
             var op = Identity.Instance;
 
             // Act
-            var result = RunAsScalar(data, op);
+            var result = op.RunAsScalar(data);
 
             // Assert
             result.Should().BeEquivalentTo(data);
@@ -46,7 +47,7 @@ namespace JsonMasher.Tests
             var op = Compose.AllParams(Identity.Instance);
 
             // Act
-            var result = RunAsScalar(data, op);
+            var result = op.RunAsScalar(data);
 
             // Assert
             result.Should().BeEquivalentTo(data);
@@ -60,7 +61,7 @@ namespace JsonMasher.Tests
             var op = Enumerate.Instance;
 
             // Act
-            var result = RunAsSequence(data, op);
+            var result = op.RunAsSequence(data);
 
             // Assert
             result.Count().Should().Be(3);
@@ -79,7 +80,7 @@ namespace JsonMasher.Tests
             var op = Enumerate.Instance;
 
             // Act
-            var result = RunAsSequence(data, op);
+            var result = op.RunAsSequence(data);
 
             // Assert
             result.Count().Should().Be(3);
@@ -96,7 +97,7 @@ namespace JsonMasher.Tests
             var op = Length.Instance;
 
             // Act
-            var result = RunAsScalar(data, op);
+            var result = op.RunAsScalar(data);
 
             // Assert
             result.Should().BeEquivalentTo(Json.Number(3));
@@ -110,7 +111,7 @@ namespace JsonMasher.Tests
             var op = Length.Instance;
 
             // Act
-            var result = RunAsScalar(data, op);
+            var result = op.RunAsScalar(data);
 
             // Assert
             result.Should().BeEquivalentTo(Json.Number(3));
@@ -124,7 +125,7 @@ namespace JsonMasher.Tests
             var op = new Compose { First = Enumerate.Instance, Second = Enumerate.Instance };
 
             // Act
-            var result = RunAsSequence(data, op);
+            var result = op.RunAsSequence(data);
 
             // Assert
             result.Count().Should().Be(9);
@@ -143,7 +144,7 @@ namespace JsonMasher.Tests
             var op = Empty.Instance;
 
             // Act
-            var result = RunAsSequence(data, op);
+            var result = op.RunAsSequence(data);
 
             // Assert
             result.Count().Should().Be(0);
@@ -157,7 +158,7 @@ namespace JsonMasher.Tests
             var op = Compose.AllParams(Empty.Instance, Identity.Instance);
 
             // Act
-            var result = RunAsSequence(data, op);
+            var result = op.RunAsSequence(data);
 
             // Assert
             result.Count().Should().Be(0);
@@ -171,7 +172,7 @@ namespace JsonMasher.Tests
             var op = Compose.AllParams(Identity.Instance, Empty.Instance);
 
             // Act
-            var result = RunAsSequence(data, op);
+            var result = op.RunAsSequence(data);
 
             // Assert
             result.Count().Should().Be(0);
@@ -185,56 +186,65 @@ namespace JsonMasher.Tests
             var op = Concat.AllParams(Enumerate.Instance, Enumerate.Instance);
 
             // Act
-            var result = RunAsSequence(data, op);
+            var result = op.RunAsSequence(data);
 
             // Assert
             var expectedValues = new List<double> { 1, 2, 3, 1, 2, 3 };
             result.Select(x => x.GetNumber()).Should().BeEquivalentTo(expectedValues);
         }
 
-        private static Json RunAsScalar(Json data, IJsonMasherOperator op)
-            => RunAsSequence(data, op).First();
-
-        private static IEnumerable<Json> RunAsSequence(Json data, IJsonMasherOperator op)
-            => new JsonMasher().Mash(data.AsEnumerable(), op);
-
-        private static JsonArray MakeArray()
+        [Fact]
+        public void LiteralTest()
         {
-            return new JsonArray(new[] {
+            // Arrange
+            var data = Json.Null;
+            var op = new Literal { Value = Json.Number(1) };
+
+            // Act
+            var result = op.RunAsSequence(data);
+
+            // Assert
+            var expectedValues = new List<double> { 1 };
+            result.Select(x => x.GetNumber()).Should().BeEquivalentTo(expectedValues);
+        }
+
+        private static Json MakeArray()
+        {
+            return Json.ArrayParams(
                 Json.Number(1),
                 Json.Number(2),
                 Json.Number(3)
-            });
+            );
         }
 
         private static Json MakeObject()
         {
-            return new JsonObject(new [] {
+            return Json.ObjectParams(
                 new JsonProperty("a", Json.Number(1)),
                 new JsonProperty("b", Json.Number(2)),
                 new JsonProperty("c", Json.Number(3))
-            });
+            );
         }
 
-        private static JsonArray MakeNestedArray()
+        private static Json MakeNestedArray()
         {
-            return new JsonArray(new[] {
-                new JsonArray(new[] {
+            return Json.ArrayParams(
+                Json.ArrayParams(
                     Json.Number(1),
                     Json.Number(2),
                     Json.Number(3)
-                }),
-                new JsonArray(new[] {
+                ),
+                Json.ArrayParams(
                     Json.Number(4),
                     Json.Number(5),
                     Json.Number(6)
-                }),
-                new JsonArray(new[] {
+                ),
+                Json.ArrayParams(
                     Json.Number(7),
                     Json.Number(8),
                     Json.Number(9)
-                })
-            });
+                )
+            );
         }
     }
 }

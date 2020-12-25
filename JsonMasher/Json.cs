@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace JsonMasher
 {
@@ -57,20 +58,42 @@ namespace JsonMasher
         private static Json Zero => new JsonNumber(0);
         private static Json One => new JsonNumber(1);
         private static Json EmptyString => new JsonString("");
+        private static Json EmptyArray => new JsonArray(Enumerable.Empty<Json>());
+        private static Json EmptyObject => new JsonObject(Enumerable.Empty<JsonProperty>());
+
         public static Json Number(double value) =>
             value switch {
                 0 => Zero,
                 1 => One,
                 _ => new JsonNumber(value)
             };
+        
         public static Json String(string str) =>
             str switch {
                 "" => EmptyString,
                 _ => new JsonString(str)
             };
+        
+        public static Json ArrayParams(params Json[] args) =>
+            Array(args);
+
+        public static Json Array(IEnumerable<Json> args) =>
+            args.Count() switch {
+                0 => EmptyArray,
+                _ => new JsonArray(args)
+            };
+
+        public static Json ObjectParams(params JsonProperty[] args) =>
+            Object(args);
+
+        public static Json Object(IEnumerable<JsonProperty> args) =>
+            args.Count() switch {
+                0 => EmptyObject,
+                _ => new JsonObject(args)
+            };
     }
 
-    public class JsonNumber : Json
+    class JsonNumber : Json
     {
         double _value;
 
@@ -84,7 +107,7 @@ namespace JsonMasher
             => _value;
     }
 
-    public class JsonString : Json
+    class JsonString : Json
     {
         string _value;
 
@@ -98,7 +121,7 @@ namespace JsonMasher
             => _value;
     }
 
-    public class JsonArray : Json
+    class JsonArray : Json
     {
         List<Json> _values;
 
@@ -118,7 +141,7 @@ namespace JsonMasher
             => _values[index];
     }
 
-    public class JsonObject : Json
+    class JsonObject : Json
     {
         Dictionary<string, Json> _values;
 
