@@ -238,6 +238,22 @@ namespace JsonMasher.Tests
             result.Select(x => x.GetNumber()).Should().BeEquivalentTo(expectedValues);
         }
 
+        [Fact]
+        public void ConstructArrayTest()
+        {
+            // Arrange
+            var data = MakeArray();
+            var op = new ConstructArray { ElementsMasher = Enumerate.Instance };
+
+            // Act
+            var result = op.RunAsSequence(data);
+
+            // Assert
+            var expectedValues = new List<double> { 2 };
+            result.Count().Should().Be(1);
+            result.First().Should().BeEquivalentTo(data);
+        }
+
         private static Json MakeArray()
         {
             return Json.ArrayParams(
