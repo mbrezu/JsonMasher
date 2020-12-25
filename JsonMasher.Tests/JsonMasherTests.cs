@@ -350,9 +350,12 @@ namespace JsonMasher.Tests
 
         // TODO: debug printing
         // TODO: n-ary operators
-        // TODO: -, *, has(key), keys, map, map_values
+        // TODO: -, *, relational operators, boolean operators
+        // TODO: has(key), keys, map, map_values
         // TODO: del, to_entries, from_entries, select, error, transpose, range
         // TODO: functions
+        // TODO: assignments
+        // TODO: min/max/group/sort
         // TODO: .. (recurse)
         // TODO: variable bindings (set in context?)
         // TODO: error handling
