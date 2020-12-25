@@ -14,8 +14,7 @@ namespace JsonMasher.Primitives
 
         private Json MashOne(Json json)
             => json.Type switch {
-                JsonValueType.Array => Json.Number(json.EnumerateArray().Count()),
-                JsonValueType.Object => Json.Number(json.EnumerateObject().Count()),
+                JsonValueType.Array or JsonValueType.Object => Json.Number(json.GetLength()),
                 _ => throw new InvalidOperationException()
             };
     

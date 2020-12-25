@@ -51,6 +51,11 @@ namespace JsonMasher
             throw new NotImplementedException();
         }
 
+        public virtual int GetLength()
+        {
+            throw new NotImplementedException();
+        }
+
         public static Json Undefined => new Json { Type = JsonValueType.Undefined };
         public static Json Null => new Json { Type = JsonValueType.Null };
         public static Json True => new Json { Type = JsonValueType.True };
@@ -139,6 +144,9 @@ namespace JsonMasher
 
         public override Json GetElementAt(int index)
             => _values[index];
+
+        public override int GetLength()
+            => _values.Count;
     }
 
     class JsonObject : Json
@@ -165,5 +173,8 @@ namespace JsonMasher
 
         public override Json GetElementAt(string key)
             => _values[key];
+
+        public override int GetLength()
+            => _values.Count;
     }
 }
