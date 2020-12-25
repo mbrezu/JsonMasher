@@ -348,6 +348,20 @@ namespace JsonMasher.Tests
             }
         }
 
+        // TODO: debug printing
+        // TODO: n-ary operators
+        // TODO: -, *, has(key), keys, map, map_values
+        // TODO: del, to_entries, from_entries, select, error, transpose, range
+        // TODO: functions
+        // TODO: .. (recurse)
+        // TODO: variable bindings (set in context?)
+        // TODO: error handling
+        // TODO: stack trace
+        // TODO: parser
+        // TODO: test coverage
+        // TODO: documentation
+        // TODO: nuget packages
+
         private static Json MakeArray()
         {
             return Json.ArrayParams(
