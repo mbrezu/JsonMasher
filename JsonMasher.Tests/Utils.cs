@@ -25,5 +25,8 @@ namespace JsonMasher.Tests
             var (json, context) = op.RunAsSequenceWithContext(data);
             return (json.First(), context);
         }
+
+        public static Json JsonNumberArray(params double[] values)
+            => Json.Array(values.Select(x => Json.Number(x)));
     }
 }

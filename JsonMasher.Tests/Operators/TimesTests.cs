@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
 using FluentAssertions;
 using JsonMasher.Combinators;
 using JsonMasher.Functions;
@@ -25,8 +23,9 @@ namespace JsonMasher.Tests.Operators
             var result = op.RunAsSequence(data);
 
             // Assert
-            var expectedValues = new List<double> { 6 };
-            result.Select(x => x.GetNumber()).Should().BeEquivalentTo(expectedValues);
+            Json.Array(result)
+                .DeepEqual(Utils.JsonNumberArray(6))
+                .Should().BeTrue();
         }
 
         [Fact]
@@ -44,8 +43,9 @@ namespace JsonMasher.Tests.Operators
             var result = op.RunAsSequence(data);
 
             // Assert
-            var expectedValues = new List<string> { "ababab" };
-            result.Select(x => x.GetString()).Should().BeEquivalentTo(expectedValues);
+            Json.Array(result)
+                .DeepEqual(Json.ArrayParams(Json.String("ababab")))
+                .Should().BeTrue();
         }
 
         [Fact]
@@ -63,8 +63,9 @@ namespace JsonMasher.Tests.Operators
             var result = op.RunAsSequence(data);
 
             // Assert
-            var expectedValues = new List<string> { "bababa" };
-            result.Select(x => x.GetString()).Should().BeEquivalentTo(expectedValues);
+            Json.Array(result)
+                .DeepEqual(Json.ArrayParams(Json.String("bababa")))
+                .Should().BeTrue();
         }
     }
 }

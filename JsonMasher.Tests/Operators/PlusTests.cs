@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
 using FluentAssertions;
 using JsonMasher.Combinators;
 using JsonMasher.Functions;
@@ -25,36 +23,38 @@ namespace JsonMasher.Tests.Operators
             var result = op.RunAsSequence(data);
 
             // Assert
-            var expectedValues = new List<double> { 2 };
-            result.Select(x => x.GetNumber()).Should().BeEquivalentTo(expectedValues);
+            Json.Array(result)
+                .DeepEqual(Utils.JsonNumberArray(2))
+                .Should().BeTrue();
         }
 
         [Fact]
         public void OuterIterateNumbers()
         {
             // Arrange
-            var data = Json.ArrayParams(Json.Number(1), Json.Number(2), Json.Number(3));
-            var op = new Compose {
-                First = Enumerate.Instance,
-                Second = new BinaryOperator {
+            var data = Utils.JsonNumberArray(1, 2, 3);
+            var op = Compose.AllParams(
+                Enumerate.Instance,
+                new BinaryOperator {
                     First = Identity.Instance,
                     Second = Identity.Instance,
                     Function = Plus.Function
-            }};
+                });
 
             // Act
             var result = op.RunAsSequence(data);
 
             // Assert
-            var expectedValues = new List<double> { 2, 4, 6 };
-            result.Select(x => x.GetNumber()).Should().BeEquivalentTo(expectedValues);
+            Json.Array(result)
+                .DeepEqual(Utils.JsonNumberArray(2, 4, 6))
+                .Should().BeTrue();
         }
 
         [Fact]
         public void InnerIterateNumbers()
         {
             // Arrange
-            var data = Json.ArrayParams(Json.Number(1), Json.Number(2), Json.Number(3));
+            var data = Utils.JsonNumberArray(1, 2, 3);
             var op = new BinaryOperator {
                 First = Enumerate.Instance,
                 Second = Enumerate.Instance,
@@ -65,8 +65,9 @@ namespace JsonMasher.Tests.Operators
             var result = op.RunAsSequence(data);
 
             // Assert
-            var expectedValues = new List<double> { 2, 3, 4, 3, 4, 5, 4, 5, 6};
-            result.Select(x => x.GetNumber()).Should().BeEquivalentTo(expectedValues);
+            Json.Array(result)
+                .DeepEqual(Utils.JsonNumberArray(2, 3, 4, 3, 4, 5, 4, 5, 6))
+                .Should().BeTrue();
         }
 
         [Fact]
@@ -84,9 +85,9 @@ namespace JsonMasher.Tests.Operators
             var result = op.RunAsSequence(data);
 
             // Assert
-            var expectedValue = Json.ArrayParams(Json.Number(1), Json.Number(2));
-            result.Count().Should().Be(1);
-            result.First().Should().BeEquivalentTo(expectedValue);
+            Json.Array(result)
+                .DeepEqual(Json.ArrayParams(Utils.JsonNumberArray(1, 1)))
+                .Should().BeTrue();
         }
 
         [Fact]
@@ -104,9 +105,9 @@ namespace JsonMasher.Tests.Operators
             var result = op.RunAsSequence(data);
 
             // Assert
-            var expectedValue = Json.String("aa");
-            result.Count().Should().Be(1);
-            result.First().Should().BeEquivalentTo(expectedValue);
+            Json.Array(result)
+                .DeepEqual(Json.ArrayParams(Json.String("aa")))
+                .Should().BeTrue();
         }
 
         [Fact]
@@ -124,11 +125,10 @@ namespace JsonMasher.Tests.Operators
             var result = op.RunAsSequence(data);
 
             // Assert
-            var expectedValue = Json.ObjectParams(
+            var expectedValue = Json.ArrayParams(Json.ObjectParams(
                 new JsonProperty("a", Json.Number(1)),
-                new JsonProperty("b", Json.Number(2)));
-            result.Count().Should().Be(1);
-            result.First().Should().BeEquivalentTo(expectedValue);
+                new JsonProperty("b", Json.Number(2))));
+            Json.Array(result).DeepEqual(expectedValue).Should().BeTrue();
         }
     }
 }

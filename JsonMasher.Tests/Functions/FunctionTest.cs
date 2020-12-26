@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using FluentAssertions;
 using JsonMasher.Combinators;
 using JsonMasher.Functions;
@@ -14,10 +13,7 @@ namespace JsonMasher.Tests.Functions
         public void NoArguments()
         {
             // Arrange
-            var data = Json.ArrayParams(
-                Json.Number(1),
-                Json.Number(2),
-                Json.Number(3));
+            var data = Utils.JsonNumberArray(1, 2, 3);
             var op = Compose.AllParams(
                 new FunctionDefinition { 
                     Name = "test",
@@ -35,18 +31,16 @@ namespace JsonMasher.Tests.Functions
             var result = op.RunAsSequence(data);
 
             // Assert
-            var expectedValues = new List<double> { 3, 4, 5 };
-            result.Select(x => x.GetNumber()).Should().BeEquivalentTo(expectedValues);
+            Json.Array(result)
+                .DeepEqual(Utils.JsonNumberArray(3, 4, 5))
+                .Should().BeTrue();
         }
 
         [Fact]
         public void WithArguments()
         {
             // Arrange
-            var data = Json.ArrayParams(
-                Json.Number(1),
-                Json.Number(2),
-                Json.Number(3));
+            var data = Utils.JsonNumberArray(1, 2, 3);
             var op = Compose.AllParams(
                 new FunctionDefinition { 
                     Name = "x",
@@ -76,11 +70,7 @@ namespace JsonMasher.Tests.Functions
                 Json.Number(1),
                 Json.Number(2),
                 Json.Number(3),
-                Json.ArrayParams(
-                    Json.Number(1),
-                    Json.Number(2),
-                    Json.Number(3)
-                ));
+                Utils.JsonNumberArray(1, 2, 3));
             result.DeepEqual(expectedValues).Should().BeTrue();
         }
     }
