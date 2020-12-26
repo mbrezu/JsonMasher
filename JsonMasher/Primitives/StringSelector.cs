@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace JsonMasher.Primitives
 {
-    public class KeySelector : IJsonMasherOperator
+    public class StringSelector : IJsonMasherOperator
     {
         public string Key { get; init; }
 

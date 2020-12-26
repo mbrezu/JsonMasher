@@ -30,6 +30,46 @@ namespace JsonMasher.Tests.Functions
         }
 
         [Fact]
+        public void OuterIterateNumbers()
+        {
+            // Arrange
+            var data = Json.ArrayParams(Json.Number(1), Json.Number(2), Json.Number(3));
+            var op = new Compose {
+                First = Enumerate.Instance,
+                Second = new BinaryOperator {
+                    First = Identity.Instance,
+                    Second = Identity.Instance,
+                    Function = Plus.Function
+            }};
+
+            // Act
+            var result = op.RunAsSequence(data);
+
+            // Assert
+            var expectedValues = new List<double> { 2, 4, 6 };
+            result.Select(x => x.GetNumber()).Should().BeEquivalentTo(expectedValues);
+        }
+
+        [Fact]
+        public void InnerIterateNumbers()
+        {
+            // Arrange
+            var data = Json.ArrayParams(Json.Number(1), Json.Number(2), Json.Number(3));
+            var op = new BinaryOperator {
+                First = Enumerate.Instance,
+                Second = Enumerate.Instance,
+                Function = Plus.Function
+            };
+
+            // Act
+            var result = op.RunAsSequence(data);
+
+            // Assert
+            var expectedValues = new List<double> { 2, 3, 4, 3, 4, 5, 4, 5, 6};
+            result.Select(x => x.GetNumber()).Should().BeEquivalentTo(expectedValues);
+        }
+
+        [Fact]
         public void Arrays()
         {
             // Arrange

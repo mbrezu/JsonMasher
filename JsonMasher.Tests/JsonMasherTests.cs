@@ -230,11 +230,11 @@ namespace JsonMasher.Tests
         }
 
         [Fact]
-        public void KeySelectorTest()
+        public void StringSelectorTest()
         {
             // Arrange
             var data = MakeObject();
-            var op = new KeySelector { Key = "a" };
+            var op = new StringSelector { Key = "a" };
 
             // Act
             var result = op.RunAsSequence(data);
@@ -245,17 +245,51 @@ namespace JsonMasher.Tests
         }
 
         [Fact]
-        public void IndexSelectorTest()
+        public void SelectorTestNumber()
         {
             // Arrange
             var data = MakeArray();
-            var op = new IndexSelector { Index = 1 };
+            var op = new Selector { Index = new Literal { Value = Json.Number(1) } };
 
             // Act
             var result = op.RunAsSequence(data);
 
             // Assert
             var expectedValues = new List<double> { 2 };
+            result.Select(x => x.GetNumber()).Should().BeEquivalentTo(expectedValues);
+        }
+
+        [Fact]
+        public void SelectorTestSequence()
+        {
+            // Arrange
+            var data = MakeArray();
+            var op = new Selector { Index = Concat.AllParams(
+                new Literal { Value = Json.Number(1) },
+                new Literal { Value = Json.Number(2) },
+                new Literal { Value = Json.Number(0) }
+            ) };
+
+            // Act
+            var result = op.RunAsSequence(data);
+
+            // Assert
+            var expectedValues = new List<double> { 2, 3, 1 };
+            result.Select(x => x.GetNumber()).Should().BeEquivalentTo(expectedValues);
+        }
+
+        [Fact]
+        public void SelectorTestString()
+        {
+            // Arrange
+            var data = MakeObject();
+            var op = new Selector { Index = new Literal { Value = Json.String("c") } };
+
+            // Act
+            var result = op.RunAsSequence(data);
+
+            // Assert
+            var expectedValues = new List<double> { 3 };
             result.Select(x => x.GetNumber()).Should().BeEquivalentTo(expectedValues);
         }
 
