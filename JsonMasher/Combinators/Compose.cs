@@ -7,17 +7,6 @@ namespace JsonMasher.Combinators
         public IJsonMasherOperator First { get; init; }
         public IJsonMasherOperator Second { get; init; }
 
-        public IEnumerable<Json> Mash(IEnumerable<Json> seq, IMashContext context)
-        {
-            foreach (var json in seq)
-            {
-                foreach (var result in Mash(json, context))
-                {
-                    yield return result;
-                }
-            }
-        }
-
         public IEnumerable<Json> Mash(Json json, IMashContext context)
         {
             foreach (var temp in First.Mash(json, context))

@@ -5,9 +5,6 @@ namespace JsonMasher.Primitives
 {
     public class Debug : IJsonMasherOperator
     {
-        public IEnumerable<Json> Mash(IEnumerable<Json> seq, IMashContext context) 
-            => seq.SelectMany(x => Mash(x, context));
-
         public IEnumerable<Json> Mash(Json json, IMashContext context)
         {
             context.LogValue(json);

@@ -8,9 +8,6 @@ namespace JsonMasher.Primitives
         public IEnumerable<Json> Mash(Json json, IMashContext context)
             => Enumerable.Empty<Json>();
 
-        public IEnumerable<Json> Mash(IEnumerable<Json> seq, IMashContext context)
-            => Enumerable.Empty<Json>();
-
         private Empty()
         {
         }

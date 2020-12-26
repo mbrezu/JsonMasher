@@ -14,9 +14,6 @@ namespace JsonMasher.Combinators
             _propertyDescriptors = propertyDescriptors;
         }
 
-        public IEnumerable<Json> Mash(IEnumerable<Json> seq, IMashContext context)
-            => seq.SelectMany(json => Mash(json, context, new List<JsonProperty>()));
-        
         public IEnumerable<Json> Mash(Json json, IMashContext context)
             => Mash(json, context, new List<JsonProperty>());
 

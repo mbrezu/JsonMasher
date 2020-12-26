@@ -11,9 +11,6 @@ namespace JsonMasher.Primitives
         public IEnumerable<Json> Mash(Json json, IMashContext context)
             => MashOne(json).AsEnumerable();
 
-        public IEnumerable<Json> Mash(IEnumerable<Json> seq, IMashContext context)
-            => seq.Select(MashOne);
-
         private Json MashOne(Json json)
             => json.Type switch {
                 JsonValueType.Object => json.GetElementAt(Key),

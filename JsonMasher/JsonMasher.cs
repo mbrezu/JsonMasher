@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 
 namespace JsonMasher
 {
@@ -9,8 +10,6 @@ namespace JsonMasher
         public IMashContext Context => _context;
 
         public IEnumerable<Json> Mash(IEnumerable<Json> seq, IJsonMasherOperator op)
-        {
-            return op.Mash(seq, _context);
-        }
+            => seq.SelectMany(json => op.Mash(json, _context));
     }
 }

@@ -21,16 +21,5 @@ namespace JsonMasher.Combinators
                 }
             }
         }
-
-        public IEnumerable<Json> Mash(IEnumerable<Json> seq, IMashContext context)
-        {
-            foreach (var t1 in First.Mash(seq, context))
-            {
-                foreach (var t2 in Second.Mash(seq, context))
-                {
-                    yield return Function(t1, t2);
-                }
-            }
-        }
     }
 }

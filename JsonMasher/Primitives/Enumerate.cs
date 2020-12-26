@@ -14,17 +14,6 @@ namespace JsonMasher.Primitives
                 _ => throw new InvalidOperationException("Can't enumerate value.")
             };
 
-        public IEnumerable<Json> Mash(IEnumerable<Json> seq, IMashContext context)
-        {
-            foreach (var json in seq)
-            {
-                foreach (var result in Mash(json, context))
-                {
-                    yield return result;
-                }
-            }
-        }
-
         private Enumerate()
         {
         }

@@ -4,9 +4,6 @@ namespace JsonMasher.Primitives
 {
     public class Identity : IJsonMasherOperator
     {
-        public IEnumerable<Json> Mash(IEnumerable<Json> seq, IMashContext context) 
-            => seq;
-
         public IEnumerable<Json> Mash(Json json, IMashContext context)
             => json.AsEnumerable();
 

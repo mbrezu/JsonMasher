@@ -1,14 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace JsonMasher.Primitives
 {
     public class Length : IJsonMasherOperator
     {
-        public IEnumerable<Json> Mash(IEnumerable<Json> seq, IMashContext context)
-            => seq.Select(MashOne);
-
         public IEnumerable<Json> Mash(Json json, IMashContext context)
             => MashOne(json).AsEnumerable();
 
