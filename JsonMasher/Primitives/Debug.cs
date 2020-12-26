@@ -11,6 +11,10 @@ namespace JsonMasher.Primitives
             yield return json;
         }
 
+        private Debug()
+        {
+        }
+
         private static Debug _instance = new Debug();
         public static Debug Instance => _instance;
     }

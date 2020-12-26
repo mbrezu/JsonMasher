@@ -298,7 +298,7 @@ namespace JsonMasher.Tests
         {
             // Arrange
             var data = MakeArray();
-            var op = new ConstructArray { ElementsMasher = Enumerate.Instance };
+            var op = new ConstructArray { Elements = Enumerate.Instance };
 
             // Act
             var result = op.RunAsSequence(data);
@@ -405,21 +405,61 @@ namespace JsonMasher.Tests
             }
         }
 
+        [Fact]
+        public void LetAndGetVariableTest()
+        {
+            // Arrange
+            var data = MakeArray();
+            var op = new Let { 
+                Value = Identity.Instance,
+                Name = "var",
+                Body = new GetVariable { Name = "var" }
+            };
+
+            // Act
+            var result = op.RunAsScalar(data);
+
+            // Assert
+            result.Should().BeEquivalentTo(data);
+        }
+
+        [Fact]
+        public void LetAndGetVariableSequenceTest()
+        {
+            // Arrange
+            var data = MakeArray();
+            var op = new ConstructArray{
+                Elements = new Let { 
+                    Value = Enumerate.Instance,
+                    Name = "var",
+                    Body = new GetVariable { Name = "var" }
+                }
+            }; 
+
+            // Act
+            var result = op.RunAsScalar(data);
+
+            // Assert
+            result.Should().BeEquivalentTo(data);
+        }
+
+        // TODO: functions
+        // TODO: lexer
+        // TODO: parser
         // TODO: pretty printing (FancyPen?) for Json values
         // TODO: pretty printing operators
         // TODO: n-ary operators
         // TODO: relational operators: <, <=, ==, >, >=
         // TODO: boolean operators: and, or, not
+        // TODO: if/elif
         // TODO: has(key), keys, map, map_values
         // TODO: del, to_entries, from_entries, select, error, transpose, range
-        // TODO: functions
         // TODO: assignments
         // TODO: min/max/group/sort
         // TODO: .. (recurse)
         // TODO: variable bindings (set in context?)
         // TODO: error handling
         // TODO: stack trace
-        // TODO: parser
         // TODO: test coverage
         // TODO: documentation
         // TODO: nuget packages

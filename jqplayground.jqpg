@@ -71,3 +71,5 @@ def person:
     {"age": 1, "name": "c"},
     {"age": 2, "name": "d", "extra": 2} 
 ]
+
+jq -n 'range(3) as $test | range(3) as $test2 | [$test, $test2]'
