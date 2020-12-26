@@ -28,6 +28,7 @@ namespace JsonMasher.Tests.Functions
             var expectedValues = new List<double> { 1 };
             result.Select(x => x.GetNumber()).Should().BeEquivalentTo(expectedValues);
         }
+
         [Fact]
         public void Arrays()
         {
