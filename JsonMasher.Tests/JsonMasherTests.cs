@@ -406,6 +406,7 @@ namespace JsonMasher.Tests
         }
 
         // TODO: pretty printing (FancyPen?) for Json values
+        // TODO: pretty printing operators
         // TODO: n-ary operators
         // TODO: -, *, relational operators, boolean operators
         // TODO: has(key), keys, map, map_values

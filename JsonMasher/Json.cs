@@ -56,6 +56,57 @@ namespace JsonMasher
             throw new NotImplementedException();
         }
 
+        public bool DeepEqual(Json other)
+        {
+            if (Type != other.Type)
+            {
+                return false;
+            }
+            return Type switch {
+                JsonValueType.Undefined => true,
+                JsonValueType.Null => true,
+                JsonValueType.True => true,
+                JsonValueType.False => true,
+                JsonValueType.Number => GetNumber() == other.GetNumber(),
+                JsonValueType.String => GetString() == other.GetString(),
+                JsonValueType.Array => DeepEqualArray(other),
+                JsonValueType.Object => DeepEqualObject(other),
+                _ => throw new InvalidOperationException()
+            };
+        }
+
+        private bool DeepEqualArray(Json other)
+        {
+            if (GetLength() != other.GetLength())
+            {
+                return false;
+            }
+            for (int i = 0; i < GetLength(); i++) 
+            {
+                if (!GetElementAt(i).DeepEqual(other.GetElementAt(i)))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        private bool DeepEqualObject(Json other)
+        {
+            if (GetLength() != other.GetLength())
+            {
+                return false;
+            }
+            foreach (var kv in EnumerateObject())
+            {
+                if (!kv.Value.DeepEqual(other.GetElementAt(kv.Key)))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
         public static Json Undefined => new Json { Type = JsonValueType.Undefined };
         public static Json Null => new Json { Type = JsonValueType.Null };
         public static Json True => new Json { Type = JsonValueType.True };
