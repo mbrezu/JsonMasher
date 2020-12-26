@@ -443,7 +443,7 @@ namespace JsonMasher.Tests
             result.Should().BeEquivalentTo(data);
         }
 
-        // TODO: functions
+        // TODO: switch tests to using DeepEqual
         // TODO: lexer
         // TODO: parser
         // TODO: pretty printing (FancyPen?) for Json values

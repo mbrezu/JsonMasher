@@ -6,7 +6,7 @@ using JsonMasher.Functions;
 using JsonMasher.Primitives;
 using Xunit;
 
-namespace JsonMasher.Tests.Functions
+namespace JsonMasher.Tests.Operators
 {
     public class PlusTests
     {
