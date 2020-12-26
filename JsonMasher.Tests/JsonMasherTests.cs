@@ -382,7 +382,30 @@ namespace JsonMasher.Tests
             }
         }
 
-        // TODO: debug printing
+        [Fact]
+        public void DebugTest()
+        {
+            // Arrange
+            var data = MakeArray();
+            var op = new Compose {
+                First = Enumerate.Instance,
+                Second = Debug.Instance
+            };
+
+            // Act
+            var (result, context) = op.RunAsSequenceWithContext(data);
+            result.ToList();
+
+            // Assert
+            context.Log.Count().Should().Be(3);
+            for (int i = 0; i < 3; i++)
+            {
+                var obj = context.Log.ElementAt(i);
+                obj.Should().BeEquivalentTo(Json.Number(i + 1));
+            }
+        }
+
+        // TODO: pretty printing (FancyPen?) for Json values
         // TODO: n-ary operators
         // TODO: -, *, relational operators, boolean operators
         // TODO: has(key), keys, map, map_values

@@ -7,8 +7,8 @@ namespace JsonMasher.Primitives
         public IEnumerable<Json> Mash(IEnumerable<Json> seq, IMashContext context) 
             => seq;
 
-        public IEnumerable<Json> Mash(Json seq, IMashContext context)
-            => seq.AsEnumerable();
+        public IEnumerable<Json> Mash(Json json, IMashContext context)
+            => json.AsEnumerable();
 
         private Identity()
         {
