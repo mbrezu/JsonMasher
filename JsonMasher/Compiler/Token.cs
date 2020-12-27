@@ -69,8 +69,14 @@ namespace JsonMasher.Compiler
         private static Token _dotDot = new SimpleToken(SimpleTokenType.DotDot);
         public static Token DotDot => _dotDot;
 
-        public static Token Number(double v) => new Number(v);
+        public static Token Number(double value) => new Number(value);
         public static Token Identifier(string id) => new Identifier(id);
+        public static Token String(string value) => new String(value);
+        
+        public static class Keywords {
+            private static Token _def = new Keyword(KeywordType.Def);
+            public static Token Def => _def;
+        }
 
         public static bool SameAs(this Token t1, Token t2)
             => (t1, t2) switch
@@ -79,6 +85,7 @@ namespace JsonMasher.Compiler
                 (Keyword kw1, Keyword kw2) => kw1.Type == kw2.Type,
                 (Number n1, Number n2) => n1.Value == n2.Value,
                 (Identifier id1, Identifier id2) => id1.Id == id2.Id,
+                (String str1, String str2) => str1.Value == str2.Value,
                 _ => false
             };
     }

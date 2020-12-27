@@ -32,7 +32,10 @@ namespace JsonMasher.Tests.Compiler
             => Enumerable.Empty<TestItem>()
                 .Concat(SimpleTokensTests())
                 .Concat(NumberTests())
-                .Concat(IdentfierTests());
+                .Concat(IdentfierTests())
+                .Concat(KeywordTests())
+                .Concat(StringTests())
+                .Concat(Tests());
 
         private static IEnumerable<TestItem> SimpleTokensTests()
         {
@@ -77,6 +80,57 @@ namespace JsonMasher.Tests.Compiler
                     Tokens.Identifier("snake_case"),
                     Tokens.Comma,
                     Tokens.Identifier("PascalCase")));
+        }
+
+        private static IEnumerable<TestItem> KeywordTests()
+        {
+            yield return new TestItem(" def ", TokensParams(Tokens.Keywords.Def));
+        }
+
+        private static IEnumerable<TestItem> StringTests()
+        {
+            yield return new TestItem(" \"a\" ", TokensParams(Tokens.String("a")));
+            yield return new TestItem(
+                " \"some string {}{-\" ", TokensParams(Tokens.String("some string {}{-")));
+            yield return new TestItem(
+                " \"some string {}{-\".. ", 
+                TokensParams(
+                    Tokens.String("some string {}{-"),
+                    Tokens.DotDot));
+            yield return new TestItem(
+                " 23 def  \t\n\"some string {}{-\". ", 
+                TokensParams(
+                    Tokens.Number(23),
+                    Tokens.Keywords.Def,
+                    Tokens.String("some string {}{-"),
+                    Tokens.Dot));
+            yield return new TestItem(
+                @" ""escaped \"" double quotes""", 
+                TokensParams(Tokens.String("escaped \" double quotes")));
+            yield return new TestItem(
+                @" ""escapes 1 \n""", 
+                TokensParams(Tokens.String("escapes 1 \n")));
+        }
+
+        private static IEnumerable<TestItem> Tests()
+        {
+            yield return new TestItem(
+                ".[] | ..", 
+                TokensParams(
+                    Tokens.Dot,
+                    Tokens.OpenSquareParen,
+                    Tokens.CloseSquareParen,
+                    Tokens.Pipe,
+                    Tokens.DotDot));
+            yield return new TestItem(
+                "[ range(3) ]", 
+                TokensParams(
+                    Tokens.OpenSquareParen,
+                    Tokens.Identifier("range"),
+                    Tokens.OpenParen,
+                    Tokens.Number(3),
+                    Tokens.CloseParen,
+                    Tokens.CloseSquareParen));
         }
 
         private static List<Token> TokensParams(params Token[] tokens) => tokens.ToList();

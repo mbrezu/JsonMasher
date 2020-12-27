@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace JsonMasher.Compiler
 {
@@ -115,6 +116,10 @@ namespace JsonMasher.Compiler
             {
                 return Identifier(state);
             }
+            else if (state.Char == '\"')
+            {
+                return String(state);
+            }
             else
             {
                 throw new InvalidOperationException();
@@ -144,7 +149,47 @@ namespace JsonMasher.Compiler
             {
                 state.Advance();
             }
-            return Tokens.Identifier(state.GetFromMark());
+            var id = state.GetFromMark();
+            return id switch {
+                "def" => Tokens.Keywords.Def,
+                _ => Tokens.Identifier(id)
+            };
+        }
+
+        private Token String(State state)
+        {
+            state.Advance();
+            state.Mark();
+            while(true) {
+                if (state.AtEnd) {
+                    throw new InvalidOperationException();
+                }
+                else if (state.Char == '\"')
+                {
+                    var value = state.GetFromMark();
+                    state.Advance();
+                    try {
+                        var unescaped = Regex.Unescape(value);
+                        return new String(unescaped);
+                    }
+                    catch (RegexParseException ex)
+                    {
+                        throw new InvalidOperationException("", ex);
+                    }
+                }
+                else if (state.Char == '\\' && state.NextChar != null)
+                {
+                    state.Advance(2);
+                }
+                else if (state.Char == '\\')
+                {
+                    throw new InvalidOperationException();
+                }
+                else
+                {
+                    state.Advance();
+                }
+            }
         }
     }
 }
