@@ -441,7 +441,6 @@ namespace JsonMasher.Tests
             result.DeepEqual(data).Should().BeTrue();
         }
 
-        // TODO: test conversion from JsonElement to Json
         // TODO: lexer
         // TODO: parser
         // TODO: pretty printing (FancyPen?) for Json values
@@ -458,7 +457,6 @@ namespace JsonMasher.Tests
         // TODO: variable bindings (set in context?)
         // TODO: error handling
         // TODO: stack trace
-        // TODO: test coverage
         // TODO: documentation
         // TODO: nuget packages
 
