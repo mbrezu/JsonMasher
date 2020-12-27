@@ -4,6 +4,7 @@ using FluentAssertions;
 using JsonMasher.Compiler;
 using JsonMasher.Mashers;
 using JsonMasher.Mashers.Combinators;
+using JsonMasher.Mashers.Operators;
 using JsonMasher.Mashers.Primitives;
 using Xunit;
 
@@ -35,6 +36,10 @@ namespace JsonMasher.Tests.Compiler
         private static IEnumerable<TestItem> GetTestData()
             => Enumerable.Empty<TestItem>()
                 .Concat(DotTests())
+                .Concat(LiteralTests())
+                .Concat(PlusMinusTests())
+                .Concat(TimesTests())
+                .Concat(ParenTests())
                 .Concat(PipeTests());
 
         private static IEnumerable<TestItem> DotTests()
@@ -55,6 +60,96 @@ namespace JsonMasher.Tests.Compiler
             yield return new TestItem(".[.].a", Compose.AllParams(
                 new Selector { Index = Identity.Instance },
                 new StringSelector { Key = "a" }));
+        }
+
+        private static IEnumerable<TestItem> LiteralTests()
+        {
+            yield return new TestItem("1", new Literal { Value = Json.Number(1) });
+            yield return new TestItem("1.", new Literal { Value = Json.Number(1) });
+            yield return new TestItem("12.3", new Literal { Value = Json.Number(12.3) });
+            yield return new TestItem("\"a\"", new Literal { Value = Json.String("a") });
+        }
+
+        private static IEnumerable<TestItem> PlusMinusTests()
+        {
+            yield return new TestItem("1 + 1", new BinaryOperator {
+                First = new Literal { Value = Json.Number(1) },
+                Second = new Literal { Value = Json.Number(1) },
+                Operator = Plus.Operator
+            });
+            yield return new TestItem("1 - 1", new BinaryOperator {
+                First = new Literal { Value = Json.Number(1) },
+                Second = new Literal { Value = Json.Number(1) },
+                Operator = Minus.Operator
+            });
+            yield return new TestItem("1 + 1 + 1", new BinaryOperator {
+                First = new BinaryOperator {
+                    First = new Literal { Value = Json.Number(1) },
+                    Second = new Literal { Value = Json.Number(1) },
+                    Operator = Plus.Operator
+                },
+                Second = new Literal { Value = Json.Number(1) },
+                Operator = Plus.Operator
+            });
+            yield return new TestItem("1 - 1 + 1", new BinaryOperator {
+                First = new BinaryOperator {
+                    First = new Literal { Value = Json.Number(1) },
+                    Second = new Literal { Value = Json.Number(1) },
+                    Operator = Minus.Operator
+                },
+                Second = new Literal { Value = Json.Number(1) },
+                Operator = Plus.Operator
+            });
+            yield return new TestItem("1 + 1 - 1", new BinaryOperator {
+                First = new BinaryOperator {
+                    First = new Literal { Value = Json.Number(1) },
+                    Second = new Literal { Value = Json.Number(1) },
+                    Operator = Plus.Operator
+                },
+                Second = new Literal { Value = Json.Number(1) },
+                Operator = Minus.Operator
+            });
+        }
+
+        private static IEnumerable<TestItem> TimesTests()
+        {
+            yield return new TestItem("1 + 2 * 2", new BinaryOperator {
+                First = new Literal { Value = Json.Number(1) },
+                Second = new BinaryOperator {
+                    First = new Literal { Value = Json.Number(2) },
+                    Second = new Literal { Value = Json.Number(2) },
+                    Operator = Times.Operator
+                },
+                Operator = Plus.Operator
+            });
+        }
+
+        private static IEnumerable<TestItem> ParenTests()
+        {
+            yield return new TestItem("1 + (1 - 1)", new BinaryOperator {
+                First = new Literal { Value = Json.Number(1) },
+                Second = new BinaryOperator {
+                    First = new Literal { Value = Json.Number(1) },
+                    Second = new Literal { Value = Json.Number(1) },
+                    Operator = Minus.Operator
+                },
+                Operator = Plus.Operator
+            });
+            yield return new TestItem("(. | .) | .", Compose.AllParams(
+                Compose.AllParams(
+                    Identity.Instance,
+                    Identity.Instance),
+                Identity.Instance
+            ));
+            yield return new TestItem("(1 + 2) * 2", new BinaryOperator {
+                First = new BinaryOperator {
+                    First = new Literal { Value = Json.Number(1) },
+                    Second = new Literal { Value = Json.Number(2) },
+                    Operator = Plus.Operator
+                },
+                Second = new Literal { Value = Json.Number(2) },
+                Operator = Times.Operator
+            });
         }
 
         private static IEnumerable<TestItem> PipeTests()

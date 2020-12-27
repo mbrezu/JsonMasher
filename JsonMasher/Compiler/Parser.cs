@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using JsonMasher.Mashers;
 using JsonMasher.Mashers.Combinators;
+using JsonMasher.Mashers.Operators;
 using JsonMasher.Mashers.Primitives;
 
 namespace JsonMasher.Compiler
@@ -51,16 +52,16 @@ namespace JsonMasher.Compiler
                 return Identity.Instance;
             }
             var state = new State(new Lexer().Tokenize(program));
-            return ParsePipe(state);
+            return ParseFilter(state);
         }
 
-        private IJsonMasherOperator ParsePipe(State state)
+        private IJsonMasherOperator ParseFilter(State state)
         {
             var term1 = ParsePipeTerm(state);
             if (state.Current == Tokens.Pipe)
             {
                 state.Advance();
-                var term2 = ParsePipe(state);
+                var term2 = ParseFilter(state);
                 return Compose.AllParams(term1, term2);
             }
             else
@@ -71,9 +72,69 @@ namespace JsonMasher.Compiler
 
         private IJsonMasherOperator ParsePipeTerm(State state)
         {
+            return ParseArithLowerTerm(state);
+        }
+
+        private IJsonMasherOperator ParseArithLowerTerm(State state)
+        {
+            return ChainAssocLeft(
+                state,
+                ParseArithHigherTerm,
+                op => op == Tokens.Plus || op == Tokens.Minus,
+                op => op == Tokens.Plus ? Plus.Operator : Minus.Operator);
+        }
+
+        private IJsonMasherOperator ChainAssocLeft(
+            State state, 
+            Func<State, IJsonMasherOperator> termParser,
+            Func<Token, bool> validOps,
+            Func<Token, Func<Json, Json, Json>> opFunc)
+        {
+            var accum = termParser(state);
+            while (validOps(state.Current))
+            {
+                var op = state.Current;
+                state.Advance();
+                accum = new BinaryOperator {
+                    First = accum,
+                    Second = termParser(state),
+                    Operator = opFunc(op)
+                };
+            }
+            return accum;
+        }
+
+        private IJsonMasherOperator ParseArithHigherTerm(State state)
+        {
+            return ChainAssocLeft(
+                state,
+                ParseTerm,
+                op => op == Tokens.Times,
+                op => Times.Operator);
+        }
+
+        private IJsonMasherOperator ParseTerm(State state)
+        {
             if (state.Current == Tokens.Dot)
             {
                 return ParseDot(state);
+            }
+            else if (state.Current is Number n)
+            {
+                state.Advance();
+                return new Literal { Value = Json.Number(n.Value) };
+            }
+            else if (state.Current is String s)
+            {
+                state.Advance();
+                return new Literal { Value = Json.String(s.Value) };
+            }
+            else if (state.Current == Tokens.OpenParen)
+            {
+                state.Advance();
+                var result = ParseFilter(state);
+                state.Match(Tokens.CloseParen);
+                return result;
             }
             else
             {

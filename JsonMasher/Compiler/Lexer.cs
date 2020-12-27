@@ -97,6 +97,18 @@ namespace JsonMasher.Compiler
                             yield return Tokens.Colon;
                             state.Advance();
                             break;
+                        case '+':
+                            yield return Tokens.Plus;
+                            state.Advance();
+                            break;
+                        case '-':
+                            yield return Tokens.Minus;
+                            state.Advance();
+                            break;
+                        case '*':
+                            yield return Tokens.Times;
+                            state.Advance();
+                            break;
                         default:
                             yield return ComplexToken(state);
                             break;

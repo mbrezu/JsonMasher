@@ -21,7 +21,10 @@ namespace JsonMasher.Compiler
             Comma,
             Semicolon,
             Colon,
-            DotDot
+            DotDot,
+            Plus,
+            Minus,
+            Times
         }
 
         private enum KeywordType
@@ -63,8 +66,16 @@ namespace JsonMasher.Compiler
         public static Token Semicolon => _semicolon;
 
         private static Token _colon = new SimpleToken(SimpleTokenType.Colon);
-
         public static Token Colon => _colon;
+
+        private static Token _plus = new SimpleToken(SimpleTokenType.Plus);
+        public static Token Plus => _plus;
+
+        private static Token _minus = new SimpleToken(SimpleTokenType.Minus);
+        public static Token Minus => _minus;
+
+        private static Token _times = new SimpleToken(SimpleTokenType.Times);
+        public static Token Times => _times;
 
         private static Token _dotDot = new SimpleToken(SimpleTokenType.DotDot);
         public static Token DotDot => _dotDot;
