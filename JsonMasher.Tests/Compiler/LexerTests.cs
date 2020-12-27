@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
@@ -25,7 +24,9 @@ namespace JsonMasher.Tests.Compiler
             var result = lexer.Tokenize(program);
 
             // Assert
-            AreTokenListsTheSame(result, expectedTokens).Should().BeTrue();
+            result.Should().BeEquivalentTo(
+                expectedTokens, 
+                options => options.RespectingRuntimeTypes());
         }
 
         private static IEnumerable<TestItem> GetTestData()
@@ -134,26 +135,5 @@ namespace JsonMasher.Tests.Compiler
         }
 
         private static List<Token> TokensParams(params Token[] tokens) => tokens.ToList();
-
-        private static bool AreTokenListsTheSame(
-            IEnumerable<Token> actual, IEnumerable<Token> expected)
-        {
-            var actualList = actual.ToList();
-            var expectedList = expected.ToList();
-            if (actualList.Count != expectedList.Count)
-            {
-                return false;
-            }
-            for (int i = 0; i < actualList.Count; i++)
-            {
-                var actualItem = actualList[i];
-                var expectedItem = expectedList[i];
-                if (!actualItem.SameAs(expectedItem))
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
     }
 }

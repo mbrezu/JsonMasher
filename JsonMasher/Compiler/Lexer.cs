@@ -168,7 +168,8 @@ namespace JsonMasher.Compiler
                 {
                     var value = state.GetFromMark();
                     state.Advance();
-                    try {
+                    try 
+                    {
                         var unescaped = Regex.Unescape(value);
                         return new String(unescaped);
                     }

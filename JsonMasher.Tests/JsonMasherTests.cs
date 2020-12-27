@@ -446,6 +446,7 @@ namespace JsonMasher.Tests
         // TODO: pretty printing (FancyPen?) for Json values
         // TODO: pretty printing operators
         // TODO: n-ary operators
+        // TODO: / (for numbers)
         // TODO: relational operators: <, <=, ==, >, >=
         // TODO: boolean operators: and, or, not
         // TODO: if/elif
