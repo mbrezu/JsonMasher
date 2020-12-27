@@ -8,7 +8,6 @@ namespace JsonMasher.Tests
 {
     public class JsonMasherTests
     {
-        // TODO: test conversion from JsonElement to Json
         [Fact]
         public void EmptySequence()
         {
@@ -442,7 +441,7 @@ namespace JsonMasher.Tests
             result.DeepEqual(data).Should().BeTrue();
         }
 
-        // TODO: test DeepEqual :-)
+        // TODO: test conversion from JsonElement to Json
         // TODO: lexer
         // TODO: parser
         // TODO: pretty printing (FancyPen?) for Json values
