@@ -9,7 +9,7 @@ namespace JsonMasher
 {
     public static class Extensions
     {
-        public static Json AsIJson(this JsonDocument doc)
+        public static Json AsJson(this JsonDocument doc)
             => doc.RootElement.AsJson();
 
         public static Json AsJson(this JsonElement element)
