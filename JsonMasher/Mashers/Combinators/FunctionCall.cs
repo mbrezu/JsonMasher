@@ -6,7 +6,7 @@ namespace JsonMasher.Mashers.Combinators
     public class FunctionCall : IJsonMasherOperator
     {
         public string Name { get; init; }
-        public List<IJsonMasherOperator> Arguments { get; init; }
+        public List<Thunk> Arguments { get; init; }
         public IEnumerable<Json> Mash(Json json, IMashContext context)
             => context.GetCallable(Name) switch
             {
@@ -15,7 +15,7 @@ namespace JsonMasher.Mashers.Combinators
                 _ => throw new InvalidOperationException()
             };
 
-        private static List<IJsonMasherOperator> _noArgs = new();
+        private static List<Thunk> _noArgs = new();
         public static FunctionCall ZeroArity(string name)
             => new FunctionCall {
                 Name = name,
@@ -31,7 +31,7 @@ namespace JsonMasher.Mashers.Combinators
             context.PushEnvironmentFrame();
             for (int i = 0; i < Arguments.Count; i++)
             {
-                context.SetCallable(func.Arguments[i], new Thunk(Arguments[i]));
+                context.SetCallable(func.Arguments[i], Arguments[i]);
             }
             foreach (var result in func.Op.Mash(json, context))
             {

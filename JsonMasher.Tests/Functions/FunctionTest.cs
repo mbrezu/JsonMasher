@@ -57,9 +57,9 @@ namespace JsonMasher.Tests.Functions
                 },
                 new FunctionCall {
                     Name = "x",
-                    Arguments = new List<IJsonMasherOperator>() {
-                        Enumerate.Instance,
-                        Identity.Instance
+                    Arguments = new List<Thunk>() {
+                        new Thunk(Enumerate.Instance),
+                        new Thunk(Identity.Instance)
                     },
                 });
 
