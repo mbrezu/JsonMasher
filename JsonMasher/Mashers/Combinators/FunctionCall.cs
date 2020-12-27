@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace JsonMasher.Combinators
+namespace JsonMasher.Mashers.Combinators
 {
     public class FunctionCall : IJsonMasherOperator
     {

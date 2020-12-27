@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace JsonMasher.Primitives
+namespace JsonMasher.Mashers.Primitives
 {
     public class Enumerate : IJsonMasherOperator
     {

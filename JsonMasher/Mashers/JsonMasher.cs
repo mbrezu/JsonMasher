@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace JsonMasher
+namespace JsonMasher.Mashers
 {
     public class JsonMasher : IJsonMasher
     {

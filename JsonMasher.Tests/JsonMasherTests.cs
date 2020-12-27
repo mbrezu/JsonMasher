@@ -1,7 +1,7 @@
 using System.Linq;
 using FluentAssertions;
-using JsonMasher.Combinators;
-using JsonMasher.Primitives;
+using JsonMasher.Mashers.Combinators;
+using JsonMasher.Mashers.Primitives;
 using Xunit;
 
 namespace JsonMasher.Tests

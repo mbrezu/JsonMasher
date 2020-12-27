@@ -3,13 +3,13 @@ using System.Collections.Generic;
 
 // TODO: extend this into n-ary operators/functions with
 // code like the one in ConstructObject.
-namespace JsonMasher.Combinators
+namespace JsonMasher.Mashers.Combinators
 {
     public class BinaryOperator : IJsonMasherOperator
     {
         public IJsonMasherOperator First { get; init; }
         public IJsonMasherOperator Second { get; init; }
-        public Func<Json, Json, Json> Function { get; init; }
+        public Func<Json, Json, Json> Operator { get; init; }
 
         public IEnumerable<Json> Mash(Json json, IMashContext context)
         {
@@ -17,7 +17,7 @@ namespace JsonMasher.Combinators
             {
                 foreach (var t2 in Second.Mash(json, context))
                 {
-                    yield return Function(t1, t2);
+                    yield return Operator(t1, t2);
                 }
             }
         }

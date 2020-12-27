@@ -1,7 +1,6 @@
 using System.Collections.Generic;
-using JsonMasher.Combinators;
 
-namespace JsonMasher
+namespace JsonMasher.Mashers
 {
     public interface IMashContext
     {

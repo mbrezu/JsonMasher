@@ -1,8 +1,9 @@
 using System.Collections.Generic;
 using FluentAssertions;
-using JsonMasher.Combinators;
-using JsonMasher.Functions;
-using JsonMasher.Primitives;
+using JsonMasher.Mashers;
+using JsonMasher.Mashers.Combinators;
+using JsonMasher.Mashers.Operators;
+using JsonMasher.Mashers.Primitives;
 using Xunit;
 
 namespace JsonMasher.Tests.Functions
@@ -21,7 +22,7 @@ namespace JsonMasher.Tests.Functions
                     Body = new BinaryOperator {
                         First = Identity.Instance,
                         Second = new Literal { Value = Json.Number(2) },
-                        Function = Plus.Function
+                        Operator = Plus.Operator
                     }
                 },
                 Enumerate.Instance,

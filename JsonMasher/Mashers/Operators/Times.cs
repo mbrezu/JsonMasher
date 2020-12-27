@@ -1,11 +1,11 @@
 using System;
 using System.Text;
 
-namespace JsonMasher.Functions
+namespace JsonMasher.Mashers.Operators
 {
     public class Times
     {
-        public static Json Function(Json t1, Json t2)
+        public static Json Operator(Json t1, Json t2)
             => (t1.Type, t2.Type) switch
             {
                 (JsonValueType.Number, JsonValueType.Number)

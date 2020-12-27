@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using JsonMasher.Mashers;
 
 namespace JsonMasher.Tests
 {
@@ -8,7 +9,7 @@ namespace JsonMasher.Tests
         public static (IEnumerable<Json> json, IMashContext context) RunAsSequenceWithContext(
             this IJsonMasherOperator op, Json data)
         {
-            var masher = new JsonMasher();
+            var masher = new Mashers.JsonMasher();
             var result = masher.Mash(data.AsEnumerable(), op);
             return (json: result, context: masher.Context);
         }

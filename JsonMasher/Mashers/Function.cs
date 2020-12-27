@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace JsonMasher
+namespace JsonMasher.Mashers
 {
     public record Callable();
     public record Thunk(IJsonMasherOperator Op): Callable;

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace JsonMasher.Primitives
+namespace JsonMasher.Mashers.Primitives
 {
     public class Literal : IJsonMasherOperator
     {

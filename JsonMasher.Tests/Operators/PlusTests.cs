@@ -1,7 +1,7 @@
 using FluentAssertions;
-using JsonMasher.Combinators;
-using JsonMasher.Functions;
-using JsonMasher.Primitives;
+using JsonMasher.Mashers.Combinators;
+using JsonMasher.Mashers.Operators;
+using JsonMasher.Mashers.Primitives;
 using Xunit;
 
 namespace JsonMasher.Tests.Operators
@@ -16,7 +16,7 @@ namespace JsonMasher.Tests.Operators
             var op = new BinaryOperator {
                 First = Identity.Instance,
                 Second = Identity.Instance,
-                Function = Plus.Function
+                Operator = Plus.Operator
             };
 
             // Act
@@ -38,7 +38,7 @@ namespace JsonMasher.Tests.Operators
                 new BinaryOperator {
                     First = Identity.Instance,
                     Second = Identity.Instance,
-                    Function = Plus.Function
+                    Operator = Plus.Operator
                 });
 
             // Act
@@ -58,7 +58,7 @@ namespace JsonMasher.Tests.Operators
             var op = new BinaryOperator {
                 First = Enumerate.Instance,
                 Second = Enumerate.Instance,
-                Function = Plus.Function
+                Operator = Plus.Operator
             };
 
             // Act
@@ -78,7 +78,7 @@ namespace JsonMasher.Tests.Operators
             var op = new BinaryOperator {
                 First = Identity.Instance,
                 Second = Identity.Instance,
-                Function = Plus.Function
+                Operator = Plus.Operator
             };
 
             // Act
@@ -98,7 +98,7 @@ namespace JsonMasher.Tests.Operators
             var op = new BinaryOperator {
                 First = Identity.Instance,
                 Second = Identity.Instance,
-                Function = Plus.Function
+                Operator = Plus.Operator
             };
 
             // Act
@@ -118,7 +118,7 @@ namespace JsonMasher.Tests.Operators
             var op = new BinaryOperator {
                 First = Identity.Instance,
                 Second = new Literal { Value = Json.ObjectParams(new JsonProperty("b", Json.Number(2)))},
-                Function = Plus.Function
+                Operator = Plus.Operator
             };
 
             // Act

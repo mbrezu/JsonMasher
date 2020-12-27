@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace JsonMasher
+namespace JsonMasher.Mashers
 {
     public interface IJsonMasherOperator
     {

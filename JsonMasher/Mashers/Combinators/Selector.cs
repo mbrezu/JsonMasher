@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace JsonMasher.Combinators
+namespace JsonMasher.Mashers.Combinators
 {
     public class Selector : IJsonMasherOperator
     {

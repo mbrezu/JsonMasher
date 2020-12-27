@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace JsonMasher
+namespace JsonMasher.Mashers
 {
     public class MashContext : IMashContext
     {

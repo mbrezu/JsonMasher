@@ -1,7 +1,7 @@
 using FluentAssertions;
-using JsonMasher.Combinators;
-using JsonMasher.Functions;
-using JsonMasher.Primitives;
+using JsonMasher.Mashers.Combinators;
+using JsonMasher.Mashers.Operators;
+using JsonMasher.Mashers.Primitives;
 using Xunit;
 
 namespace JsonMasher.Tests.Operators
@@ -16,7 +16,7 @@ namespace JsonMasher.Tests.Operators
             var op = new BinaryOperator {
                 First = new Literal { Value = Json.Number(2) },
                 Second = new Literal { Value = Json.Number(1) },
-                Function = Minus.Function
+                Operator = Minus.Operator
             };
 
             // Act
@@ -39,7 +39,7 @@ namespace JsonMasher.Tests.Operators
                     Second = new Literal {
                         Value = Utils.JsonNumberArray(3, 4, 5)
                     },
-                    Function = Minus.Function
+                    Operator = Minus.Operator
                 },
                 Second = Enumerate.Instance
             };
