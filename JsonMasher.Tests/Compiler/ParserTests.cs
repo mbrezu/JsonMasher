@@ -19,7 +19,7 @@ namespace JsonMasher.Tests.Compiler
 
         [Theory]
         [MemberData(nameof(TestData))]
-        public void TokenizeTest(string program, IJsonMasherOperator expectation)
+        public void ParseTest(string program, IJsonMasherOperator expectation)
         {
             // Arrange
             var parser = new Parser();
