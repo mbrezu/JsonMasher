@@ -88,3 +88,6 @@ jq -n '
 def test: . + 2;
 range(3) | test
 '
+
+jq ''
+1

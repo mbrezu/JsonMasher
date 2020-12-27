@@ -9,6 +9,7 @@ namespace JsonMasher.Compiler
         {
             private string _program;
             private int _index;
+            private int _mark;
 
             public State(string program)
             {
@@ -30,6 +31,10 @@ namespace JsonMasher.Compiler
             }
 
             public void Advance(int amount = 1) => _index += amount;
+
+            internal void Mark() => _mark = _index;
+
+            internal string GetFromMark() => _program.Substring(_mark, _index - _mark);
         }
 
         public IEnumerable<Token> Tokenize(string program)
@@ -45,24 +50,101 @@ namespace JsonMasher.Compiler
                 }
                 else 
                 {
-                    yield return state.Char switch {
-                        '.' => Tokens.Dot,
-                        '|' => Tokens.Pipe,
-                        '(' => Tokens.OpenParen,
-                        ')' => Tokens.CloseParen,
-                        '[' => Tokens.OpenSquareParen,
-                        ']' => Tokens.CloseSquareParen,
-                        '{' => Tokens.OpenBrace,
-                        '}' => Tokens.CloseBrace,
-                        ',' => Tokens.Comma,
-                        ';' => Tokens.Semicolon,
-                        ':' => Tokens.Colon,
-                        _ => throw new InvalidOperationException()
-                    };
-                    state.Advance();
+                    switch (state.Char)
+                    {
+                        case '.':
+                            yield return Tokens.Dot;
+                            state.Advance();
+                            break;
+                        case '|':
+                            yield return Tokens.Pipe;
+                            state.Advance();
+                            break;
+                        case '(':
+                            yield return Tokens.OpenParen;
+                            state.Advance();
+                            break;
+                        case ')':
+                            yield return Tokens.CloseParen;
+                            state.Advance();
+                            break;
+                        case '[':
+                            yield return Tokens.OpenSquareParen;
+                            state.Advance();
+                            break;
+                        case ']':
+                            yield return Tokens.CloseSquareParen;
+                            state.Advance();
+                            break;
+                        case '{':
+                            yield return Tokens.OpenBrace;
+                            state.Advance();
+                            break;
+                        case '}':
+                            yield return Tokens.CloseBrace;
+                            state.Advance();
+                            break;
+                        case ',':
+                            yield return Tokens.Comma;
+                            state.Advance();
+                            break;
+                        case ';':
+                            yield return Tokens.Semicolon;
+                            state.Advance();
+                            break;
+                        case ':':
+                            yield return Tokens.Colon;
+                            state.Advance();
+                            break;
+                        default:
+                            yield return ComplexToken(state);
+                            break;
+                    }
                 }
                 state.SkipSpaces();
             }
+        }
+
+        private Token ComplexToken(State state)
+        {
+            if (Char.IsDigit(state.Char))
+            {
+                return Number(state);
+            }
+            else if (Char.IsLetter(state.Char) || state.Char == '_')
+            {
+                return Identifier(state);
+            }
+            else
+            {
+                throw new InvalidOperationException();
+            }
+        }
+
+        private Token Number(State state)
+        {
+            state.Mark();
+            bool seenDot = false;
+            bool inNumber() => (!seenDot && state.Char == '.') || Char.IsDigit(state.Char);
+            while (!state.AtEnd && inNumber())
+            {
+                if (state.Char == '.')
+                {
+                    seenDot = true;
+                }
+                state.Advance();
+            }
+            return Tokens.Number(double.Parse(state.GetFromMark()));
+        }
+
+        private Token Identifier(State state)
+        {
+            state.Mark();
+            while (!state.AtEnd && (state.Char == '_' || Char.IsLetterOrDigit(state.Char)))
+            {
+                state.Advance();
+            }
+            return Tokens.Identifier(state.GetFromMark());
         }
     }
 }

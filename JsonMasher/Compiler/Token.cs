@@ -63,9 +63,23 @@ namespace JsonMasher.Compiler
         public static Token Semicolon => _semicolon;
 
         private static Token _colon = new SimpleToken(SimpleTokenType.Colon);
+
         public static Token Colon => _colon;
 
         private static Token _dotDot = new SimpleToken(SimpleTokenType.DotDot);
         public static Token DotDot => _dotDot;
+
+        public static Token Number(double v) => new Number(v);
+        public static Token Identifier(string id) => new Identifier(id);
+
+        public static bool SameAs(this Token t1, Token t2)
+            => (t1, t2) switch
+            {
+                (SimpleToken st1, SimpleToken st2) => st1.Type == st2.Type,
+                (Keyword kw1, Keyword kw2) => kw1.Type == kw2.Type,
+                (Number n1, Number n2) => n1.Value == n2.Value,
+                (Identifier id1, Identifier id2) => id1.Id == id2.Id,
+                _ => false
+            };
     }
 }
