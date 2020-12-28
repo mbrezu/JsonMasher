@@ -89,6 +89,9 @@ namespace JsonMasher.Tests.Compiler
             yield return new TestItem("1.", new Literal { Value = Json.Number(1) });
             yield return new TestItem("12.3", new Literal { Value = Json.Number(12.3) });
             yield return new TestItem("\"a\"", new Literal { Value = Json.String("a") });
+            yield return new TestItem("null", new Literal { Value = Json.Null });
+            yield return new TestItem("true", new Literal { Value = Json.True });
+            yield return new TestItem("false", new Literal { Value = Json.False });
         }
 
         private static IEnumerable<TestItem> PlusMinusTests()

@@ -175,6 +175,16 @@ namespace JsonMasher.Compiler
                 state.Advance();
                 return new Literal { Value = Json.String(s.Value) };
             }
+            else if (state.Current is Identifier identifier)
+            {
+                state.Advance();
+                return identifier.Id switch {
+                    "null" => new Literal { Value = Json.Null },
+                    "true" => new Literal { Value = Json.True },
+                    "false" => new Literal { Value = Json.False },
+                    _ => throw new InvalidOperationException()
+                };
+            }
             else if (state.Current == Tokens.OpenParen)
             {
                 state.Advance();
