@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using JsonMasher.Mashers;
 
 namespace JsonMasher.Tests
@@ -29,5 +30,8 @@ namespace JsonMasher.Tests
 
         public static Json JsonNumberArray(params double[] values)
             => Json.Array(values.Select(x => Json.Number(x)));
+
+        public static Json AsJson(this string json)
+            => JsonDocument.Parse(json).AsJson();
     }
 }

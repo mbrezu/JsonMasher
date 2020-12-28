@@ -42,6 +42,7 @@ namespace JsonMasher.Tests.Compiler
                 .Concat(TimesTests())
                 .Concat(ParenTests())
                 .Concat(RelationalTests())
+                .Concat(AssignmentTests())
                 .Concat(PipeTests());
 
         private static IEnumerable<TestItem> DotTests()
@@ -160,6 +161,18 @@ namespace JsonMasher.Tests.Compiler
                 First = new Literal { Value = Json.Number(1) },
                 Second = new Literal { Value = Json.Number(2) },
                 Operator = EqualsEquals.Operator
+            });
+        }
+
+        private static IEnumerable<TestItem> AssignmentTests()
+        {
+            yield return new TestItem(". |= . + 2", new PipeAssignment {
+                PathExpression = Identity.Instance,
+                Masher = new BinaryOperator {
+                    First = Identity.Instance,
+                    Second = new Literal { Value = Json.Number(2) },
+                    Operator = Plus.Operator
+                }
             });
         }
 

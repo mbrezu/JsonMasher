@@ -1,6 +1,6 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.Json;
 using FluentAssertions;
 using JsonMasher.Compiler;
 using Xunit;
@@ -23,23 +23,21 @@ namespace JsonMasher.Tests.EndToEnd
             // Arrange
             var parser = new Parser();
             var filter = parser.Parse(program);
-            var input = ParseJson(inputJson).AsEnumerable();
+            var input = inputJson.AsJson().AsEnumerable();
 
             // Act
             var result = new Mashers.JsonMasher().Mash(input, filter);
 
             // Assert
             Json.Array(result)
-                .DeepEqual(ParseJson(expectedOutputJson))
+                .DeepEqual(expectedOutputJson.AsJson())
                 .Should().BeTrue();
         }
 
-        private static Json ParseJson(string json)
-            => JsonDocument.Parse(json).AsJson();
-
         private static IEnumerable<TestItem> GetTestData()
             => Enumerable.Empty<TestItem>()
-                .Concat(SimplePrograms());
+                .Concat(SimplePrograms())
+                .Concat(AssignmentPrograms());
 
         private static IEnumerable<TestItem> SimplePrograms()
         {
@@ -71,6 +69,14 @@ namespace JsonMasher.Tests.EndToEnd
                 ".a.b | . + 2",
                 "{ \"a\": { \"b\": 1, \"c\": 2 }, \"d\": 2}",
                 "[3]");
+        }
+
+        private static IEnumerable<TestItem> AssignmentPrograms()
+        {
+            yield return new TestItem(
+                ".[][] |= . + 2",
+                "[[1, 2], [3, 4]]",
+                "[[[3, 4], [5, 6]]]");
         }
     }
 }

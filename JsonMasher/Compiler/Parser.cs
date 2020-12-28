@@ -72,7 +72,19 @@ namespace JsonMasher.Compiler
 
         private IJsonMasherOperator ParsePipeTerm(State state)
         {
-            return ParseRelationalTerm(state);
+            var t1 = ParseRelationalTerm(state);
+            if (state.Current == Tokens.PipeEquals) {
+                state.Advance();
+                var t2 = ParseRelationalTerm(state);
+                return new PipeAssignment {
+                    PathExpression = t1,
+                    Masher = t2
+                };
+            }
+            else
+            {
+                return t1;
+            }
         }
 
         private IJsonMasherOperator ParseRelationalTerm(State state)

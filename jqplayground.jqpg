@@ -94,5 +94,8 @@ jq ''
 
 jq -n 'range(3) as $test | [$test]'
 
-jq -n '[range(3)] | empty += 2'
+jq -n '[1, 2] | .[] += 2'
 
+jq -n '1 | . |= . + range(1; 3)'
+
+jq -n '{ a: 1, b: 2} | .[] |= . + 1'

@@ -54,6 +54,11 @@ namespace JsonMasher.Compiler
                     yield return Tokens.EqualsEquals;
                     state.Advance(2);
                 }
+                else if (state.Char == '|' && state.NextChar == '=')
+                {
+                    yield return Tokens.PipeEquals;
+                    state.Advance(2);
+                }
                 else 
                 {
                     switch (state.Char)
