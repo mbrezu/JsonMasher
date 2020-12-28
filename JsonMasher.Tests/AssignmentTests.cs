@@ -101,5 +101,53 @@ namespace JsonMasher.Tests
                 .DeepEqual("[{ \"a\": 3, \"b\": 4 }]".AsJson())
                 .Should().BeTrue();
         }
+
+        [Fact]
+        public void ObjectKeyAssignment()
+        {
+            // Arrange
+            var data = "{ \"a\": 1, \"b\": 2 }".AsJson();
+            var op = new PipeAssignment {
+                PathExpression = new StringSelector { Key = "a"},
+                Masher = new BinaryOperator {
+                    First = Identity.Instance,
+                    Second = new Literal { Value = Json.Number(2) },
+                    Operator = Plus.Operator
+                }
+            };
+
+            // Act
+            var result = op.RunAsSequence(data);
+
+            // Assert
+            Json.Array(result)
+                .DeepEqual("[{ \"a\": 3, \"b\": 2 }]".AsJson())
+                .Should().BeTrue();
+        }
+
+        [Fact]
+        public void ObjectMultiKeyPathAssignment()
+        {
+            // Arrange
+            var data = "{ \"a\": { \"c\": 1 }, \"b\": 2 }".AsJson();
+            var op = new PipeAssignment {
+                PathExpression = Compose.AllParams(
+                    new StringSelector { Key = "a" },
+                    new StringSelector { Key = "c" }),
+                Masher = new BinaryOperator {
+                    First = Identity.Instance,
+                    Second = new Literal { Value = Json.Number(2) },
+                    Operator = Plus.Operator
+                }
+            };
+
+            // Act
+            var result = op.RunAsSequence(data);
+
+            // Assert
+            Json.Array(result)
+                .DeepEqual("[{ \"a\": { \"c\": 3 }, \"b\": 2 }]".AsJson())
+                .Should().BeTrue();
+        }
     }
 }

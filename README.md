@@ -1,6 +1,6 @@
 # JsonMasher
 
-A project to study [jq](https://stedolan.github.io/jq/) by re-implementing it in C#/.NET 5.0.
+A project to study [jq](https://stedolan.github.io/jq/) by re-implementing it in C# 9.0/.NET 5.0.
 
 ## Get started
 

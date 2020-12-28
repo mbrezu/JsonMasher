@@ -445,6 +445,8 @@ namespace JsonMasher.Tests
         // TODO: parser
         // TODO: pretty printing (FancyPen?) for Json values
         // TODO: pretty printing operators
+        // TODO: assignments
+        // TODO: switch to System.Collections.Immutable
         // TODO: n-ary operators
         // TODO: / (for numbers)
         // TODO: relational operators: <, <=, ==, >, >=
@@ -452,7 +454,6 @@ namespace JsonMasher.Tests
         // TODO: if/elif
         // TODO: has(key), keys, map, map_values
         // TODO: del, to_entries, from_entries, select, error, transpose, range
-        // TODO: assignments
         // TODO: min/max/group/sort
         // TODO: .. (recurse)
         // TODO: variable bindings (set in context?)
