@@ -24,7 +24,8 @@ namespace JsonMasher.Compiler
             DotDot,
             Plus,
             Minus,
-            Times
+            Times,
+            EqualsEquals,
         }
 
         private enum KeywordType
@@ -79,6 +80,9 @@ namespace JsonMasher.Compiler
 
         private static Token _dotDot = new SimpleToken(SimpleTokenType.DotDot);
         public static Token DotDot => _dotDot;
+
+        private static Token _equalsEquals = new SimpleToken(SimpleTokenType.EqualsEquals);
+        public static Token EqualsEquals => _equalsEquals;
 
         public static Token Number(double value) => new Number(value);
         public static Token Identifier(string id) => new Identifier(id);

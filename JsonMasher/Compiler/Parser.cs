@@ -72,7 +72,25 @@ namespace JsonMasher.Compiler
 
         private IJsonMasherOperator ParsePipeTerm(State state)
         {
-            return ParseArithLowerTerm(state);
+            return ParseRelationalTerm(state);
+        }
+
+        private IJsonMasherOperator ParseRelationalTerm(State state)
+        {
+            var t1 = ParseArithLowerTerm(state);
+            if (state.Current == Tokens.EqualsEquals)
+            {
+                state.Advance();
+                return new BinaryOperator {
+                    First = t1,
+                    Second = ParseArithLowerTerm(state),
+                    Operator = EqualsEquals.Operator
+                };
+            }
+            else
+            {
+                return t1;
+            }
         }
 
         private IJsonMasherOperator ParseArithLowerTerm(State state)

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
@@ -40,6 +41,7 @@ namespace JsonMasher.Tests.Compiler
                 .Concat(PlusMinusTests())
                 .Concat(TimesTests())
                 .Concat(ParenTests())
+                .Concat(RelationalTests())
                 .Concat(PipeTests());
 
         private static IEnumerable<TestItem> DotTests()
@@ -149,6 +151,15 @@ namespace JsonMasher.Tests.Compiler
                 },
                 Second = new Literal { Value = Json.Number(2) },
                 Operator = Times.Operator
+            });
+        }
+
+        private static IEnumerable<TestItem> RelationalTests()
+        {
+            yield return new TestItem("1 == 2", new BinaryOperator {
+                First = new Literal { Value = Json.Number(1) },
+                Second = new Literal { Value = Json.Number(2) },
+                Operator = EqualsEquals.Operator
             });
         }
 

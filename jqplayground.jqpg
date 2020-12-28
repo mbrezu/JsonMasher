@@ -91,3 +91,8 @@ range(3) | test
 
 jq ''
 1
+
+jq -n 'range(3) as $test | [$test]'
+
+jq -n '[range(3)] | empty += 2'
+
