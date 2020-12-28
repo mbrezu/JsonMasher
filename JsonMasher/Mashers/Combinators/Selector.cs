@@ -16,7 +16,7 @@ namespace JsonMasher.Mashers.Combinators
             var indices = Index.Mash(json, context);
             return json.Type switch {
                 JsonValueType.Array => ZipDownArray(indices, json, context),
-                //JsonValueType.Object => ZipDownObject(indices, json, context),
+                JsonValueType.Object => ZipDownObject(indices, json, context),
                 _ => throw new InvalidOperationException()
             };
         }
@@ -44,10 +44,23 @@ namespace JsonMasher.Mashers.Combinators
             return Json.Array(jsonValues);
         }
 
-        // private ZipStage ZipDownObject(IEnumerable<Json> indices, Json json, IMashContext context)
-        // {
-        //     throw new NotImplementedException();
-        // }
+        private ZipStage ZipDownObject(IEnumerable<Json> indices, Json json, IMashContext context)
+        {
+            if (!indices.All(x => x.Type == JsonValueType.String))
+            {
+                throw new InvalidOperationException();
+            }
+            var stringIndices = indices.Select(i => i.GetString()).ToArray();
+            var parts = stringIndices.Select(i => json.GetElementAt(i));
+            return new ZipStage(
+                values => RecombineObject(json, stringIndices, values.ToArray()),
+                parts);
+        }
+
+        private Json RecombineObject(Json json, string[] stringIndices, Json[] values)
+            => Json.Object(
+                json.EnumerateObject()
+                .Concat(stringIndices.Zip(values, (i, v) => new JsonProperty(i, v))));
 
         private IEnumerable<Json> MashOne(Json json, IMashContext context)
             => Index.Mash(json, context).Select(index => 
