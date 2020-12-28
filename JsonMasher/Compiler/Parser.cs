@@ -52,25 +52,52 @@ namespace JsonMasher.Compiler
                 return Identity.Instance;
             }
             var state = new State(new Lexer().Tokenize(program));
-            return ParseFilter(state);
+            var result = ParseFilter(state);
+            if (!state.AtEnd)
+            {
+                throw new InvalidOperationException();
+            }
+            return result;
         }
 
         private IJsonMasherOperator ParseFilter(State state)
+            => ChainIntoArray(
+                state,
+                ParsePipeTerm, 
+                token => token == Tokens.Pipe,
+                Compose.All);
+
+        private IJsonMasherOperator ChainIntoArray(
+            State state, 
+            Func<State, IJsonMasherOperator> termParser, 
+            Func<Token, bool> isLinkToken,
+            Func<IEnumerable<IJsonMasherOperator>, IJsonMasherOperator> combiner)
         {
-            var term1 = ParsePipeTerm(state);
-            if (state.Current == Tokens.Pipe)
+            var terms = new List<IJsonMasherOperator>();
+            terms.Add(termParser(state));
+            while (isLinkToken(state.Current))
             {
                 state.Advance();
-                var term2 = ParseFilter(state);
-                return Compose.AllParams(term1, term2);
+                terms.Add(termParser(state));
+            }
+            if (terms.Count > 1)
+            {
+                return combiner(terms);
             }
             else
             {
-                return term1;
+                return terms[0];
             }
         }
 
         private IJsonMasherOperator ParsePipeTerm(State state)
+            => ChainIntoArray(
+                state,
+                ParseCommaTerm, 
+                token => token == Tokens.Comma,
+                Concat.All);
+
+        private IJsonMasherOperator ParseCommaTerm(State state)
         {
             var t1 = ParseRelationalTerm(state);
             if (state.Current == Tokens.PipeEquals) {
@@ -87,23 +114,12 @@ namespace JsonMasher.Compiler
             }
         }
 
-        private IJsonMasherOperator ParseRelationalTerm(State state)
-        {
-            var t1 = ParseArithLowerTerm(state);
-            if (state.Current == Tokens.EqualsEquals)
-            {
-                state.Advance();
-                return new BinaryOperator {
-                    First = t1,
-                    Second = ParseArithLowerTerm(state),
-                    Operator = EqualsEquals.Operator
-                };
-            }
-            else
-            {
-                return t1;
-            }
-        }
+        private IJsonMasherOperator ParseRelationalTerm(State state) 
+            => ChainAssocLeft(
+                state,
+                ParseArithLowerTerm,
+                op => op == Tokens.EqualsEquals,
+                op => EqualsEquals.Operator);
 
         private IJsonMasherOperator ParseArithLowerTerm(State state)
         {

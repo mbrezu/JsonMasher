@@ -42,6 +42,7 @@ namespace JsonMasher.Tests.Compiler
                 .Concat(TimesTests())
                 .Concat(ParenTests())
                 .Concat(RelationalTests())
+                .Concat(CommaTests())
                 .Concat(AssignmentTests())
                 .Concat(PipeTests());
 
@@ -181,6 +182,30 @@ namespace JsonMasher.Tests.Compiler
             });
         }
 
+        private static IEnumerable<TestItem> CommaTests()
+        {
+            yield return new TestItem("1, 2", Concat.AllParams(
+                new Literal { Value = Json.Number(1) },
+                new Literal { Value = Json.Number(2) }
+            ));
+            yield return new TestItem("1, 2, \"a\"", Concat.AllParams(
+                new Literal { Value = Json.Number(1) },
+                new Literal { Value = Json.Number(2) },
+                new Literal { Value = Json.String("a") }
+            ));
+            yield return new TestItem(
+                "1, 2, \"a\" | . | 3, 4", 
+                Compose.AllParams(
+                    Concat.AllParams(
+                        new Literal { Value = Json.Number(1) },
+                        new Literal { Value = Json.Number(2) },
+                        new Literal { Value = Json.String("a") }),
+                    Identity.Instance,
+                    Concat.AllParams(
+                        new Literal { Value = Json.Number(3) },
+                        new Literal { Value = Json.Number(4) })));
+        }
+
         private static IEnumerable<TestItem> AssignmentTests()
         {
             yield return new TestItem(". |= . + 2", new PipeAssignment {
@@ -191,6 +216,23 @@ namespace JsonMasher.Tests.Compiler
                     Operator = Plus.Operator
                 }
             });
+            yield return new TestItem(". |= . + 2 | . |= . + 2", Compose.AllParams(
+                new PipeAssignment {
+                    PathExpression = Identity.Instance,
+                    Masher = new BinaryOperator {
+                        First = Identity.Instance,
+                        Second = new Literal { Value = Json.Number(2) },
+                        Operator = Plus.Operator
+                    }
+                },
+                new PipeAssignment {
+                    PathExpression = Identity.Instance,
+                    Masher = new BinaryOperator {
+                        First = Identity.Instance,
+                        Second = new Literal { Value = Json.Number(2) },
+                        Operator = Plus.Operator
+                    }
+                }));
         }
 
         private static IEnumerable<TestItem> PipeTests()
@@ -200,6 +242,12 @@ namespace JsonMasher.Tests.Compiler
                 Identity.Instance));
 
             yield return new TestItem(". | . | .", Compose.AllParams(
+                Identity.Instance,
+                Identity.Instance,
+                Identity.Instance));
+
+            yield return new TestItem(". | . | . | .", Compose.AllParams(
+                Identity.Instance,
                 Identity.Instance,
                 Identity.Instance,
                 Identity.Instance));
