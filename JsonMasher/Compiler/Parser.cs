@@ -175,33 +175,52 @@ namespace JsonMasher.Compiler
         private IJsonMasherOperator ParseDot(State state)
         {
             state.Advance();
-            if (state.Current is Identifier id)
+            var terms = new List<IJsonMasherOperator>();
+            if (state.Current == Tokens.OpenSquareParen)
             {
-                return ChainSelectors(state, ParseStringSelector(state, id.Id));
+                terms.Add(ParseSelector(state));
             }
-            else if (state.Current == Tokens.OpenSquareParen)
+            else if (state.Current is Identifier identifier)
             {
-                return ChainSelectors(state, ParseSelector(state));
+                state.Advance();
+                terms.Add(new StringSelector { Key = identifier.Id });
+            }
+            else
+            {
+                terms.Add(Identity.Instance);
+            }
+            while (state.Current == Tokens.Dot || state.Current == Tokens.OpenSquareParen)
+            {
+                if (state.Current == Tokens.Dot)
+                {
+                    terms.Add(ParseDotOrStringSelector(state));
+                }
+                else if (state.Current == Tokens.OpenSquareParen)
+                {
+                    terms.Add(ParseSelector(state));
+                }
+            }
+            if (terms.Count > 1)
+            {
+                return Compose.All(terms);
+            }
+            else
+            {
+                return terms[0];
+            }
+        }
+
+        private IJsonMasherOperator ParseDotOrStringSelector(State state)
+        {
+            state.Match(Tokens.Dot);
+            if (state.Current is Identifier identifier)
+            {
+                state.Advance();
+                return new StringSelector { Key = identifier.Id };
             }
             else
             {
                 return Identity.Instance;
-            }
-        }
-
-        private IJsonMasherOperator ChainSelectors(State state, IJsonMasherOperator first)
-        {
-            if (state.Current == Tokens.Dot)
-            {
-                return Compose.AllParams(first, ParseDot(state));
-            }
-            if (state.Current == Tokens.OpenSquareParen)
-            {
-                return Compose.AllParams(first, ParseSelector(state));
-            }
-            else
-            {
-                return first;
             }
         }
 
@@ -219,12 +238,6 @@ namespace JsonMasher.Compiler
                 state.Match(Tokens.CloseSquareParen);
                 return new Selector { Index = filter };
             }
-        }
-
-        private IJsonMasherOperator ParseStringSelector(State state, string id)
-        {
-            state.Advance();
-            return new StringSelector { Key = id };
         }
     }
 }

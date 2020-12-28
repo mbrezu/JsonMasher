@@ -63,6 +63,23 @@ namespace JsonMasher.Tests.Compiler
             yield return new TestItem(".[.].a", Compose.AllParams(
                 new Selector { Index = Identity.Instance },
                 new StringSelector { Key = "a" }));
+            yield return new TestItem(".[.].a[][]", Compose.AllParams(
+                new Selector { Index = Identity.Instance },
+                new StringSelector { Key = "a" },
+                Enumerate.Instance,
+                Enumerate.Instance));
+            yield return new TestItem(".[][]", Compose.AllParams(
+                Enumerate.Instance,
+                Enumerate.Instance));
+            yield return new TestItem(".[][][]", Compose.AllParams(
+                Enumerate.Instance,
+                Enumerate.Instance,
+                Enumerate.Instance));
+            yield return new TestItem(".[][][][]", Compose.AllParams(
+                Enumerate.Instance,
+                Enumerate.Instance,
+                Enumerate.Instance,
+                Enumerate.Instance));
         }
 
         private static IEnumerable<TestItem> LiteralTests()
