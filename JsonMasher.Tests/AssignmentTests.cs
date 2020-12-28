@@ -149,5 +149,30 @@ namespace JsonMasher.Tests
                 .DeepEqual("[{ \"a\": { \"c\": 3 }, \"b\": 2 }]".AsJson())
                 .Should().BeTrue();
         }
+
+        [Fact]
+        public void ArrayIndexSelectorAssignment()
+        {
+            // Arrange
+            var data = "[[1, 2], [3, 4]]".AsJson();
+            var op = new PipeAssignment {
+                PathExpression = Compose.AllParams(
+                    Enumerate.Instance,
+                    new Selector { Index = new Literal { Value = Json.Number(0) } }),
+                Masher = new BinaryOperator {
+                    First = Identity.Instance,
+                    Second = new Literal { Value = Json.Number(2) },
+                    Operator = Plus.Operator
+                }
+            };
+
+            // Act
+            var result = op.RunAsSequence(data);
+
+            // Assert
+            Json.Array(result)
+                .DeepEqual("[[[3, 2], [5, 4]]]".AsJson())
+                .Should().BeTrue();
+        }
     }
 }

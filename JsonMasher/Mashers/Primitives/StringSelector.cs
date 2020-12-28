@@ -11,12 +11,6 @@ namespace JsonMasher.Mashers.Primitives
         public IEnumerable<Json> Mash(Json json, IMashContext context)
             => MashOne(json).AsEnumerable();
 
-        private Json MashOne(Json json)
-            => json.Type switch {
-                JsonValueType.Object => json.GetElementAt(Key),
-                _ => throw new InvalidOperationException()
-            };
-
         public ZipStage ZipDown(Json json, IMashContext context)
         {
             if (json.Type == JsonValueType.Object)
@@ -32,5 +26,11 @@ namespace JsonMasher.Mashers.Primitives
                 throw new InvalidOperationException();
             }
         }
+
+        private Json MashOne(Json json)
+            => json.Type switch {
+                JsonValueType.Object => json.GetElementAt(Key),
+                _ => throw new InvalidOperationException()
+            };
     }
 }
