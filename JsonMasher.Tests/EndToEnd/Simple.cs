@@ -96,6 +96,10 @@ namespace JsonMasher.Tests.EndToEnd
                 ".[0,1] |= . + 2",
                 "[1, 2, 3, 4]",
                 "[[3, 4, 3, 4]]");
+            yield return new TestItem(
+                "(.[0] |= . + 2 | .[0]), .[0]",
+                "[1, 2]",
+                "[3, 1]");
         }
     }
 }
