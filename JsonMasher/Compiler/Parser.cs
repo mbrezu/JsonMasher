@@ -10,10 +10,24 @@ namespace JsonMasher.Compiler
 {
     public class Parser : IParser
     {
+        public class Environment
+        {
+            Dictionary<string, Builtin> _entries = new();
+
+            public Environment()
+            {
+                _entries["empty"] = Empty.Builtin;
+            }
+
+            public Builtin GetBuiltin(string name) => _entries[name];
+        }
+
         class State
         {
             private Token[] _tokens;
             private int _index;
+
+            private Environment _environment = new();
 
             public State(IEnumerable<Token> tokens)
             {
@@ -35,7 +49,7 @@ namespace JsonMasher.Compiler
                 return this;
             }
 
-            internal void Match(Token expected)
+            public void Match(Token expected)
             {
                 if (Current != expected)
                 {
@@ -43,6 +57,8 @@ namespace JsonMasher.Compiler
                 }
                 Advance();
             }
+
+            public Builtin GetBuiltin(string name) => _environment.GetBuiltin(name);
         }
 
         public IJsonMasherOperator Parse(string program)
@@ -242,6 +258,7 @@ namespace JsonMasher.Compiler
                     "null" => new Literal(Json.Null),
                     "true" => new Literal(Json.True),
                     "false" => new Literal(Json.False),
+                    string builtin => new FunctionCall(state.GetBuiltin(builtin)),
                     _ => throw new InvalidOperationException()
                 };
             }

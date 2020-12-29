@@ -56,7 +56,8 @@ namespace JsonMasher.Tests.Compiler
                 .Concat(CommaTests())
                 .Concat(AssignmentTests())
                 .Concat(VariablesTest())
-                .Concat(PipeTests());
+                .Concat(PipeTests())
+                .Concat(EmptyTests());
 
         private static IEnumerable<TestItem> DotTests()
         {
@@ -453,6 +454,11 @@ namespace JsonMasher.Tests.Compiler
                     new StringSelector { Key = "c"}
                 ),
                 new StringSelector { Key = "d" }));
+        }
+
+        private static IEnumerable<TestItem> EmptyTests()
+        {
+            yield return new TestItem("empty", new FunctionCall(Empty.Builtin));
         }
     }
 }

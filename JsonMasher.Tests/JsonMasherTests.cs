@@ -1,6 +1,7 @@
 using System.Linq;
 using FluentAssertions;
 using JsonMasher.Mashers.Combinators;
+using JsonMasher.Mashers.Operators;
 using JsonMasher.Mashers.Primitives;
 using Xunit;
 
@@ -127,7 +128,7 @@ namespace JsonMasher.Tests
         {
             // Arrange
             var data = MakeNestedArray();
-            var op = Empty.Instance;
+            var op = new FunctionCall(Empty.Builtin);
 
             // Act
             var result = op.RunAsSequence(data);
@@ -141,7 +142,7 @@ namespace JsonMasher.Tests
         {
             // Arrange
             var data = MakeNestedArray();
-            var op = Compose.AllParams(Empty.Instance, Identity.Instance);
+            var op = Compose.AllParams(new FunctionCall(Empty.Builtin), Identity.Instance);
 
             // Act
             var result = op.RunAsSequence(data);
@@ -155,7 +156,7 @@ namespace JsonMasher.Tests
         {
             // Arrange
             var data = MakeNestedArray();
-            var op = Compose.AllParams(Identity.Instance, Empty.Instance);
+            var op = Compose.AllParams(Identity.Instance, new FunctionCall(Empty.Builtin));
 
             // Act
             var result = op.RunAsSequence(data);

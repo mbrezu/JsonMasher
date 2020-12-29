@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
@@ -118,6 +117,10 @@ namespace JsonMasher.Tests.EndToEnd
             yield return new TestItem(". > 3 and . < 5 or . > 7 and . < 9", "4", "[true]");
             yield return new TestItem(". > 3 and . < 5 or . > 7 and . < 9", "8", "[true]");
             yield return new TestItem(". > 3 and . < 5 or . > 7 and . < 9", "6", "[false]");
+
+            yield return new TestItem("empty", "null", "[]");
+            yield return new TestItem(". | empty", "[1, 2, 3]", "[]");
+            yield return new TestItem("empty | .", "[1, 2, 3]", "[]");
         }
 
         private static IEnumerable<TestItem> IfThenElsePrograms()
