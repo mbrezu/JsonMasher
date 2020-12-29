@@ -38,6 +38,7 @@ namespace JsonMasher.Tests.Compiler
             => Enumerable.Empty<TestItem>()
                 .Concat(DotTests())
                 .Concat(LiteralTests())
+                .Concat(ArrayConstructionTests())
                 .Concat(PlusMinusTests())
                 .Concat(TimesTests())
                 .Concat(ParenTests())
@@ -82,6 +83,24 @@ namespace JsonMasher.Tests.Compiler
                 Enumerate.Instance,
                 Enumerate.Instance,
                 Enumerate.Instance));
+        }
+
+        private static IEnumerable<TestItem> ArrayConstructionTests()
+        {
+            yield return new TestItem("[1]", new ConstructArray {
+                Elements = new Literal { Value = Json.Number(1) }
+            });
+            yield return new TestItem("[1, 2]", new ConstructArray {
+                Elements = Concat.AllParams(
+                    new Literal { Value = Json.Number(1) },
+                    new Literal { Value = Json.Number(2) })
+            });
+            yield return new TestItem("[1, 2, \"a\"]", new ConstructArray {
+                Elements = Concat.AllParams(
+                    new Literal { Value = Json.Number(1) },
+                    new Literal { Value = Json.Number(2) },
+                    new Literal { Value = Json.String("a") })
+            });
         }
 
         private static IEnumerable<TestItem> LiteralTests()

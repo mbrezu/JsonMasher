@@ -218,6 +218,13 @@ namespace JsonMasher.Compiler
                 state.Advance();
                 return new GetVariable { Name = variableIdentifier.Id };
             }
+            else if (state.Current == Tokens.OpenSquareParen)
+            {
+                state.Advance();
+                var elements = ParseFilter(state);
+                state.Match(Tokens.CloseSquareParen);
+                return new ConstructArray { Elements = elements };
+            }
             else if (state.Current == Tokens.OpenParen)
             {
                 state.Advance();
