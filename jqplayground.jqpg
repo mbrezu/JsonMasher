@@ -104,4 +104,8 @@ jq -n 'range(3) | null'
 
 jq -n '[1, 2] | (.[0] += 2 | .[0]), .[0]'
 
-jq -n '1, 2 as $test | $test'
+jq -n '1, 2 as $test | $test + 2'
+
+jq -n '{a:1}'
+
+jq -n '{a:1} | ."a"'

@@ -1,6 +1,6 @@
 # Things to do next
 
-- [ ] object construction
+- [ ] jq -n '{a:1} | ."a"'
 - [ ] pretty printing (FancyPen?) for Json values
 - [ ] pretty printing operators
 - [ ] assignments WIP

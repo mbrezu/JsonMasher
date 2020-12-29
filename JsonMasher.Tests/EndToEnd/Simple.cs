@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
@@ -36,7 +37,8 @@ namespace JsonMasher.Tests.EndToEnd
         private static IEnumerable<TestItem> GetTestData()
             => Enumerable.Empty<TestItem>()
                 .Concat(SimplePrograms())
-                .Concat(AssignmentPrograms());
+                .Concat(AssignmentPrograms())
+                .Concat(BindingPrograms());
 
         private static IEnumerable<TestItem> SimplePrograms()
         {
@@ -78,6 +80,21 @@ namespace JsonMasher.Tests.EndToEnd
                 ".a.b as $test | $test | $test + 2",
                 "{ \"a\": { \"b\": 1, \"c\": 2 }, \"d\": 2}",
                 "[3]");
+
+            yield return new TestItem(
+                "{a:1}",
+                "null",
+                "[{\"a\":1}]");
+
+            yield return new TestItem(
+                ".[] | {a:.}",
+                "[1, 2]",
+                "[{\"a\":1}, {\"a\":2}]");
+
+            yield return new TestItem(
+                "{a:., b:.[]}",
+                "[1, 2]",
+                "[{\"a\": [1, 2], \"b\": 1}, {\"a\": [1, 2], \"b\": 2}]");
         }
 
         private static IEnumerable<TestItem> AssignmentPrograms()
@@ -110,6 +127,14 @@ namespace JsonMasher.Tests.EndToEnd
                 "(.[0] |= . + 2 | .[0]), .[0]",
                 "[1, 2]",
                 "[3, 1]");
+        }
+
+        private static IEnumerable<TestItem> BindingPrograms()
+        {
+            yield return new TestItem(
+                "1, 2 as $test | $test",
+                "null",
+                "[1, 2]");
         }
     }
 }

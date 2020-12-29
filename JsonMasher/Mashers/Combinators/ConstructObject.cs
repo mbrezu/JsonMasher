@@ -1,16 +1,17 @@
 using System.Collections.Generic;
+using System.Linq;
 
 namespace JsonMasher.Mashers.Combinators
 {
+    public record PropertyDescriptor(string Key, IJsonMasherOperator Operator);
+
     public class ConstructObject : IJsonMasherOperator
     {
-        public record PropertyDescriptor(string Key, IJsonMasherOperator Operator);
+        public IReadOnlyList<PropertyDescriptor> Descriptors { get; init; }
 
-        private PropertyDescriptor[] _propertyDescriptors;
-
-        public ConstructObject(params PropertyDescriptor[] propertyDescriptors)
+        public ConstructObject(params PropertyDescriptor[] descriptors)
         {
-            _propertyDescriptors = propertyDescriptors;
+            Descriptors = descriptors.ToList();
         }
 
         public IEnumerable<Json> Mash(Json json, IMashContext context)
@@ -20,13 +21,13 @@ namespace JsonMasher.Mashers.Combinators
             Json json, IMashContext context, List<JsonProperty> properties)
         {
             int level = properties.Count;
-            if (level == _propertyDescriptors.Length)
+            if (level == Descriptors.Count)
             {
                 yield return Json.Object(properties);
             }
             else
             {
-                var descriptor = _propertyDescriptors[level];
+                var descriptor = Descriptors[level];
                 foreach (var value in descriptor.Operator.Mash(json, context))
                 {
                     properties.Add(new JsonProperty(descriptor.Key, value));

@@ -30,7 +30,10 @@ namespace JsonMasher.Tests.Compiler
             // Assert
             result.Should().BeEquivalentTo(
                 expectation,
-                options => options.RespectingRuntimeTypes());
+                options => options
+                    .RespectingRuntimeTypes()
+                    .WithStrictOrdering()
+                    .ComparingByMembers<PropertyDescriptor>());
         }
 
         private static IEnumerable<TestItem> GetTestData()
@@ -38,6 +41,7 @@ namespace JsonMasher.Tests.Compiler
                 .Concat(DotTests())
                 .Concat(LiteralTests())
                 .Concat(ArrayConstructionTests())
+                .Concat(ObjectConstructionTests())
                 .Concat(PlusMinusTests())
                 .Concat(TimesTests())
                 .Concat(ParenTests())
@@ -100,6 +104,63 @@ namespace JsonMasher.Tests.Compiler
                     new Literal { Value = Json.Number(2) },
                     new Literal { Value = Json.String("a") })
             });
+        }
+
+        private static IEnumerable<TestItem> ObjectConstructionTests()
+        {
+            yield return new TestItem("{a:.}", new ConstructObject(
+                new PropertyDescriptor(
+                    "a", 
+                    Identity.Instance)));
+            yield return new TestItem("{a:1}", new ConstructObject(
+                new PropertyDescriptor(
+                    "a", 
+                    new Literal { Value = Json.Number(1) })));
+            yield return new TestItem("{\"a\":1}", new ConstructObject(
+                new PropertyDescriptor(
+                    "a", 
+                    new Literal { Value = Json.Number(1) })));
+            yield return new TestItem("{a:1, b:2}", new ConstructObject(
+                new PropertyDescriptor(
+                    "a", 
+                    new Literal { Value = Json.Number(1) }),
+                new PropertyDescriptor(
+                    "b", 
+                    new Literal { Value = Json.Number(2) })));
+            yield return new TestItem("{\"a\":1, b:2}", new ConstructObject(
+                new PropertyDescriptor(
+                    "a", 
+                    new Literal { Value = Json.Number(1) }),
+                new PropertyDescriptor(
+                    "b", 
+                    new Literal { Value = Json.Number(2) })));
+            yield return new TestItem("{\"a\":1, \"b\":2}", new ConstructObject(
+                new PropertyDescriptor(
+                    "a", 
+                    new Literal { Value = Json.Number(1) }),
+                new PropertyDescriptor(
+                    "b", 
+                    new Literal { Value = Json.Number(2) })));
+            yield return new TestItem("{a:1, \"b\":2}", new ConstructObject(
+                new PropertyDescriptor(
+                    "a", 
+                    new Literal { Value = Json.Number(1) }),
+                new PropertyDescriptor(
+                    "b", 
+                    new Literal { Value = Json.Number(2) })));
+            yield return new TestItem("{a:1, b: {c: 2}, d: 3}", new ConstructObject(
+                new PropertyDescriptor(
+                    "a", 
+                    new Literal { Value = Json.Number(1) }),
+                new PropertyDescriptor(
+                    "b",
+                    new ConstructObject(
+                        new PropertyDescriptor(
+                            "c", 
+                            new Literal { Value = Json.Number(2) }))),
+                new PropertyDescriptor(
+                    "d", 
+                    new Literal { Value = Json.Number(3) })));
         }
 
         private static IEnumerable<TestItem> LiteralTests()
