@@ -38,7 +38,8 @@ namespace JsonMasher.Tests.EndToEnd
                 .Concat(SimplePrograms())
                 .Concat(AssignmentPrograms())
                 .Concat(IfThenElsePrograms())
-                .Concat(BindingPrograms());
+                .Concat(BindingPrograms())
+                .Concat(ProgramsWithFunctions());
 
         private static IEnumerable<TestItem> SimplePrograms()
         {
@@ -170,6 +171,32 @@ namespace JsonMasher.Tests.EndToEnd
                 "1, 2 as $test | $test",
                 "null",
                 "[1, 2]");
+        }
+
+        private static IEnumerable<TestItem> ProgramsWithFunctions()
+        {
+            yield return new TestItem(
+                "def point(x; y): [x, y]; point(1; 2)",
+                "null",
+                "[[1, 2]]");
+            yield return new TestItem(
+                "def map(x): .[] | x; map(. + 2)",
+                "[1, 2, 3]",
+                "[3, 4, 5]");
+            yield return new TestItem(
+                @"
+def map(x): .[] | x;
+def select(x): if x then . else empty end;
+map(select(. < 2))",
+                "[1, 2, 3]",
+                "[1]");
+            yield return new TestItem(
+                @"
+def map(x): def result: .[] | x; result;
+def select(x): if x then . else empty end;
+map(select(. < 2))",
+                "[1, 2, 3]",
+                "[1]");
         }
     }
 }

@@ -22,6 +22,12 @@ namespace JsonMasher.Mashers.Combinators
             Arguments = arguments.ToList();
         }
 
+        public FunctionCall(FunctionDescriptor descriptor, List<IJsonMasherOperator> arguments)
+        {
+            Descriptor = descriptor;
+            Arguments = arguments;
+        }
+
         public IEnumerable<Json> Mash(Json json, IMashContext context)
             => Descriptor switch {
                 FunctionName name => GetThenCallCallable(name.Name, json, context),

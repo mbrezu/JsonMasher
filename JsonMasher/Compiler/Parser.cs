@@ -52,12 +52,75 @@ namespace JsonMasher.Compiler
                 return Identity.Instance;
             }
             var state = new State(new Lexer().Tokenize(program));
-            var result = ParseFilter(state);
+            var result = ParseDefinitionOrFilter(state);
             if (!state.AtEnd)
             {
                 throw new InvalidOperationException();
             }
             return result;
+        }
+
+        private IJsonMasherOperator ParseDefinitionOrFilter(State state)
+        {
+            if (state.Current == Tokens.Keywords.Def)
+            {
+                var def = ParseDefinition(state);
+                if (state.AtEnd)
+                {
+                    return def;
+                }
+                else
+                {
+                    return Compose.AllParams(def, ParseDefinitionOrFilter(state));
+                }
+            }
+            else
+            {
+                return ParseFilter(state);
+            }
+        }
+
+        private IJsonMasherOperator ParseDefinition(State state)
+        {
+            state.Match(Tokens.Keywords.Def);
+            var name = state.Current switch {
+                Identifier identifier => identifier.Id,
+                _ => throw new InvalidOperationException()
+            };
+            state.Advance();
+            var arguments = new List<string>();
+            if (state.Current == Tokens.OpenParen)
+            {
+                state.Advance();
+                if (state.Current == Tokens.CloseParen)
+                {
+                    throw new InvalidOperationException();
+                }
+                while (state.Current != Tokens.CloseParen)
+                {
+                    arguments.Add(state.Current switch {
+                        Identifier identifier => identifier.Id,
+                        _ => throw new InvalidOperationException()
+                    });
+                    state.Advance();
+                    if (state.Current == Tokens.Semicolon) {
+                        state.Advance();
+                        if (state.Current == Tokens.CloseParen)
+                        {
+                            throw new InvalidOperationException();
+                        }
+                    }
+                }
+                state.Match(Tokens.CloseParen);
+            }
+            state.Match(Tokens.Colon);
+            var body = ParseDefinitionOrFilter(state);
+            state.Match(Tokens.Semicolon);
+            return new FunctionDefinition {
+                Name = name,
+                Arguments = arguments.Count > 0 ? arguments : null,
+                Body = body
+            };
         }
 
         private IJsonMasherOperator ParseFilter(State state)
@@ -237,7 +300,7 @@ namespace JsonMasher.Compiler
                     "null" => new Literal(Json.Null),
                     "true" => new Literal(Json.True),
                     "false" => new Literal(Json.False),
-                    string function => new FunctionCall(new FunctionName(function)),
+                    string function => ParseFunctionCall(state, function),
                     _ => throw new InvalidOperationException()
                 };
             }
@@ -270,6 +333,37 @@ namespace JsonMasher.Compiler
             else
             {
                 throw new InvalidOperationException();
+            }
+        }
+
+        private IJsonMasherOperator ParseFunctionCall(State state, string function)
+        {
+            if (state.Current == Tokens.OpenParen)
+            {
+                state.Advance();
+                if (state.Current == Tokens.CloseParen)
+                {
+                    throw new InvalidOperationException();
+                }
+                var arguments = new List<IJsonMasherOperator>();
+                while (state.Current != Tokens.CloseParen)
+                {
+                    arguments.Add(ParseFilter(state));
+                    if (state.Current == Tokens.Semicolon)
+                    {
+                        state.Advance();
+                        if (state.Current == Tokens.CloseParen)
+                        {
+                            throw new InvalidOperationException();
+                        }
+                    }
+                }
+                state.Match(Tokens.CloseParen);
+                return new FunctionCall(new FunctionName(function), arguments);
+            }
+            else
+            {
+                return new FunctionCall(new FunctionName(function));
             }
         }
 

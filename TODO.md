@@ -1,6 +1,5 @@
 # Things to do next
 
-- [ ] parse functions definitions and function calls
 - [ ] jq -n '{a : 1 | 2}' (seems I need to be able to parse pipes inside dicts)
 - [ ] switch to System.Collections.Immutable for Json
 - [ ] pretty printing (FancyPen?) for Json values

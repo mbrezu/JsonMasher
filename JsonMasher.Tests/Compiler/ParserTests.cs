@@ -56,7 +56,8 @@ namespace JsonMasher.Tests.Compiler
                 .Concat(AssignmentTests())
                 .Concat(VariablesTest())
                 .Concat(PipeTests())
-                .Concat(EmptyTests());
+                .Concat(EmptyTests())
+                .Concat(FunctionTests());
 
         private static IEnumerable<TestItem> DotTests()
         {
@@ -460,6 +461,78 @@ namespace JsonMasher.Tests.Compiler
         private static IEnumerable<TestItem> EmptyTests()
         {
             yield return new TestItem("empty", new FunctionCall(new FunctionName("empty")));
+        }
+
+        private static IEnumerable<TestItem> FunctionTests()
+        {
+            yield return new TestItem(
+                "def test: 1;",
+                new FunctionDefinition {
+                    Name = "test",
+                    Body = new Literal(1)
+                });
+
+            yield return new TestItem(
+                "def test: 1; test",
+                Compose.AllParams(
+                    new FunctionDefinition {
+                        Name = "test",
+                        Body = new Literal(1)
+                    },
+                    new FunctionCall(new FunctionName("test"))));
+
+            yield return new TestItem(
+                "def test(a): 1 + a;",
+                new FunctionDefinition {
+                    Name = "test",
+                    Arguments = new List<string> { "a" },
+                    Body = new FunctionCall(
+                        Plus.Builtin,
+                        new Literal(1),
+                        new FunctionCall(new FunctionName("a")))
+                });
+
+            yield return new TestItem(
+                "def point(x; y): [x, y];",
+                new FunctionDefinition {
+                    Name = "point",
+                    Arguments = new List<string> { "x", "y" },
+                    Body = new ConstructArray {
+                        Elements = Concat.AllParams(
+                            new FunctionCall(new FunctionName("x")),
+                            new FunctionCall(new FunctionName("y")))
+                    }
+                });
+
+            yield return new TestItem(
+                "def point(x; y; z): [x, y, z];",
+                new FunctionDefinition {
+                    Name = "point",
+                    Arguments = new List<string> { "x", "y", "z" },
+                    Body = new ConstructArray {
+                        Elements = Concat.AllParams(
+                            new FunctionCall(new FunctionName("x")),
+                            new FunctionCall(new FunctionName("y")),
+                            new FunctionCall(new FunctionName("z")))
+                    }
+                });
+
+            yield return new TestItem(
+                "def point(x; y): [x, y]; point(1; 2)",
+                Compose.AllParams(
+                    new FunctionDefinition {
+                        Name = "point",
+                        Arguments = new List<string> { "x", "y" },
+                        Body = new ConstructArray {
+                            Elements = Concat.AllParams(
+                                new FunctionCall(new FunctionName("x")),
+                                new FunctionCall(new FunctionName("y")))
+                        }
+                    },
+                    new FunctionCall(
+                        new FunctionName("point"),
+                        new Literal(1),
+                        new Literal(2))));
         }
     }
 }

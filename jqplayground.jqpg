@@ -119,3 +119,5 @@ jq -n 'if empty | . + 2 then 1, 2 | . + 2 else empty end'
 jq -n 'def plus(a; b): [a, b]; plus(1; 2)'
 
 jq -n 'plus(1; 2)'
+
+jq -n 'def test:1; test'
