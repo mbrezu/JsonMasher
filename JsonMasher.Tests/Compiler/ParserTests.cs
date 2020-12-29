@@ -44,6 +44,7 @@ namespace JsonMasher.Tests.Compiler
                 .Concat(RelationalTests())
                 .Concat(CommaTests())
                 .Concat(AssignmentTests())
+                .Concat(VariablesTest())
                 .Concat(PipeTests());
 
         private static IEnumerable<TestItem> DotTests()
@@ -236,6 +237,20 @@ namespace JsonMasher.Tests.Compiler
                         Operator = Plus.Operator
                     }
                 }));
+        }
+
+        private static IEnumerable<TestItem> VariablesTest()
+        {
+            yield return new TestItem(". + 2 as $test | .", new Let {
+                Name = "test",
+                Value = new BinaryOperator {
+                    First = Identity.Instance,
+                    Second = new Literal { Value = Json.Number(2) },
+                    Operator = Plus.Operator
+                },
+                Body = Identity.Instance
+            });
+            yield return new TestItem("$test", new GetVariable { Name = "test" });
         }
 
         private static IEnumerable<TestItem> PipeTests()

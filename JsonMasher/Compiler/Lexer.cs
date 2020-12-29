@@ -134,7 +134,7 @@ namespace JsonMasher.Compiler
             {
                 return Number(state);
             }
-            else if (Char.IsLetter(state.Char) || state.Char == '_')
+            else if (Char.IsLetter(state.Char) || state.Char == '_' || state.Char == '$')
             {
                 return Identifier(state);
             }
@@ -167,6 +167,7 @@ namespace JsonMasher.Compiler
         private Token Identifier(State state)
         {
             state.Mark();
+            state.Advance();
             while (!state.AtEnd && (state.Char == '_' || Char.IsLetterOrDigit(state.Char)))
             {
                 state.Advance();
@@ -174,9 +175,15 @@ namespace JsonMasher.Compiler
             var id = state.GetFromMark();
             return id switch {
                 "def" => Tokens.Keywords.Def,
-                _ => Tokens.Identifier(id)
+                "as" => Tokens.Keywords.As,
+                _ => MakeIdentifier(id)
             };
         }
+
+        private Token MakeIdentifier(string id)
+            => id.StartsWith('$') 
+                ? Tokens.VariableIdentifier(id.Substring(1))
+                : Tokens.Identifier(id);
 
         private Token String(State state)
         {

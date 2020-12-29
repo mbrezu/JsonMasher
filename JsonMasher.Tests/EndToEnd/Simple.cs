@@ -68,6 +68,16 @@ namespace JsonMasher.Tests.EndToEnd
                 ".a.b | . + 2",
                 "{ \"a\": { \"b\": 1, \"c\": 2 }, \"d\": 2}",
                 "[3]");
+
+            yield return new TestItem(
+                ".a.b as $test | $test",
+                "{ \"a\": { \"b\": 1, \"c\": 2 }, \"d\": 2}",
+                "[1]");
+
+            yield return new TestItem(
+                ".a.b as $test | $test | $test + 2",
+                "{ \"a\": { \"b\": 1, \"c\": 2 }, \"d\": 2}",
+                "[3]");
         }
 
         private static IEnumerable<TestItem> AssignmentPrograms()

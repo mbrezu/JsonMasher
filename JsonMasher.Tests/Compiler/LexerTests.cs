@@ -87,11 +87,13 @@ namespace JsonMasher.Tests.Compiler
                     Tokens.Identifier("snake_case"),
                     Tokens.Comma,
                     Tokens.Identifier("PascalCase")));
+            yield return new TestItem(" $test", TokensParams(Tokens.VariableIdentifier("test")));
         }
 
         private static IEnumerable<TestItem> KeywordTests()
         {
             yield return new TestItem(" def ", TokensParams(Tokens.Keywords.Def));
+            yield return new TestItem(" as ", TokensParams(Tokens.Keywords.As));
         }
 
         private static IEnumerable<TestItem> StringTests()

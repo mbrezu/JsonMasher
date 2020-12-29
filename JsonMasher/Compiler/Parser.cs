@@ -39,7 +39,7 @@ namespace JsonMasher.Compiler
             {
                 if (Current != expected)
                 {
-                    throw new NotImplementedException();
+                    throw new InvalidOperationException();
                 }
                 Advance();
             }
@@ -93,9 +93,37 @@ namespace JsonMasher.Compiler
         private IJsonMasherOperator ParsePipeTerm(State state)
             => ChainIntoArray(
                 state,
-                ParseCommaTerm, 
+                ParseBinding, 
                 token => token == Tokens.Comma,
                 Concat.All);
+
+        private IJsonMasherOperator ParseBinding(State state)
+        {
+            var t1 = ParseCommaTerm(state);
+            if (state.Current == Tokens.Keywords.As)
+            {
+                state.Advance();
+                if (state.Current is VariableIdentifier identifier)
+                {
+                    state.Advance();
+                    state.Match(Tokens.Pipe);
+                    var body = ParseFilter(state);
+                    return new Let {
+                        Name = identifier.Id,
+                        Value = t1,
+                        Body = body
+                    };
+                }
+                else
+                {
+                    throw new InvalidOperationException();
+                }
+            }
+            else
+            {
+                return t1;
+            }
+        }
 
         private IJsonMasherOperator ParseCommaTerm(State state)
         {
@@ -184,6 +212,11 @@ namespace JsonMasher.Compiler
                     "false" => new Literal { Value = Json.False },
                     _ => throw new InvalidOperationException()
                 };
+            }
+            else if (state.Current is VariableIdentifier variableIdentifier)
+            {
+                state.Advance();
+                return new GetVariable { Name = variableIdentifier.Id };
             }
             else if (state.Current == Tokens.OpenParen)
             {

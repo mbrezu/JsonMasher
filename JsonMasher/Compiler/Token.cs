@@ -2,9 +2,10 @@ namespace JsonMasher.Compiler
 {
     public interface Token {}
 
-    public record Identifier(string Id): Token;
-    public record String(string Value): Token;
-    public record Number(double Value): Token;
+    record Identifier(string Id): Token;
+    record VariableIdentifier(string Id): Token;
+    record String(string Value): Token;
+    record Number(double Value): Token;
 
     public static class Tokens
     {
@@ -32,6 +33,7 @@ namespace JsonMasher.Compiler
         private enum KeywordType
         {
             Def,
+            As
         }
 
         private record SimpleToken(SimpleTokenType Type): Token;
@@ -90,11 +92,14 @@ namespace JsonMasher.Compiler
 
         public static Token Number(double value) => new Number(value);
         public static Token Identifier(string id) => new Identifier(id);
+        public static Token VariableIdentifier(string id) => new VariableIdentifier(id);
         public static Token String(string value) => new String(value);
         
         public static class Keywords {
             private static Token _def = new Keyword(KeywordType.Def);
             public static Token Def => _def;
+            private static Token _as = new Keyword(KeywordType.As);
+            public static Token As => _as;
         }
     }
 }

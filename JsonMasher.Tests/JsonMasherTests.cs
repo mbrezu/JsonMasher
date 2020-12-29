@@ -441,13 +441,15 @@ namespace JsonMasher.Tests
             result.DeepEqual(data).Should().BeTrue();
         }
 
-        // TODO: lexer
-        // TODO: parser
+        // TODO: proper TODO file.
+        // TODO: variable bindings (set in context?)
         // TODO: pretty printing (FancyPen?) for Json values
         // TODO: pretty printing operators
-        // TODO: assignments
+        // TODO: assignments WIP
+        // TODO: lexer/parser tokens position information for errors
+        //       using Object.ReferenceEquals and RuntimeHelpers.GetHashCode for keys on IJsonMasherOperator
         // TODO: switch to System.Collections.Immutable
-        // TODO: n-ary operators
+        // TODO: n-ary operators/builtins (replace current BinaryOperator with Builtin)
         // TODO: / (for numbers)
         // TODO: relational operators: <, <=, ==, >, >=
         // TODO: boolean operators: and, or, not
@@ -456,7 +458,6 @@ namespace JsonMasher.Tests
         // TODO: del, to_entries, from_entries, select, error, transpose, range
         // TODO: min/max/group/sort
         // TODO: .. (recurse)
-        // TODO: variable bindings (set in context?)
         // TODO: error handling
         // TODO: stack trace
         // TODO: documentation
