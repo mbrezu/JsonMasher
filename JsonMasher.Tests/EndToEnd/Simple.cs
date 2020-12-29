@@ -110,9 +110,9 @@ namespace JsonMasher.Tests.EndToEnd
 
             yield return new TestItem(". > 3 and . < 4", "3.5", "[true]");
             yield return new TestItem(". > 3 and . < 4", "3", "[false]");
-            yield return new TestItem(". < 3 or not(. < 4)", "3.5", "[false]");
-            yield return new TestItem(". < 3 or not(. < 4)", "2", "[true]");
-            yield return new TestItem(". < 3 or not(. < 4)", "5", "[true]");
+            yield return new TestItem(". < 3 or (. < 4 | not)", "3.5", "[false]");
+            yield return new TestItem(". < 3 or (. < 4 | not)", "2", "[true]");
+            yield return new TestItem(". < 3 or (. < 4 | not)", "5", "[true]");
 
             yield return new TestItem(". > 3 and . < 5 or . > 7 and . < 9", "4", "[true]");
             yield return new TestItem(". > 3 and . < 5 or . > 7 and . < 9", "8", "[true]");

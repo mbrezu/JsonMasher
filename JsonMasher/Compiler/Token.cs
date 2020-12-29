@@ -41,7 +41,6 @@ namespace JsonMasher.Compiler
             As,
             And,
             Or,
-            Not,
             If,
             Then,
             Else,
@@ -132,8 +131,6 @@ namespace JsonMasher.Compiler
             public static Token And => _and;
             private static Token _or = new Keyword(KeywordType.Or);
             public static Token Or => _or;
-            private static Token _not = new Keyword(KeywordType.Not);
-            public static Token Not => _not;
             private static Token _if = new Keyword(KeywordType.If);
             public static Token If => _if;
             private static Token _then = new Keyword(KeywordType.Then);

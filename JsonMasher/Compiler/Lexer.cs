@@ -200,7 +200,6 @@ namespace JsonMasher.Compiler
                 "as" => Tokens.Keywords.As,
                 "and" => Tokens.Keywords.And,
                 "or" => Tokens.Keywords.Or,
-                "not" => Tokens.Keywords.Not,
                 "if" => Tokens.Keywords.If,
                 "then" => Tokens.Keywords.Then,
                 "else" => Tokens.Keywords.Else,

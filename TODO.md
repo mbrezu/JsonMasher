@@ -1,8 +1,7 @@
 # Things to do next
 
-- [ ] not is not a keyword, but a builtin filter
-- [ ] jq -n '{a : 1 | 2}' (seems I need to be able to parse pipes inside dicts)
 - [ ] parse functions definitions and function calls
+- [ ] jq -n '{a : 1 | 2}' (seems I need to be able to parse pipes inside dicts)
 - [ ] switch to System.Collections.Immutable for Json
 - [ ] pretty printing (FancyPen?) for Json values
 - [ ] pretty printing operators

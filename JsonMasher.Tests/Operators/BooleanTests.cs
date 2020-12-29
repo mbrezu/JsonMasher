@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
@@ -7,7 +6,6 @@ using JsonMasher.Mashers.Combinators;
 using JsonMasher.Mashers.Operators;
 using JsonMasher.Mashers.Primitives;
 using Xunit;
-using Ops = JsonMasher.Mashers.Operators;
 
 namespace JsonMasher.Tests.Operators
 {
@@ -81,12 +79,12 @@ namespace JsonMasher.Tests.Operators
         private static IEnumerable<TestItem> NotTests()
         {
             yield return new TestItem(
-                new FunctionCall(Not.Builtin, new Literal(true)),
-                "null",
+                new FunctionCall(Not.Builtin),
+                "true",
                 "[false]");
             yield return new TestItem(
-                new FunctionCall(Not.Builtin, new Literal(false)),
-                "null",
+                new FunctionCall(Not.Builtin),
+                "false",
                 "[true]");
         }
     }

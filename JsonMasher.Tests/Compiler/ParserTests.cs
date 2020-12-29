@@ -45,7 +45,7 @@ namespace JsonMasher.Tests.Compiler
             => Enumerable.Empty<TestItem>()
                 .Concat(DotTests())
                 .Concat(IfThenElseTests())
-                .Concat(NotTests())
+                .Concat(BooleanTests())
                 .Concat(LiteralTests())
                 .Concat(ArrayConstructionTests())
                 .Concat(ObjectConstructionTests())
@@ -119,9 +119,10 @@ namespace JsonMasher.Tests.Compiler
                 });
         }
 
-        private static IEnumerable<TestItem> NotTests()
+        private static IEnumerable<TestItem> BooleanTests()
         {
-            yield return new TestItem("not .", new FunctionCall(Not.Builtin, Identity.Instance));
+            yield return new TestItem(
+                ". | not", Compose.AllParams(Identity.Instance, new FunctionCall(Not.Builtin)));
             yield return new TestItem(
                 "true or false", 
                 new FunctionCall(Or.Builtin, new Literal(true), new Literal(false)));

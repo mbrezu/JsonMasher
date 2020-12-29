@@ -17,6 +17,7 @@ namespace JsonMasher.Compiler
             public Environment()
             {
                 _entries["empty"] = Empty.Builtin;
+                _entries["not"] = Not.Builtin;
             }
 
             public Builtin GetBuiltin(string name) => _entries[name];
@@ -227,12 +228,7 @@ namespace JsonMasher.Compiler
 
         private IJsonMasherOperator ParseTerm(State state)
         {
-            if (state.Current == Tokens.Keywords.Not)
-            {
-                state.Advance();
-                return new FunctionCall(Not.Builtin, ParseTerm(state));
-            }
-            else if (state.Current == Tokens.Keywords.If)
+            if (state.Current == Tokens.Keywords.If)
             {
                 state.Advance();
                 return ParseIf(state);

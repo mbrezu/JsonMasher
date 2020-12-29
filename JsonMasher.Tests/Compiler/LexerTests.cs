@@ -102,7 +102,6 @@ namespace JsonMasher.Tests.Compiler
             yield return new TestItem(" as ", TokensParams(Tokens.Keywords.As));
             yield return new TestItem(" and ", TokensParams(Tokens.Keywords.And));
             yield return new TestItem(" or ", TokensParams(Tokens.Keywords.Or));
-            yield return new TestItem(" not ", TokensParams(Tokens.Keywords.Not));
             yield return new TestItem(" if ", TokensParams(Tokens.Keywords.If));
             yield return new TestItem(" then ", TokensParams(Tokens.Keywords.Then));
             yield return new TestItem(" else ", TokensParams(Tokens.Keywords.Else));
