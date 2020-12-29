@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
@@ -43,6 +44,7 @@ namespace JsonMasher.Tests.Compiler
         private static IEnumerable<TestItem> GetTestData()
             => Enumerable.Empty<TestItem>()
                 .Concat(DotTests())
+                .Concat(NotTests())
                 .Concat(LiteralTests())
                 .Concat(ArrayConstructionTests())
                 .Concat(ObjectConstructionTests())
@@ -91,6 +93,56 @@ namespace JsonMasher.Tests.Compiler
                 Enumerate.Instance,
                 Enumerate.Instance,
                 Enumerate.Instance));
+        }
+
+        private static IEnumerable<TestItem> NotTests()
+        {
+            yield return new TestItem("not .", new FunctionCall(Not.Builtin, Identity.Instance));
+            yield return new TestItem(
+                "true or false", 
+                new FunctionCall(Or.Builtin, new Literal(true), new Literal(false)));
+            yield return new TestItem(
+                "true and false", 
+                new FunctionCall(And.Builtin, new Literal(true), new Literal(false)));
+            yield return new TestItem(
+                "true or false and true", 
+                new FunctionCall(
+                    Or.Builtin, 
+                    new Literal(true), 
+                    new FunctionCall(
+                        And.Builtin,
+                        new Literal(false),
+                        new Literal(true))));
+            yield return new TestItem(
+                "true or false or true", 
+                new FunctionCall(
+                    Or.Builtin, 
+                    new FunctionCall(
+                        Or.Builtin,
+                        new Literal(true),
+                        new Literal(false)), 
+                    new Literal(true)));
+            yield return new TestItem(
+                "true and false and true", 
+                new FunctionCall(
+                    And.Builtin, 
+                    new FunctionCall(
+                        And.Builtin,
+                        new Literal(true),
+                        new Literal(false)), 
+                    new Literal(true)));
+            yield return new TestItem(
+                "true and false or false and true", 
+                new FunctionCall(
+                    Or.Builtin, 
+                    new FunctionCall(
+                        And.Builtin,
+                        new Literal(true),
+                        new Literal(false)), 
+                    new FunctionCall(
+                        And.Builtin,
+                        new Literal(false),
+                        new Literal(true))));
         }
 
         private static IEnumerable<TestItem> ArrayConstructionTests()

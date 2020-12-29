@@ -198,6 +198,9 @@ namespace JsonMasher.Compiler
             return id switch {
                 "def" => Tokens.Keywords.Def,
                 "as" => Tokens.Keywords.As,
+                "and" => Tokens.Keywords.And,
+                "or" => Tokens.Keywords.Or,
+                "not" => Tokens.Keywords.Not,
                 _ => MakeIdentifier(id)
             };
         }

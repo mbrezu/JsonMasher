@@ -25,6 +25,11 @@ namespace JsonMasher.Mashers.Primitives
             Value = Json.String(value);
         }
 
+        public Literal(bool value)
+        {
+            Value = Json.Bool(value);
+        }
+
         public IEnumerable<Json> Mash(Json json, IMashContext context)
             => Value.AsEnumerable();
     }

@@ -21,6 +21,13 @@ namespace JsonMasher
     {
         public JsonValueType Type { get; init; }
 
+        internal bool GetBool()
+            => Type switch {
+                JsonValueType.True => true,
+                JsonValueType.False => false,
+                _ => throw new InvalidOperationException()
+            };
+
         public virtual IEnumerable<Json> EnumerateArray()
         {
             throw new NotImplementedException();

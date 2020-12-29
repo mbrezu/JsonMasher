@@ -38,7 +38,10 @@ namespace JsonMasher.Compiler
         private enum KeywordType
         {
             Def,
-            As
+            As,
+            And,
+            Or,
+            Not
         }
 
         private record SimpleToken(SimpleTokenType Type): Token;
@@ -120,6 +123,12 @@ namespace JsonMasher.Compiler
             public static Token Def => _def;
             private static Token _as = new Keyword(KeywordType.As);
             public static Token As => _as;
+            private static Token _and = new Keyword(KeywordType.And);
+            public static Token And => _and;
+            private static Token _or = new Keyword(KeywordType.Or);
+            public static Token Or => _or;
+            private static Token _not = new Keyword(KeywordType.Not);
+            public static Token Not => _not;
         }
     }
 }

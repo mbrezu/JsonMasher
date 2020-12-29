@@ -100,6 +100,9 @@ namespace JsonMasher.Tests.Compiler
         {
             yield return new TestItem(" def ", TokensParams(Tokens.Keywords.Def));
             yield return new TestItem(" as ", TokensParams(Tokens.Keywords.As));
+            yield return new TestItem(" and ", TokensParams(Tokens.Keywords.And));
+            yield return new TestItem(" or ", TokensParams(Tokens.Keywords.Or));
+            yield return new TestItem(" not ", TokensParams(Tokens.Keywords.Not));
         }
 
         private static IEnumerable<TestItem> StringTests()

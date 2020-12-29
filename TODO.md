@@ -1,6 +1,5 @@
 # Things to do next
 
-- [ ] boolean operators: and, or, not
 - [ ] if/elif
 - [ ] parse functions definitions and function calls
 - [ ] switch to System.Collections.Immutable for Json

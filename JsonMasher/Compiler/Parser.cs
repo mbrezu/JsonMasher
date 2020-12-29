@@ -99,7 +99,7 @@ namespace JsonMasher.Compiler
 
         private IJsonMasherOperator ParseBinding(State state)
         {
-            var t1 = ParseAssignmentExpression(state);
+            var t1 = ParseRelationalLowerExpression(state);
             if (state.Current == Tokens.Keywords.As)
             {
                 state.Advance();
@@ -125,6 +125,20 @@ namespace JsonMasher.Compiler
             }
         }
 
+        private IJsonMasherOperator ParseRelationalLowerExpression(State state)
+            => ChainAssocLeft(
+                state,
+                ParseRelationalHigherExpression,
+                op => op == Tokens.Keywords.Or,
+                op => Or.Builtin);
+
+        private IJsonMasherOperator ParseRelationalHigherExpression(State state)
+            => ChainAssocLeft(
+                state,
+                ParseAssignmentExpression,
+                op => op == Tokens.Keywords.And,
+                op => And.Builtin);
+
         private IJsonMasherOperator ParseAssignmentExpression(State state)
         {
             var t1 = ParseRelationalExpression(state);
@@ -144,7 +158,7 @@ namespace JsonMasher.Compiler
 
         private IJsonMasherOperator ParseRelationalExpression(State state) 
         {
-            var t1 = ParseArithLowerExpression(state);
+            var t1 = ParseArithmeticLowerExpression(state);
             var op = state.Current switch
             {
                 Token t when t == Tokens.EqualsEquals => EqualsEquals.Builtin,
@@ -156,7 +170,7 @@ namespace JsonMasher.Compiler
             };
             if (op != null) {
                 state.Advance();
-                var t2 = ParseArithLowerExpression(state);
+                var t2 = ParseArithmeticLowerExpression(state);
                 return new FunctionCall(op, t1, t2);
             }
             else
@@ -165,14 +179,12 @@ namespace JsonMasher.Compiler
             }
         }
 
-        private IJsonMasherOperator ParseArithLowerExpression(State state)
-        {
-            return ChainAssocLeft(
+        private IJsonMasherOperator ParseArithmeticLowerExpression(State state)
+            => ChainAssocLeft(
                 state,
-                ParseArithHigherExpression,
+                ParseArithmeticHigherExpression,
                 op => op == Tokens.Plus || op == Tokens.Minus,
                 op => op == Tokens.Plus ? Plus.Builtin : Minus.Builtin);
-        }
 
         private IJsonMasherOperator ChainAssocLeft(
             State state, 
@@ -190,17 +202,20 @@ namespace JsonMasher.Compiler
             return accum;
         }
 
-        private IJsonMasherOperator ParseArithHigherExpression(State state)
-        {
-            return ChainAssocLeft(
+        private IJsonMasherOperator ParseArithmeticHigherExpression(State state)
+            => ChainAssocLeft(
                 state,
                 ParseTerm,
                 op => op == Tokens.Times || op == Tokens.Divide,
                 op => op == Tokens.Times ? Times.Builtin : Divide.Builtin);
-        }
 
         private IJsonMasherOperator ParseTerm(State state)
         {
+            if (state.Current == Tokens.Keywords.Not)
+            {
+                state.Advance();
+                return new FunctionCall(Not.Builtin, ParseTerm(state));
+            }
             if (state.Current == Tokens.Dot)
             {
                 return ParseDot(state);

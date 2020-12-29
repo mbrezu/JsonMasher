@@ -107,6 +107,16 @@ namespace JsonMasher.Tests.EndToEnd
             yield return new TestItem(".[] | . <= 2", "[1, 2]", "[true, true]");
             yield return new TestItem(".[] | . > 2", "[1, 2, 3, 4]", "[false, false, true, true]");
             yield return new TestItem(".[] | . >= 2", "[1, 2, 3, 4]", "[false, true, true, true]");
+
+            yield return new TestItem(". > 3 and . < 4", "3.5", "[true]");
+            yield return new TestItem(". > 3 and . < 4", "3", "[false]");
+            yield return new TestItem(". < 3 or not(. < 4)", "3.5", "[false]");
+            yield return new TestItem(". < 3 or not(. < 4)", "2", "[true]");
+            yield return new TestItem(". < 3 or not(. < 4)", "5", "[true]");
+
+            yield return new TestItem(". > 3 and . < 5 or . > 7 and . < 9", "4", "[true]");
+            yield return new TestItem(". > 3 and . < 5 or . > 7 and . < 9", "8", "[true]");
+            yield return new TestItem(". > 3 and . < 5 or . > 7 and . < 9", "6", "[false]");
         }
 
         private static IEnumerable<TestItem> AssignmentPrograms()

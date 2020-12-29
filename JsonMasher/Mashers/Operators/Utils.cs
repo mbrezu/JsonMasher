@@ -29,5 +29,27 @@ namespace JsonMasher.Mashers.Operators
             }
             return result;
         }
+
+        internal static Builtin MakeUnaryBuiltin(Func<Json, Json> function)
+        {
+            return new Builtin(MakeUnaryFunction(function), 1);
+        }
+
+        private static Func<List<IJsonMasherOperator>, Json, IMashContext, IEnumerable<Json>> 
+        MakeUnaryFunction(Func<Json, Json> function)
+        {
+            IEnumerable<Json> result(
+                List<IJsonMasherOperator> mashers, Json json, IMashContext context)
+            {
+                if (mashers.Count != 1) {
+                    throw new InvalidOperationException();
+                }
+                foreach (var t1 in mashers[0].Mash(json, context))
+                {
+                    yield return function(t1);
+                }
+            }
+            return result;
+        }
     }
 }
