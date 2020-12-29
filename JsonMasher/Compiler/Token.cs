@@ -27,7 +27,8 @@ namespace JsonMasher.Compiler
             Minus,
             Times,
             EqualsEquals,
-            PipeEquals
+            PipeEquals,
+            Divide
         }
 
         private enum KeywordType
@@ -89,6 +90,9 @@ namespace JsonMasher.Compiler
 
         private static Token _pipeEquals = new SimpleToken(SimpleTokenType.PipeEquals);
         public static Token PipeEquals => _pipeEquals;
+
+        private static Token _divide = new SimpleToken(SimpleTokenType.Divide);
+        public static Token Divide => _divide;
 
         public static Token Number(double value) => new Number(value);
         public static Token Identifier(string id) => new Identifier(id);

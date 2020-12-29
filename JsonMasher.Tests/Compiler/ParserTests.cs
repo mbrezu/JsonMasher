@@ -43,7 +43,7 @@ namespace JsonMasher.Tests.Compiler
                 .Concat(ArrayConstructionTests())
                 .Concat(ObjectConstructionTests())
                 .Concat(PlusMinusTests())
-                .Concat(TimesTests())
+                .Concat(TimesDivisionTests())
                 .Concat(ParenTests())
                 .Concat(RelationalTests())
                 .Concat(CommaTests())
@@ -216,7 +216,7 @@ namespace JsonMasher.Tests.Compiler
             });
         }
 
-        private static IEnumerable<TestItem> TimesTests()
+        private static IEnumerable<TestItem> TimesDivisionTests()
         {
             yield return new TestItem("1 + 2 * 2", new BinaryOperator {
                 First = new Literal { Value = Json.Number(1) },
@@ -224,6 +224,15 @@ namespace JsonMasher.Tests.Compiler
                     First = new Literal { Value = Json.Number(2) },
                     Second = new Literal { Value = Json.Number(2) },
                     Operator = Times.Operator
+                },
+                Operator = Plus.Operator
+            });
+            yield return new TestItem("1 + 2 / 2", new BinaryOperator {
+                First = new Literal { Value = Json.Number(1) },
+                Second = new BinaryOperator {
+                    First = new Literal { Value = Json.Number(2) },
+                    Second = new Literal { Value = Json.Number(2) },
+                    Operator = Divide.Operator
                 },
                 Operator = Plus.Operator
             });

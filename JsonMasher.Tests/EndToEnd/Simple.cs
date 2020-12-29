@@ -100,6 +100,8 @@ namespace JsonMasher.Tests.EndToEnd
                 ".\"a\"",
                 "{ \"a\": 1 }",
                 "[1]");
+
+            yield return new TestItem("./2", "1", "[0.5]");
         }
 
         private static IEnumerable<TestItem> AssignmentPrograms()

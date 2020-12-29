@@ -183,8 +183,8 @@ namespace JsonMasher.Compiler
             return ChainAssocLeft(
                 state,
                 ParseTerm,
-                op => op == Tokens.Times,
-                op => Times.Operator);
+                op => op == Tokens.Times || op == Tokens.Divide,
+                op => op == Tokens.Times ? Times.Operator : Divide.Operator);
         }
 
         private IJsonMasherOperator ParseTerm(State state)

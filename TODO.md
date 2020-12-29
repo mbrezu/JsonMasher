@@ -1,6 +1,5 @@
 # Things to do next
 
-- [ ] / (for numbers)
 - [ ] relational operators: <, <=, ==, >, >=
 - [ ] boolean operators: and, or, not
 - [ ] if/elif

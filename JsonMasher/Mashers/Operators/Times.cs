@@ -16,7 +16,7 @@ namespace JsonMasher.Mashers.Operators
                     => Json.String(Repeat(t2.GetString(), (int)t1.GetNumber())),
                 _ => throw new InvalidOperationException()
             };
-        
+
         public static string Repeat(string str, int times)
         {
             var sb = new StringBuilder();

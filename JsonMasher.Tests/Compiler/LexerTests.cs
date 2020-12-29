@@ -60,6 +60,8 @@ namespace JsonMasher.Tests.Compiler
                 "== +", TokensParams(Tokens.EqualsEquals, Tokens.Plus));
             yield return new TestItem(
                 "|= +", TokensParams(Tokens.PipeEquals, Tokens.Plus));
+            yield return new TestItem(
+                "/ +", TokensParams(Tokens.Divide, Tokens.Plus));
         }
 
         private static IEnumerable<TestItem> NumberTests()

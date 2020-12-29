@@ -119,6 +119,10 @@ namespace JsonMasher.Compiler
                             yield return Tokens.Times;
                             state.Advance();
                             break;
+                        case '/':
+                            yield return Tokens.Divide;
+                            state.Advance();
+                            break;
                         default:
                             yield return ComplexToken(state);
                             break;

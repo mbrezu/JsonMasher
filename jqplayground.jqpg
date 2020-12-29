@@ -109,3 +109,5 @@ jq -n '1, 2 as $test | $test + 2'
 jq -n '{a:1}'
 
 jq -n '{a:1} | ."a"'
+
+jq -n '1/2'
