@@ -56,6 +56,7 @@ namespace JsonMasher.Tests.Compiler
             yield return new TestItem("", Identity.Instance);
             yield return new TestItem(".", Identity.Instance);
             yield return new TestItem(".a", new StringSelector { Key = "a" });
+            yield return new TestItem(".\"a\"", new StringSelector { Key = "a" });
             yield return new TestItem(".a.b", Compose.AllParams(
                 new StringSelector { Key = "a" },
                 new StringSelector { Key = "b" }));

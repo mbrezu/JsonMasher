@@ -95,6 +95,11 @@ namespace JsonMasher.Tests.EndToEnd
                 "{a:., b:.[]}",
                 "[1, 2]",
                 "[{\"a\": [1, 2], \"b\": 1}, {\"a\": [1, 2], \"b\": 2}]");
+
+            yield return new TestItem(
+                ".\"a\"",
+                "{ \"a\": 1 }",
+                "[1]");
         }
 
         private static IEnumerable<TestItem> AssignmentPrograms()

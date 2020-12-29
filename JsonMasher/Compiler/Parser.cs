@@ -258,6 +258,11 @@ namespace JsonMasher.Compiler
                 state.Advance();
                 terms.Add(new StringSelector { Key = identifier.Id });
             }
+            else if (state.Current is String str)
+            {
+                state.Advance();
+                terms.Add(new StringSelector { Key = str.Value });
+            }
             else
             {
                 terms.Add(Identity.Instance);
