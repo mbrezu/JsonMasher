@@ -1,0 +1,22 @@
+# Things to do next
+
+- [ ] object construction
+- [ ] pretty printing (FancyPen?) for Json values
+- [ ] pretty printing operators
+- [ ] assignments WIP
+- [ ] lexer/parser tokens position information for errors
+- [ ] using Object.ReferenceEquals and RuntimeHelpers.GetHashCode for keys on IJsonMasherOperator
+- [ ] switch to System.Collections.Immutable
+- [ ] n-ary operators/builtins (replace current BinaryOperator with Builtin)
+- [ ] / (for numbers)
+- [ ] relational operators: <, <=, ==, >, >=
+- [ ] boolean operators: and, or, not
+- [ ] if/elif
+- [ ] has(key), keys, map, map_values
+- [ ] del, to_entries, from_entries, select, error, transpose, range
+- [ ] min/max/group/sort
+- [ ] .. (recurse)
+- [ ] error handling
+- [ ] stack trace
+- [ ] documentation
+- [ ] nuget packages

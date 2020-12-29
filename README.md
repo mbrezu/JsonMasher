@@ -10,10 +10,14 @@ both the compiler and the resulting object tree.
 
 ## What is missing
 
+Short answer:
+
 - most of jq :-)
 - a Nuget package
 - proper error reporting
 - debugging facilities (`debug` is there, but I want more)
+
+Longer (but still incomplete) answer: [TODO](TODO.md).
 
 ## What is not missing
 
