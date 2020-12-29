@@ -13,15 +13,20 @@ namespace JsonMasher.Mashers.Combinators
 
     public class FunctionCall : IJsonMasherOperator
     {
-        public FunctionDescriptor Descriptor { get; init; }
-        public List<Thunk> Arguments { get; init; }
+        public FunctionDescriptor Descriptor { get; private set; }
+        public List<Thunk> ThunkedArguments { get; private set; }
+        public List<IJsonMasherOperator> Arguments { get; private set; }
 
+        // TODO: remove me
         public static FunctionCall Builtin(Builtin builtin, params IJsonMasherOperator[] arguments) 
-            => new FunctionCall
-            {
-                Descriptor = builtin,
-                Arguments = arguments.Select(a => new Thunk(a)).ToList()
-            };
+            => new FunctionCall(builtin, arguments);
+        
+        public FunctionCall(FunctionDescriptor descriptor, params IJsonMasherOperator[] arguments)
+        {
+            Descriptor = descriptor;
+            Arguments = arguments.ToList();
+            ThunkedArguments = arguments.Select(a => new Thunk(a)).ToList();
+        }
 
         public IEnumerable<Json> Mash(Json json, IMashContext context)
             => Descriptor switch {
@@ -39,25 +44,21 @@ namespace JsonMasher.Mashers.Combinators
             };
 
         private IEnumerable<Json> RunBuiltin(Builtin builtin, Json json, IMashContext context)
-            => builtin.Function(Arguments.Select(t => t.Op).ToList(), json, context);
+            => builtin.Function(Arguments, json, context);
 
-        private static List<Thunk> _noArgs = new();
         public static FunctionCall ZeroArity(string name)
-            => new FunctionCall {
-                Descriptor = new FunctionName(name),
-                Arguments = _noArgs
-            };
+            => new FunctionCall(new FunctionName(name));
 
         private IEnumerable<Json> Call(Json json, Function func, IMashContext context)
         {
-            if (Arguments.Count != func.Arguments.Count)
+            if (ThunkedArguments.Count != func.Arguments.Count)
             {
                 throw new InvalidOperationException();
             }
             context.PushEnvironmentFrame();
-            for (int i = 0; i < Arguments.Count; i++)
+            for (int i = 0; i < ThunkedArguments.Count; i++)
             {
-                context.SetCallable(func.Arguments[i], Arguments[i]);
+                context.SetCallable(func.Arguments[i], ThunkedArguments[i]);
             }
             foreach (var result in func.Op.Mash(json, context))
             {

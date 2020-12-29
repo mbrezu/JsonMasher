@@ -1,6 +1,5 @@
 # Things to do next
 
-- [ ] optimize FunctionCall by holding a list of thunked and unthunked arguments
 - [ ] relational operators: <, <=, ==, >, >=
 - [ ] boolean operators: and, or, not
 - [ ] if/elif

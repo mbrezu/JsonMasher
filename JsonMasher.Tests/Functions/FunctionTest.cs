@@ -52,13 +52,7 @@ namespace JsonMasher.Tests.Functions
                             FunctionCall.ZeroArity("test2"))
                     }
                 },
-                new FunctionCall {
-                    Descriptor = new FunctionName("x"),
-                    Arguments = new List<Thunk>() {
-                        new Thunk(Enumerate.Instance),
-                        new Thunk(Identity.Instance)
-                    },
-                });
+                new FunctionCall(new FunctionName("x"), Enumerate.Instance, Identity.Instance));
 
             // Act
             var result = op.RunAsScalar(data);
