@@ -95,18 +95,18 @@ namespace JsonMasher.Tests.Compiler
         private static IEnumerable<TestItem> ArrayConstructionTests()
         {
             yield return new TestItem("[1]", new ConstructArray {
-                Elements = new Literal { Value = Json.Number(1) }
+                Elements = new Literal(1)
             });
             yield return new TestItem("[1, 2]", new ConstructArray {
                 Elements = Concat.AllParams(
-                    new Literal { Value = Json.Number(1) },
-                    new Literal { Value = Json.Number(2) })
+                    new Literal(1),
+                    new Literal(2))
             });
             yield return new TestItem("[1, 2, \"a\"]", new ConstructArray {
                 Elements = Concat.AllParams(
-                    new Literal { Value = Json.Number(1) },
-                    new Literal { Value = Json.Number(2) },
-                    new Literal { Value = Json.String("a") })
+                    new Literal(1),
+                    new Literal(2),
+                    new Literal("a"))
             });
         }
 
@@ -119,63 +119,63 @@ namespace JsonMasher.Tests.Compiler
             yield return new TestItem("{a:1}", new ConstructObject(
                 new PropertyDescriptor(
                     "a", 
-                    new Literal { Value = Json.Number(1) })));
+                    new Literal(1))));
             yield return new TestItem("{\"a\":1}", new ConstructObject(
                 new PropertyDescriptor(
                     "a", 
-                    new Literal { Value = Json.Number(1) })));
+                    new Literal(1))));
             yield return new TestItem("{a:1, b:2}", new ConstructObject(
                 new PropertyDescriptor(
                     "a", 
-                    new Literal { Value = Json.Number(1) }),
+                    new Literal(1)),
                 new PropertyDescriptor(
                     "b", 
-                    new Literal { Value = Json.Number(2) })));
+                    new Literal(2))));
             yield return new TestItem("{\"a\":1, b:2}", new ConstructObject(
                 new PropertyDescriptor(
                     "a", 
-                    new Literal { Value = Json.Number(1) }),
+                    new Literal(1)),
                 new PropertyDescriptor(
                     "b", 
-                    new Literal { Value = Json.Number(2) })));
+                    new Literal(2))));
             yield return new TestItem("{\"a\":1, \"b\":2}", new ConstructObject(
                 new PropertyDescriptor(
                     "a", 
-                    new Literal { Value = Json.Number(1) }),
+                    new Literal(1)),
                 new PropertyDescriptor(
                     "b", 
-                    new Literal { Value = Json.Number(2) })));
+                    new Literal(2))));
             yield return new TestItem("{a:1, \"b\":2}", new ConstructObject(
                 new PropertyDescriptor(
                     "a", 
-                    new Literal { Value = Json.Number(1) }),
+                    new Literal(1)),
                 new PropertyDescriptor(
                     "b", 
-                    new Literal { Value = Json.Number(2) })));
+                    new Literal(2))));
             yield return new TestItem("{a:1, b: {c: 2}, d: 3}", new ConstructObject(
                 new PropertyDescriptor(
                     "a", 
-                    new Literal { Value = Json.Number(1) }),
+                    new Literal(1)),
                 new PropertyDescriptor(
                     "b",
                     new ConstructObject(
                         new PropertyDescriptor(
                             "c", 
-                            new Literal { Value = Json.Number(2) }))),
+                            new Literal(2)))),
                 new PropertyDescriptor(
                     "d", 
-                    new Literal { Value = Json.Number(3) })));
+                    new Literal(3))));
         }
 
         private static IEnumerable<TestItem> LiteralTests()
         {
-            yield return new TestItem("1", new Literal { Value = Json.Number(1) });
-            yield return new TestItem("1.", new Literal { Value = Json.Number(1) });
-            yield return new TestItem("12.3", new Literal { Value = Json.Number(12.3) });
-            yield return new TestItem("\"a\"", new Literal { Value = Json.String("a") });
-            yield return new TestItem("null", new Literal { Value = Json.Null });
-            yield return new TestItem("true", new Literal { Value = Json.True });
-            yield return new TestItem("false", new Literal { Value = Json.False });
+            yield return new TestItem("1", new Literal(1));
+            yield return new TestItem("1.", new Literal(1));
+            yield return new TestItem("12.3", new Literal(12.3));
+            yield return new TestItem("\"a\"", new Literal("a"));
+            yield return new TestItem("null", new Literal(Json.Null));
+            yield return new TestItem("true", new Literal(Json.True));
+            yield return new TestItem("false", new Literal(Json.False));
         }
 
         private static IEnumerable<TestItem> PlusMinusTests()
@@ -184,41 +184,41 @@ namespace JsonMasher.Tests.Compiler
                 "1 + 1", 
                 new FunctionCall(
                     Plus.Builtin,
-                    new Literal { Value = Json.Number(1) },
-                    new Literal { Value = Json.Number(1) }));
+                    new Literal(1),
+                    new Literal(1)));
             yield return new TestItem(
                 "1 - 1", 
                 new FunctionCall(
                     Minus.Builtin,
-                    new Literal { Value = Json.Number(1) },
-                    new Literal { Value = Json.Number(1) }));
+                    new Literal(1),
+                    new Literal(1)));
             yield return new TestItem(
                 "1 + 1 + 1", 
                 new FunctionCall(
                     Plus.Builtin, 
                     new FunctionCall(
                         Plus.Builtin, 
-                        new Literal { Value = Json.Number(1) },
-                        new Literal { Value = Json.Number(1) }),
-                    new Literal { Value = Json.Number(1) }));
+                        new Literal(1),
+                        new Literal(1)),
+                    new Literal(1)));
             yield return new TestItem(
                 "1 - 1 + 1", 
                 new FunctionCall(
                     Plus.Builtin,
                     new FunctionCall(
                         Minus.Builtin,
-                        new Literal { Value = Json.Number(1) },
-                        new Literal { Value = Json.Number(1) }),
-                    new Literal { Value = Json.Number(1) }));
+                        new Literal(1),
+                        new Literal(1)),
+                    new Literal(1)));
             yield return new TestItem(
                 "1 + 1 - 1", 
                 new FunctionCall(
                     Minus.Builtin, 
                     new FunctionCall(
                         Plus.Builtin,
-                        new Literal { Value = Json.Number(1) },
-                        new Literal { Value = Json.Number(1) }),
-                    new Literal { Value = Json.Number(1) }));
+                        new Literal(1),
+                        new Literal(1)),
+                    new Literal(1)));
         }
 
         private static IEnumerable<TestItem> TimesDivisionTests()
@@ -227,20 +227,20 @@ namespace JsonMasher.Tests.Compiler
                 "1 + 2 * 2", 
                 new FunctionCall(
                     Plus.Builtin,
-                    new Literal { Value = Json.Number(1) },
+                    new Literal(1),
                     new FunctionCall(
                         Times.Builtin,
-                        new Literal { Value = Json.Number(2) },
-                        new Literal { Value = Json.Number(2) })));
+                        new Literal(2),
+                        new Literal(2))));
             yield return new TestItem(
                 "1 + 2 / 2", 
                 new FunctionCall(
                     Plus.Builtin,
-                    new Literal { Value = Json.Number(1) },
+                    new Literal(1),
                     new FunctionCall(
                         Divide.Builtin,
-                        new Literal { Value = Json.Number(2) },
-                        new Literal { Value = Json.Number(2) })));
+                        new Literal(2),
+                        new Literal(2))));
         }
 
         private static IEnumerable<TestItem> ParenTests()
@@ -249,11 +249,11 @@ namespace JsonMasher.Tests.Compiler
                 "1 + (1 - 1)",
                 new FunctionCall(
                     Plus.Builtin,
-                    new Literal { Value = Json.Number(1) },
+                    new Literal(1),
                     new FunctionCall(
                         Minus.Builtin,
-                        new Literal { Value = Json.Number(1) },
-                        new Literal { Value = Json.Number(1) })));
+                        new Literal(1),
+                        new Literal(1))));
             yield return new TestItem("(. | .) | .", Compose.AllParams(
                 Compose.AllParams(
                     Identity.Instance,
@@ -266,9 +266,9 @@ namespace JsonMasher.Tests.Compiler
                     Times.Builtin,
                     new FunctionCall(
                         Plus.Builtin,
-                        new Literal { Value = Json.Number(1) },
-                        new Literal { Value = Json.Number(2) }),
-                    new Literal { Value = Json.Number(2) }));
+                        new Literal(1),
+                        new Literal(2)),
+                    new Literal(2)));
         }
 
         private static IEnumerable<TestItem> RelationalTests()
@@ -277,31 +277,31 @@ namespace JsonMasher.Tests.Compiler
                 "1 == 2",
                 new FunctionCall(
                     EqualsEquals.Builtin,
-                    new Literal { Value = Json.Number(1) },
-                    new Literal { Value = Json.Number(2) }));
+                    new Literal(1),
+                    new Literal(2)));
         }
 
         private static IEnumerable<TestItem> CommaTests()
         {
             yield return new TestItem("1, 2", Concat.AllParams(
-                new Literal { Value = Json.Number(1) },
-                new Literal { Value = Json.Number(2) }
+                new Literal(1),
+                new Literal(2)
             ));
             yield return new TestItem("1, 2, \"a\"", Concat.AllParams(
-                new Literal { Value = Json.Number(1) },
-                new Literal { Value = Json.Number(2) },
-                new Literal { Value = Json.String("a") }
+                new Literal(1),
+                new Literal(2),
+                new Literal("a")
             ));
             yield return new TestItem(
                 "1, 2, \"a\" | . | 3, 4", 
                 Compose.AllParams(
                     Concat.AllParams(
-                        new Literal { Value = Json.Number(1) },
-                        new Literal { Value = Json.Number(2) },
-                        new Literal { Value = Json.String("a") }),
+                        new Literal(1),
+                        new Literal(2),
+                        new Literal("a")),
                     Identity.Instance,
                     Concat.AllParams(
-                        new Literal { Value = Json.Number(3) },
+                        new Literal(3),
                         new Literal { Value = Json.Number(4) })));
         }
 
@@ -312,7 +312,7 @@ namespace JsonMasher.Tests.Compiler
                 Masher = new FunctionCall(
                     Plus.Builtin,
                     Identity.Instance,
-                    new Literal { Value = Json.Number(2) })
+                    new Literal(2))
             });
             yield return new TestItem(". |= . + 2 | . |= . + 2", Compose.AllParams(
                 new PipeAssignment {
@@ -320,14 +320,14 @@ namespace JsonMasher.Tests.Compiler
                     Masher = new FunctionCall(
                         Plus.Builtin,
                         Identity.Instance,
-                        new Literal { Value = Json.Number(2) })
+                        new Literal(2))
                 },
                 new PipeAssignment {
                     PathExpression = Identity.Instance,
                     Masher = new FunctionCall(
                         Plus.Builtin,
                         Identity.Instance,
-                        new Literal { Value = Json.Number(2) })
+                        new Literal(2))
                 }));
         }
 
@@ -338,7 +338,7 @@ namespace JsonMasher.Tests.Compiler
                 Value = new FunctionCall(
                     Plus.Builtin,
                     Identity.Instance,
-                    new Literal { Value = Json.Number(2) }),
+                    new Literal(2)),
                 Body = Identity.Instance
             });
             yield return new TestItem("$test", new GetVariable { Name = "test" });

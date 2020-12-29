@@ -192,20 +192,20 @@ namespace JsonMasher.Compiler
             else if (state.Current is Number n)
             {
                 state.Advance();
-                return new Literal { Value = Json.Number(n.Value) };
+                return new Literal(n.Value);
             }
             else if (state.Current is String s)
             {
                 state.Advance();
-                return new Literal { Value = Json.String(s.Value) };
+                return new Literal(s.Value);
             }
             else if (state.Current is Identifier identifier)
             {
                 state.Advance();
                 return identifier.Id switch {
-                    "null" => new Literal { Value = Json.Null },
-                    "true" => new Literal { Value = Json.True },
-                    "false" => new Literal { Value = Json.False },
+                    "null" => new Literal(Json.Null),
+                    "true" => new Literal(Json.True),
+                    "false" => new Literal(Json.False),
                     _ => throw new InvalidOperationException()
                 };
             }

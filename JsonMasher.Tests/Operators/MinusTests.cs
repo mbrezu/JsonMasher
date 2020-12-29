@@ -15,8 +15,8 @@ namespace JsonMasher.Tests.Operators
             var data = Json.Null;
             var op = new FunctionCall(
                 Minus.Builtin,
-                new Literal { Value = Json.Number(2) },
-                new Literal { Value = Json.Number(1) });
+                new Literal(2),
+                new Literal(1));
 
             // Act
             var result = op.RunAsSequence(data);

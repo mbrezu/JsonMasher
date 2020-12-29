@@ -205,7 +205,7 @@ namespace JsonMasher.Tests
         {
             // Arrange
             var data = Json.Null;
-            var op = new Literal { Value = Json.Number(1) };
+            var op = new Literal(1);
 
             // Act
             var result = op.RunAsSequence(data);
@@ -237,7 +237,7 @@ namespace JsonMasher.Tests
         {
             // Arrange
             var data = MakeArray();
-            var op = new Selector { Index = new Literal { Value = Json.Number(1) } };
+            var op = new Selector { Index = new Literal(1) };
 
             // Act
             var result = op.RunAsSequence(data);
@@ -254,7 +254,7 @@ namespace JsonMasher.Tests
             // Arrange
             var data = MakeArray();
             var op = new Selector { Index = Concat.AllParams(
-                new Literal { Value = Json.Number(1) },
+                new Literal(1),
                 new Literal { Value = Json.Number(2) },
                 new Literal { Value = Json.Number(0) }
             ) };
