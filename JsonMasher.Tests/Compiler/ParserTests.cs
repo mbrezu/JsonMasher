@@ -122,7 +122,8 @@ namespace JsonMasher.Tests.Compiler
         private static IEnumerable<TestItem> BooleanTests()
         {
             yield return new TestItem(
-                ". | not", Compose.AllParams(Identity.Instance, new FunctionCall(Not.Builtin)));
+                ". | not", 
+                Compose.AllParams(Identity.Instance, new FunctionCall(new FunctionName("not"))));
             yield return new TestItem(
                 "true or false", 
                 new FunctionCall(Or.Builtin, new Literal(true), new Literal(false)));
@@ -459,7 +460,7 @@ namespace JsonMasher.Tests.Compiler
 
         private static IEnumerable<TestItem> EmptyTests()
         {
-            yield return new TestItem("empty", new FunctionCall(Empty.Builtin));
+            yield return new TestItem("empty", new FunctionCall(new FunctionName("empty")));
         }
     }
 }

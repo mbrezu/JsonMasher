@@ -4,12 +4,12 @@ using System.Linq;
 
 namespace JsonMasher.Mashers.Combinators
 {
-    public record FunctionDescriptor();
+    public interface FunctionDescriptor {};
     public record FunctionName(string Name): FunctionDescriptor;
     public record Builtin(
         Func<List<IJsonMasherOperator>, Json, IMashContext, IEnumerable<Json>> Function,
         int Arity)
-    : FunctionDescriptor;
+    : FunctionDescriptor, Callable;
 
     public class FunctionCall : IJsonMasherOperator
     {
@@ -36,6 +36,7 @@ namespace JsonMasher.Mashers.Combinators
             {
                 Thunk thunk => thunk.Op.Mash(json, context),
                 Function func => Call(json, func, context),
+                Builtin builtin => builtin.Function(Arguments, json, context),
                 _ => throw new InvalidOperationException()
             };
 

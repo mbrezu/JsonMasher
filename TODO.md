@@ -1,5 +1,6 @@
 # Things to do next
 
+- [ ] get rid of thunk and make IJsonMasherOperator callable
 - [ ] parse functions definitions and function calls
 - [ ] jq -n '{a : 1 | 2}' (seems I need to be able to parse pipes inside dicts)
 - [ ] switch to System.Collections.Immutable for Json

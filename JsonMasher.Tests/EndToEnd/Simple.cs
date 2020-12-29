@@ -28,7 +28,7 @@ namespace JsonMasher.Tests.EndToEnd
             var result = new Mashers.JsonMasher().Mash(input, filter);
 
             // Assert
-            Json.Array(result)
+            Json.Array(result.sequence)
                 .DeepEqual(expectedOutputJson.AsJson())
                 .Should().BeTrue();
         }

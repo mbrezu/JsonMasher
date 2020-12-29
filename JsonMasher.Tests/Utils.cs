@@ -12,7 +12,7 @@ namespace JsonMasher.Tests
         {
             var masher = new Mashers.JsonMasher();
             var result = masher.Mash(data.AsEnumerable(), op);
-            return (json: result, context: masher.Context);
+            return (json: result.sequence, context: result.context);
         }
 
         public static IEnumerable<Json> RunAsSequence(this IJsonMasherOperator op, Json data)
