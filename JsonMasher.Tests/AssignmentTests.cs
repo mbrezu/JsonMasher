@@ -15,11 +15,8 @@ namespace JsonMasher.Tests
             var data = Json.Number(2);
             var op = new PipeAssignment {
                 PathExpression = Identity.Instance,
-                Masher = new BinaryOperator {
-                    First = Identity.Instance,
-                    Second = new Literal { Value = Json.Number(2) },
-                    Operator = Plus.Operator
-                }
+                Masher = FunctionCall.Builtin(
+                    Plus.Builtin, Identity.Instance, new Literal { Value = Json.Number(2) })
             };
 
             // Act
@@ -38,11 +35,8 @@ namespace JsonMasher.Tests
             var data = "[1, 2]".AsJson();
             var op = new PipeAssignment {
                 PathExpression = Enumerate.Instance,
-                Masher = new BinaryOperator {
-                    First = Identity.Instance,
-                    Second = new Literal { Value = Json.Number(2) },
-                    Operator = Plus.Operator
-                }
+                Masher = FunctionCall.Builtin(
+                    Plus.Builtin, Identity.Instance, new Literal { Value = Json.Number(2) })
             };
 
             // Act
@@ -63,11 +57,8 @@ namespace JsonMasher.Tests
                 PathExpression = Compose.AllParams(
                     Enumerate.Instance,
                     Enumerate.Instance),
-                Masher = new BinaryOperator {
-                    First = Identity.Instance,
-                    Second = new Literal { Value = Json.Number(2) },
-                    Operator = Plus.Operator
-                }
+                Masher = FunctionCall.Builtin(
+                    Plus.Builtin, Identity.Instance, new Literal { Value = Json.Number(2) })
             };
 
             // Act
@@ -86,11 +77,8 @@ namespace JsonMasher.Tests
             var data = "{ \"a\": 1, \"b\": 2 }".AsJson();
             var op = new PipeAssignment {
                 PathExpression = Enumerate.Instance,
-                Masher = new BinaryOperator {
-                    First = Identity.Instance,
-                    Second = new Literal { Value = Json.Number(2) },
-                    Operator = Plus.Operator
-                }
+                Masher = FunctionCall.Builtin(
+                    Plus.Builtin, Identity.Instance, new Literal { Value = Json.Number(2) })
             };
 
             // Act
@@ -109,11 +97,8 @@ namespace JsonMasher.Tests
             var data = "{ \"a\": 1, \"b\": 2 }".AsJson();
             var op = new PipeAssignment {
                 PathExpression = new StringSelector { Key = "a"},
-                Masher = new BinaryOperator {
-                    First = Identity.Instance,
-                    Second = new Literal { Value = Json.Number(2) },
-                    Operator = Plus.Operator
-                }
+                Masher = FunctionCall.Builtin(
+                    Plus.Builtin, Identity.Instance, new Literal { Value = Json.Number(2) })
             };
 
             // Act
@@ -134,11 +119,8 @@ namespace JsonMasher.Tests
                 PathExpression = Compose.AllParams(
                     new StringSelector { Key = "a" },
                     new StringSelector { Key = "c" }),
-                Masher = new BinaryOperator {
-                    First = Identity.Instance,
-                    Second = new Literal { Value = Json.Number(2) },
-                    Operator = Plus.Operator
-                }
+                Masher = FunctionCall.Builtin(
+                    Plus.Builtin, Identity.Instance, new Literal { Value = Json.Number(2) })
             };
 
             // Act
@@ -159,11 +141,8 @@ namespace JsonMasher.Tests
                 PathExpression = Compose.AllParams(
                     Enumerate.Instance,
                     new Selector { Index = new Literal { Value = Json.Number(0) } }),
-                Masher = new BinaryOperator {
-                    First = Identity.Instance,
-                    Second = new Literal { Value = Json.Number(2) },
-                    Operator = Plus.Operator
-                }
+                Masher = FunctionCall.Builtin(
+                    Plus.Builtin, Identity.Instance, new Literal { Value = Json.Number(2) })
             };
 
             // Act
@@ -184,11 +163,8 @@ namespace JsonMasher.Tests
                 PathExpression = Compose.AllParams(
                     Enumerate.Instance,
                     new Selector { Index = new Literal { Value = Json.String("b") } }),
-                Masher = new BinaryOperator {
-                    First = Identity.Instance,
-                    Second = new Literal { Value = Json.Number(2) },
-                    Operator = Plus.Operator
-                }
+                Masher = FunctionCall.Builtin(
+                    Plus.Builtin, Identity.Instance, new Literal { Value = Json.Number(2) })
             };
 
             // Act

@@ -1,11 +1,14 @@
 using System;
 using System.Text;
+using JsonMasher.Mashers.Combinators;
 
 namespace JsonMasher.Mashers.Operators
 {
     public class Times
     {
-        public static Json Operator(Json t1, Json t2)
+        public static Builtin Builtin = Utils.MakeBinaryBuiltin(Operator);
+
+        static Json Operator(Json t1, Json t2)
             => (t1.Type, t2.Type) switch
             {
                 (JsonValueType.Number, JsonValueType.Number)
@@ -17,7 +20,7 @@ namespace JsonMasher.Mashers.Operators
                 _ => throw new InvalidOperationException()
             };
 
-        public static string Repeat(string str, int times)
+        static string Repeat(string str, int times)
         {
             var sb = new StringBuilder();
             for (int i = 0; i < times; i++)

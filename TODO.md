@@ -1,9 +1,9 @@
 # Things to do next
 
+- [ ] optimize FunctionCall by holding a list of thunked and unthunked arguments
 - [ ] relational operators: <, <=, ==, >, >=
 - [ ] boolean operators: and, or, not
 - [ ] if/elif
-- [ ] n-ary operators/builtins (replace current BinaryOperator with Builtin)
 - [ ] parse functions definitions and function calls
 - [ ] switch to System.Collections.Immutable for Json
 - [ ] pretty printing (FancyPen?) for Json values

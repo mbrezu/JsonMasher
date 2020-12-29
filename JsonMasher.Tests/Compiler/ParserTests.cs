@@ -33,7 +33,10 @@ namespace JsonMasher.Tests.Compiler
                 options => options
                     .RespectingRuntimeTypes()
                     .WithStrictOrdering()
-                    .ComparingByMembers<PropertyDescriptor>());
+                    .ComparingByValue<Builtin>()
+                    .ComparingByMembers<PropertyDescriptor>()
+                    .ComparingByMembers<Thunk>()
+                    .ComparingByMembers<FunctionName>());
         }
 
         private static IEnumerable<TestItem> GetTestData()
@@ -177,102 +180,105 @@ namespace JsonMasher.Tests.Compiler
 
         private static IEnumerable<TestItem> PlusMinusTests()
         {
-            yield return new TestItem("1 + 1", new BinaryOperator {
-                First = new Literal { Value = Json.Number(1) },
-                Second = new Literal { Value = Json.Number(1) },
-                Operator = Plus.Operator
-            });
-            yield return new TestItem("1 - 1", new BinaryOperator {
-                First = new Literal { Value = Json.Number(1) },
-                Second = new Literal { Value = Json.Number(1) },
-                Operator = Minus.Operator
-            });
-            yield return new TestItem("1 + 1 + 1", new BinaryOperator {
-                First = new BinaryOperator {
-                    First = new Literal { Value = Json.Number(1) },
-                    Second = new Literal { Value = Json.Number(1) },
-                    Operator = Plus.Operator
-                },
-                Second = new Literal { Value = Json.Number(1) },
-                Operator = Plus.Operator
-            });
-            yield return new TestItem("1 - 1 + 1", new BinaryOperator {
-                First = new BinaryOperator {
-                    First = new Literal { Value = Json.Number(1) },
-                    Second = new Literal { Value = Json.Number(1) },
-                    Operator = Minus.Operator
-                },
-                Second = new Literal { Value = Json.Number(1) },
-                Operator = Plus.Operator
-            });
-            yield return new TestItem("1 + 1 - 1", new BinaryOperator {
-                First = new BinaryOperator {
-                    First = new Literal { Value = Json.Number(1) },
-                    Second = new Literal { Value = Json.Number(1) },
-                    Operator = Plus.Operator
-                },
-                Second = new Literal { Value = Json.Number(1) },
-                Operator = Minus.Operator
-            });
+            yield return new TestItem(
+                "1 + 1", 
+                FunctionCall.Builtin(
+                    Plus.Builtin,
+                    new Literal { Value = Json.Number(1) },
+                    new Literal { Value = Json.Number(1) }));
+            yield return new TestItem(
+                "1 - 1", 
+                FunctionCall.Builtin(
+                    Minus.Builtin,
+                    new Literal { Value = Json.Number(1) },
+                    new Literal { Value = Json.Number(1) }));
+            yield return new TestItem(
+                "1 + 1 + 1", 
+                FunctionCall.Builtin(
+                    Plus.Builtin, 
+                    FunctionCall.Builtin(
+                        Plus.Builtin, 
+                        new Literal { Value = Json.Number(1) },
+                        new Literal { Value = Json.Number(1) }),
+                    new Literal { Value = Json.Number(1) }));
+            yield return new TestItem(
+                "1 - 1 + 1", 
+                FunctionCall.Builtin(
+                    Plus.Builtin,
+                    FunctionCall.Builtin(
+                        Minus.Builtin,
+                        new Literal { Value = Json.Number(1) },
+                        new Literal { Value = Json.Number(1) }),
+                    new Literal { Value = Json.Number(1) }));
+            yield return new TestItem(
+                "1 + 1 - 1", 
+                FunctionCall.Builtin(
+                    Minus.Builtin, 
+                    FunctionCall.Builtin(
+                        Plus.Builtin,
+                        new Literal { Value = Json.Number(1) },
+                        new Literal { Value = Json.Number(1) }),
+                    new Literal { Value = Json.Number(1) }));
         }
 
         private static IEnumerable<TestItem> TimesDivisionTests()
         {
-            yield return new TestItem("1 + 2 * 2", new BinaryOperator {
-                First = new Literal { Value = Json.Number(1) },
-                Second = new BinaryOperator {
-                    First = new Literal { Value = Json.Number(2) },
-                    Second = new Literal { Value = Json.Number(2) },
-                    Operator = Times.Operator
-                },
-                Operator = Plus.Operator
-            });
-            yield return new TestItem("1 + 2 / 2", new BinaryOperator {
-                First = new Literal { Value = Json.Number(1) },
-                Second = new BinaryOperator {
-                    First = new Literal { Value = Json.Number(2) },
-                    Second = new Literal { Value = Json.Number(2) },
-                    Operator = Divide.Operator
-                },
-                Operator = Plus.Operator
-            });
+            yield return new TestItem(
+                "1 + 2 * 2", 
+                FunctionCall.Builtin(
+                    Plus.Builtin,
+                    new Literal { Value = Json.Number(1) },
+                    FunctionCall.Builtin(
+                        Times.Builtin,
+                        new Literal { Value = Json.Number(2) },
+                        new Literal { Value = Json.Number(2) })));
+            yield return new TestItem(
+                "1 + 2 / 2", 
+                FunctionCall.Builtin(
+                    Plus.Builtin,
+                    new Literal { Value = Json.Number(1) },
+                    FunctionCall.Builtin(
+                        Divide.Builtin,
+                        new Literal { Value = Json.Number(2) },
+                        new Literal { Value = Json.Number(2) })));
         }
 
         private static IEnumerable<TestItem> ParenTests()
         {
-            yield return new TestItem("1 + (1 - 1)", new BinaryOperator {
-                First = new Literal { Value = Json.Number(1) },
-                Second = new BinaryOperator {
-                    First = new Literal { Value = Json.Number(1) },
-                    Second = new Literal { Value = Json.Number(1) },
-                    Operator = Minus.Operator
-                },
-                Operator = Plus.Operator
-            });
+            yield return new TestItem(
+                "1 + (1 - 1)",
+                FunctionCall.Builtin(
+                    Plus.Builtin,
+                    new Literal { Value = Json.Number(1) },
+                    FunctionCall.Builtin(
+                        Minus.Builtin,
+                        new Literal { Value = Json.Number(1) },
+                        new Literal { Value = Json.Number(1) })));
             yield return new TestItem("(. | .) | .", Compose.AllParams(
                 Compose.AllParams(
                     Identity.Instance,
                     Identity.Instance),
                 Identity.Instance
             ));
-            yield return new TestItem("(1 + 2) * 2", new BinaryOperator {
-                First = new BinaryOperator {
-                    First = new Literal { Value = Json.Number(1) },
-                    Second = new Literal { Value = Json.Number(2) },
-                    Operator = Plus.Operator
-                },
-                Second = new Literal { Value = Json.Number(2) },
-                Operator = Times.Operator
-            });
+            yield return new TestItem(
+                "(1 + 2) * 2",
+                FunctionCall.Builtin(
+                    Times.Builtin,
+                    FunctionCall.Builtin(
+                        Plus.Builtin,
+                        new Literal { Value = Json.Number(1) },
+                        new Literal { Value = Json.Number(2) }),
+                    new Literal { Value = Json.Number(2) }));
         }
 
         private static IEnumerable<TestItem> RelationalTests()
         {
-            yield return new TestItem("1 == 2", new BinaryOperator {
-                First = new Literal { Value = Json.Number(1) },
-                Second = new Literal { Value = Json.Number(2) },
-                Operator = EqualsEquals.Operator
-            });
+            yield return new TestItem(
+                "1 == 2",
+                FunctionCall.Builtin(
+                    EqualsEquals.Builtin,
+                    new Literal { Value = Json.Number(1) },
+                    new Literal { Value = Json.Number(2) }));
         }
 
         private static IEnumerable<TestItem> CommaTests()
@@ -303,28 +309,25 @@ namespace JsonMasher.Tests.Compiler
         {
             yield return new TestItem(". |= . + 2", new PipeAssignment {
                 PathExpression = Identity.Instance,
-                Masher = new BinaryOperator {
-                    First = Identity.Instance,
-                    Second = new Literal { Value = Json.Number(2) },
-                    Operator = Plus.Operator
-                }
+                Masher = FunctionCall.Builtin(
+                    Plus.Builtin,
+                    Identity.Instance,
+                    new Literal { Value = Json.Number(2) })
             });
             yield return new TestItem(". |= . + 2 | . |= . + 2", Compose.AllParams(
                 new PipeAssignment {
                     PathExpression = Identity.Instance,
-                    Masher = new BinaryOperator {
-                        First = Identity.Instance,
-                        Second = new Literal { Value = Json.Number(2) },
-                        Operator = Plus.Operator
-                    }
+                    Masher = FunctionCall.Builtin(
+                        Plus.Builtin,
+                        Identity.Instance,
+                        new Literal { Value = Json.Number(2) })
                 },
                 new PipeAssignment {
                     PathExpression = Identity.Instance,
-                    Masher = new BinaryOperator {
-                        First = Identity.Instance,
-                        Second = new Literal { Value = Json.Number(2) },
-                        Operator = Plus.Operator
-                    }
+                    Masher = FunctionCall.Builtin(
+                        Plus.Builtin,
+                        Identity.Instance,
+                        new Literal { Value = Json.Number(2) })
                 }));
         }
 
@@ -332,11 +335,10 @@ namespace JsonMasher.Tests.Compiler
         {
             yield return new TestItem(". + 2 as $test | .", new Let {
                 Name = "test",
-                Value = new BinaryOperator {
-                    First = Identity.Instance,
-                    Second = new Literal { Value = Json.Number(2) },
-                    Operator = Plus.Operator
-                },
+                Value = FunctionCall.Builtin(
+                    Plus.Builtin,
+                    Identity.Instance,
+                    new Literal { Value = Json.Number(2) }),
                 Body = Identity.Instance
             });
             yield return new TestItem("$test", new GetVariable { Name = "test" });

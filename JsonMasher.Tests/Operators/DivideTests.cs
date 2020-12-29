@@ -13,11 +13,10 @@ namespace JsonMasher.Tests.Operators
         {
             // Arrange
             var data = Json.Null;
-            var op = new BinaryOperator {
-                First = new Literal { Value = Json.Number(1) },
-                Second = new Literal { Value = Json.Number(2) },
-                Operator = Divide.Operator
-            };
+            var op = FunctionCall.Builtin(
+                Divide.Builtin,
+                new Literal { Value = Json.Number(1) },
+                new Literal { Value = Json.Number(2) });
 
             // Act
             var result = op.RunAsSequence(data);

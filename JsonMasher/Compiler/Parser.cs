@@ -147,7 +147,7 @@ namespace JsonMasher.Compiler
                 state,
                 ParseArithLowerExpression,
                 op => op == Tokens.EqualsEquals,
-                op => EqualsEquals.Operator);
+                op => EqualsEquals.Builtin);
 
         private IJsonMasherOperator ParseArithLowerExpression(State state)
         {
@@ -155,25 +155,22 @@ namespace JsonMasher.Compiler
                 state,
                 ParseArithHigherExpression,
                 op => op == Tokens.Plus || op == Tokens.Minus,
-                op => op == Tokens.Plus ? Plus.Operator : Minus.Operator);
+                op => op == Tokens.Plus ? Plus.Builtin : Minus.Builtin);
         }
 
         private IJsonMasherOperator ChainAssocLeft(
             State state, 
             Func<State, IJsonMasherOperator> termParser,
             Func<Token, bool> validOps,
-            Func<Token, Func<Json, Json, Json>> opFunc)
+            Func<Token, Builtin> builtinFunc)
         {
             var accum = termParser(state);
             while (validOps(state.Current))
             {
                 var op = state.Current;
                 state.Advance();
-                accum = new BinaryOperator {
-                    First = accum,
-                    Second = termParser(state),
-                    Operator = opFunc(op)
-                };
+                accum = FunctionCall.Builtin(
+                    builtinFunc(op), accum, termParser(state));
             }
             return accum;
         }
@@ -184,7 +181,7 @@ namespace JsonMasher.Compiler
                 state,
                 ParseTerm,
                 op => op == Tokens.Times || op == Tokens.Divide,
-                op => op == Tokens.Times ? Times.Operator : Divide.Operator);
+                op => op == Tokens.Times ? Times.Builtin : Divide.Builtin);
         }
 
         private IJsonMasherOperator ParseTerm(State state)

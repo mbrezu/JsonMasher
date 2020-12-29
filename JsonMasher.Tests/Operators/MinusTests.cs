@@ -13,11 +13,10 @@ namespace JsonMasher.Tests.Operators
         {
             // Arrange
             var data = Json.Null;
-            var op = new BinaryOperator {
-                First = new Literal { Value = Json.Number(2) },
-                Second = new Literal { Value = Json.Number(1) },
-                Operator = Minus.Operator
-            };
+            var op = FunctionCall.Builtin(
+                Minus.Builtin,
+                new Literal { Value = Json.Number(2) },
+                new Literal { Value = Json.Number(1) });
 
             // Act
             var result = op.RunAsSequence(data);
@@ -32,15 +31,14 @@ namespace JsonMasher.Tests.Operators
             // Arrange
             var data = Json.Null;
             var op = new Compose {
-                First = new BinaryOperator {
-                    First = new Literal { 
+                First = FunctionCall.Builtin(
+                    Minus.Builtin,
+                    new Literal { 
                         Value = Utils.JsonNumberArray(1, 2, 3)
                     },
-                    Second = new Literal {
+                    new Literal {
                         Value = Utils.JsonNumberArray(3, 4, 5)
-                    },
-                    Operator = Minus.Operator
-                },
+                    }),
                 Second = Enumerate.Instance
             };
 

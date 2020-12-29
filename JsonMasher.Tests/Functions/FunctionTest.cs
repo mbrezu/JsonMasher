@@ -19,11 +19,8 @@ namespace JsonMasher.Tests.Functions
                 new FunctionDefinition { 
                     Name = "test",
                     Arguments = new List<string>(),
-                    Body = new BinaryOperator {
-                        First = Identity.Instance,
-                        Second = new Literal { Value = Json.Number(2) },
-                        Operator = Plus.Operator
-                    }
+                    Body = FunctionCall.Builtin(
+                        Plus.Builtin, Identity.Instance, new Literal { Value = Json.Number(2) })
                 },
                 Enumerate.Instance,
                 FunctionCall.ZeroArity("test"));
@@ -56,7 +53,7 @@ namespace JsonMasher.Tests.Functions
                     }
                 },
                 new FunctionCall {
-                    Name = "x",
+                    Descriptor = new FunctionName("x"),
                     Arguments = new List<Thunk>() {
                         new Thunk(Enumerate.Instance),
                         new Thunk(Identity.Instance)
