@@ -441,6 +441,42 @@ namespace JsonMasher.Tests
             result.DeepEqual(data).Should().BeTrue();
         }
 
+        [Fact]
+        public void IfThenElseTrue()
+        {
+            // Arrange
+            var data = MakeArray();
+            var op = new IfThenElse {
+                Cond = new Literal(true),
+                Then = new Literal(1),
+                Else = new Literal(2)
+            }; 
+
+            // Act
+            var result = op.RunAsScalar(data);
+
+            // Assert
+            result.DeepEqual("1".AsJson()).Should().BeTrue();
+        }
+
+        [Fact]
+        public void IfThenElseFalse()
+        {
+            // Arrange
+            var data = MakeArray();
+            var op = new IfThenElse {
+                Cond = new Literal(false),
+                Then = new Literal(1),
+                Else = new Literal(2)
+            }; 
+
+            // Act
+            var result = op.RunAsScalar(data);
+
+            // Assert
+            result.DeepEqual("2".AsJson()).Should().BeTrue();
+        }
+
         private static Json MakeArray()
         {
             return Json.ArrayParams(

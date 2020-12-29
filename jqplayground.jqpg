@@ -111,3 +111,9 @@ jq -n '{a:1}'
 jq -n '{a:1} | ."a"'
 
 jq -n '["a", "b"] | .[0] < .[1]'
+
+jq -n 'if range(3) | . + 2 then 1, 2 | . + 2 else empty end'
+
+jq -n 'if empty | . + 2 then 1, 2 | . + 2 else empty end'
+
+jq -n '{a : 1 | 2}'

@@ -201,6 +201,11 @@ namespace JsonMasher.Compiler
                 "and" => Tokens.Keywords.And,
                 "or" => Tokens.Keywords.Or,
                 "not" => Tokens.Keywords.Not,
+                "if" => Tokens.Keywords.If,
+                "then" => Tokens.Keywords.Then,
+                "else" => Tokens.Keywords.Else,
+                "end" => Tokens.Keywords.End,
+                "elif" => Tokens.Keywords.Elif,
                 _ => MakeIdentifier(id)
             };
         }

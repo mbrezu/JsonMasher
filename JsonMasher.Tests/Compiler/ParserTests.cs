@@ -44,6 +44,7 @@ namespace JsonMasher.Tests.Compiler
         private static IEnumerable<TestItem> GetTestData()
             => Enumerable.Empty<TestItem>()
                 .Concat(DotTests())
+                .Concat(IfThenElseTests())
                 .Concat(NotTests())
                 .Concat(LiteralTests())
                 .Concat(ArrayConstructionTests())
@@ -93,6 +94,28 @@ namespace JsonMasher.Tests.Compiler
                 Enumerate.Instance,
                 Enumerate.Instance,
                 Enumerate.Instance));
+        }
+
+        private static IEnumerable<TestItem> IfThenElseTests()
+        {
+            yield return new TestItem(
+                "if true then 1 else 2 end",
+                new IfThenElse {
+                    Cond = new Literal(true),
+                    Then = new Literal(1),
+                    Else = new Literal(2)
+                });
+            yield return new TestItem(
+                "if true then 1 elif true then 2 else 3 end",
+                new IfThenElse {
+                    Cond = new Literal(true),
+                    Then = new Literal(1),
+                    Else = new IfThenElse {
+                        Cond = new Literal(true),
+                        Then = new Literal(2),
+                        Else = new Literal(3)
+                    }
+                });
         }
 
         private static IEnumerable<TestItem> NotTests()

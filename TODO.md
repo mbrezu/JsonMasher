@@ -1,6 +1,7 @@
 # Things to do next
 
-- [ ] if/elif
+- [ ] empty
+- [ ] jq -n '{a : 1 | 2}' (seems I need to be able to parse pipes inside dicts)
 - [ ] parse functions definitions and function calls
 - [ ] switch to System.Collections.Immutable for Json
 - [ ] pretty printing (FancyPen?) for Json values

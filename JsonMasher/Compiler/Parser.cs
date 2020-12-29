@@ -216,7 +216,12 @@ namespace JsonMasher.Compiler
                 state.Advance();
                 return new FunctionCall(Not.Builtin, ParseTerm(state));
             }
-            if (state.Current == Tokens.Dot)
+            else if (state.Current == Tokens.Keywords.If)
+            {
+                state.Advance();
+                return ParseIf(state);
+            }
+            else if (state.Current == Tokens.Dot)
             {
                 return ParseDot(state);
             }
@@ -265,6 +270,37 @@ namespace JsonMasher.Compiler
                 var result = ParseFilter(state);
                 state.Match(Tokens.CloseParen);
                 return result;
+            }
+            else
+            {
+                throw new InvalidOperationException();
+            }
+        }
+
+        private IJsonMasherOperator ParseIf(State state)
+        {
+            var cond = ParseFilter(state);
+            state.Match(Tokens.Keywords.Then);
+            var thenFilter = ParseFilter(state);
+            if (state.Current == Tokens.Keywords.Else)
+            {
+                state.Advance();
+                var elseFilter = ParseFilter(state);
+                state.Match(Tokens.Keywords.End);
+                return new IfThenElse {
+                    Cond = cond,
+                    Then = thenFilter,
+                    Else = elseFilter
+                };
+            }
+            else if (state.Current == Tokens.Keywords.Elif)
+            {
+                state.Advance();
+                return new IfThenElse {
+                    Cond = cond,
+                    Then = thenFilter,
+                    Else = ParseIf(state)
+                };
             }
             else
             {

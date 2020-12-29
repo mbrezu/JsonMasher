@@ -41,7 +41,12 @@ namespace JsonMasher.Compiler
             As,
             And,
             Or,
-            Not
+            Not,
+            If,
+            Then,
+            Else,
+            End,
+            Elif
         }
 
         private record SimpleToken(SimpleTokenType Type): Token;
@@ -129,6 +134,16 @@ namespace JsonMasher.Compiler
             public static Token Or => _or;
             private static Token _not = new Keyword(KeywordType.Not);
             public static Token Not => _not;
+            private static Token _if = new Keyword(KeywordType.If);
+            public static Token If => _if;
+            private static Token _then = new Keyword(KeywordType.Then);
+            public static Token Then => _then;
+            private static Token _else = new Keyword(KeywordType.Else);
+            public static Token Else => _else;
+            private static Token _end = new Keyword(KeywordType.End);
+            public static Token End => _end;
+            private static Token _elif = new Keyword(KeywordType.Elif);
+            public static Token Elif => _elif;
         }
     }
 }

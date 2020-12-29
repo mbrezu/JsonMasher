@@ -38,6 +38,7 @@ namespace JsonMasher.Tests.EndToEnd
             => Enumerable.Empty<TestItem>()
                 .Concat(SimplePrograms())
                 .Concat(AssignmentPrograms())
+                .Concat(IfThenElsePrograms())
                 .Concat(BindingPrograms());
 
         private static IEnumerable<TestItem> SimplePrograms()
@@ -117,6 +118,15 @@ namespace JsonMasher.Tests.EndToEnd
             yield return new TestItem(". > 3 and . < 5 or . > 7 and . < 9", "4", "[true]");
             yield return new TestItem(". > 3 and . < 5 or . > 7 and . < 9", "8", "[true]");
             yield return new TestItem(". > 3 and . < 5 or . > 7 and . < 9", "6", "[false]");
+        }
+
+        private static IEnumerable<TestItem> IfThenElsePrograms()
+        {
+            yield return new TestItem("if true, false then 1 else 2 end", "null", "[1, 2]");
+            yield return new TestItem("if . < 3 then 1 else 2 end", "2", "[1]");
+            yield return new TestItem("if . == 4 then 1 else 2 end", "2", "[2]");
+            yield return new TestItem(
+                "if . == 4 then 1 elif . == 2 then 3 else 2 end", "2", "[3]");
         }
 
         private static IEnumerable<TestItem> AssignmentPrograms()
