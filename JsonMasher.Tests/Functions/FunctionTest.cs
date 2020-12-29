@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using FluentAssertions;
-using JsonMasher.Mashers;
 using JsonMasher.Mashers.Combinators;
 using JsonMasher.Mashers.Operators;
 using JsonMasher.Mashers.Primitives;

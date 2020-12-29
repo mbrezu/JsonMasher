@@ -147,6 +147,7 @@ namespace JsonMasher
                 0 => EmptyObject,
                 _ => new JsonObject(args)
             };
+        public static Json Bool(bool value) => value ? Json.True : Json.False;
     }
 
     class JsonNumber : Json
