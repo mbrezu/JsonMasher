@@ -1,6 +1,5 @@
 # Things to do next
 
-- [ ] relational operators: <, <=, ==, >, >=
 - [ ] boolean operators: and, or, not
 - [ ] if/elif
 - [ ] parse functions definitions and function calls

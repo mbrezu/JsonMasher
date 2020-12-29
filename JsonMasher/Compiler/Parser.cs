@@ -143,11 +143,27 @@ namespace JsonMasher.Compiler
         }
 
         private IJsonMasherOperator ParseRelationalExpression(State state) 
-            => ChainAssocLeft(
-                state,
-                ParseArithLowerExpression,
-                op => op == Tokens.EqualsEquals,
-                op => EqualsEquals.Builtin);
+        {
+            var t1 = ParseArithLowerExpression(state);
+            var op = state.Current switch
+            {
+                Token t when t == Tokens.EqualsEquals => EqualsEquals.Builtin,
+                Token t when t == Tokens.LessThan => LessThan.Builtin,
+                Token t when t == Tokens.LessThanOrEqual => LessThanOrEqual.Builtin,
+                Token t when t == Tokens.GreaterThan => GreaterThan.Builtin,
+                Token t when t == Tokens.GreaterThanOrEqual => GreaterThanOrEqual.Builtin,
+                _ => null
+            };
+            if (op != null) {
+                state.Advance();
+                var t2 = ParseArithLowerExpression(state);
+                return new FunctionCall(op, t1, t2);
+            }
+            else
+            {
+                return t1;
+            }
+        }
 
         private IJsonMasherOperator ParseArithLowerExpression(State state)
         {

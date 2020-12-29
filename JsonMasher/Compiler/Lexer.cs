@@ -59,6 +59,16 @@ namespace JsonMasher.Compiler
                     yield return Tokens.PipeEquals;
                     state.Advance(2);
                 }
+                else if (state.Char == '<' && state.NextChar == '=')
+                {
+                    yield return Tokens.LessThanOrEqual;
+                    state.Advance(2);
+                }
+                else if (state.Char == '>' && state.NextChar == '=')
+                {
+                    yield return Tokens.GreaterThanOrEqual;
+                    state.Advance(2);
+                }
                 else 
                 {
                     switch (state.Char)
@@ -121,6 +131,14 @@ namespace JsonMasher.Compiler
                             break;
                         case '/':
                             yield return Tokens.Divide;
+                            state.Advance();
+                            break;
+                        case '<':
+                            yield return Tokens.LessThan;
+                            state.Advance();
+                            break;
+                        case '>':
+                            yield return Tokens.GreaterThan;
                             state.Advance();
                             break;
                         default:

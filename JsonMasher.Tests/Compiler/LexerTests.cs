@@ -62,6 +62,10 @@ namespace JsonMasher.Tests.Compiler
                 "|= +", TokensParams(Tokens.PipeEquals, Tokens.Plus));
             yield return new TestItem(
                 "/ +", TokensParams(Tokens.Divide, Tokens.Plus));
+            yield return new TestItem(
+                "> <", TokensParams(Tokens.GreaterThan, Tokens.LessThan));
+            yield return new TestItem(
+                "<= >=", TokensParams(Tokens.LessThanOrEqual, Tokens.GreaterThanOrEqual));
         }
 
         private static IEnumerable<TestItem> NumberTests()

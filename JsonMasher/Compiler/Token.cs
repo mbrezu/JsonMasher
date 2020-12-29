@@ -28,7 +28,11 @@ namespace JsonMasher.Compiler
             Times,
             EqualsEquals,
             PipeEquals,
-            Divide
+            Divide,
+            LessThan,
+            LessThanOrEqual,
+            GreaterThan,
+            GreaterThanOrEqual
         }
 
         private enum KeywordType
@@ -93,6 +97,18 @@ namespace JsonMasher.Compiler
 
         private static Token _divide = new SimpleToken(SimpleTokenType.Divide);
         public static Token Divide => _divide;
+
+        private static Token _lessThan = new SimpleToken(SimpleTokenType.LessThan);
+        public static Token LessThan => _lessThan;
+
+        private static Token _lessThanOrEqual = new SimpleToken(SimpleTokenType.LessThanOrEqual);
+        public static Token LessThanOrEqual => _lessThanOrEqual;
+
+        private static Token _greaterThan = new SimpleToken(SimpleTokenType.GreaterThan);
+        public static Token GreaterThan => _greaterThan;
+
+        private static Token _greaterThanOrEqual = new SimpleToken(SimpleTokenType.GreaterThanOrEqual);
+        public static Token GreaterThanOrEqual => _greaterThanOrEqual;
 
         public static Token Number(double value) => new Number(value);
         public static Token Identifier(string id) => new Identifier(id);

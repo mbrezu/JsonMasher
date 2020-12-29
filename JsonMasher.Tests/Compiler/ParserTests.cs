@@ -7,6 +7,7 @@ using JsonMasher.Mashers.Combinators;
 using JsonMasher.Mashers.Operators;
 using JsonMasher.Mashers.Primitives;
 using Xunit;
+using Ops = JsonMasher.Mashers.Operators;
 
 namespace JsonMasher.Tests.Compiler
 {
@@ -275,10 +276,19 @@ namespace JsonMasher.Tests.Compiler
         {
             yield return new TestItem(
                 "1 == 2",
-                new FunctionCall(
-                    EqualsEquals.Builtin,
-                    new Literal(1),
-                    new Literal(2)));
+                new FunctionCall(EqualsEquals.Builtin, new Literal(1), new Literal(2)));
+            yield return new TestItem(
+                "1 < 2",
+                new FunctionCall(Ops.LessThan.Builtin, new Literal(1), new Literal(2)));
+            yield return new TestItem(
+                "1 <= 2",
+                new FunctionCall(Ops.LessThanOrEqual.Builtin, new Literal(1), new Literal(2)));
+            yield return new TestItem(
+                "1 > 2",
+                new FunctionCall(Ops.GreaterThan.Builtin, new Literal(1), new Literal(2)));
+            yield return new TestItem(
+                "1 >= 2",
+                new FunctionCall(Ops.GreaterThanOrEqual.Builtin, new Literal(1), new Literal(2)));
         }
 
         private static IEnumerable<TestItem> CommaTests()

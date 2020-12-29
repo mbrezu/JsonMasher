@@ -102,6 +102,11 @@ namespace JsonMasher.Tests.EndToEnd
                 "[1]");
 
             yield return new TestItem("./2", "1", "[0.5]");
+
+            yield return new TestItem(". > 3", "1", "[false]");
+            yield return new TestItem(".[] | . <= 2", "[1, 2]", "[true, true]");
+            yield return new TestItem(".[] | . > 2", "[1, 2, 3, 4]", "[false, false, true, true]");
+            yield return new TestItem(".[] | . >= 2", "[1, 2, 3, 4]", "[false, true, true, true]");
         }
 
         private static IEnumerable<TestItem> AssignmentPrograms()
