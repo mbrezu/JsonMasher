@@ -15,7 +15,7 @@ namespace JsonMasher.Tests
             var data = Json.Number(2);
             var op = new PipeAssignment {
                 PathExpression = Identity.Instance,
-                Masher = FunctionCall.Builtin(
+                Masher = new FunctionCall(
                     Plus.Builtin, Identity.Instance, new Literal { Value = Json.Number(2) })
             };
 
@@ -35,7 +35,7 @@ namespace JsonMasher.Tests
             var data = "[1, 2]".AsJson();
             var op = new PipeAssignment {
                 PathExpression = Enumerate.Instance,
-                Masher = FunctionCall.Builtin(
+                Masher = new FunctionCall(
                     Plus.Builtin, Identity.Instance, new Literal { Value = Json.Number(2) })
             };
 
@@ -57,7 +57,7 @@ namespace JsonMasher.Tests
                 PathExpression = Compose.AllParams(
                     Enumerate.Instance,
                     Enumerate.Instance),
-                Masher = FunctionCall.Builtin(
+                Masher = new FunctionCall(
                     Plus.Builtin, Identity.Instance, new Literal { Value = Json.Number(2) })
             };
 
@@ -77,7 +77,7 @@ namespace JsonMasher.Tests
             var data = "{ \"a\": 1, \"b\": 2 }".AsJson();
             var op = new PipeAssignment {
                 PathExpression = Enumerate.Instance,
-                Masher = FunctionCall.Builtin(
+                Masher = new FunctionCall(
                     Plus.Builtin, Identity.Instance, new Literal { Value = Json.Number(2) })
             };
 
@@ -97,7 +97,7 @@ namespace JsonMasher.Tests
             var data = "{ \"a\": 1, \"b\": 2 }".AsJson();
             var op = new PipeAssignment {
                 PathExpression = new StringSelector { Key = "a"},
-                Masher = FunctionCall.Builtin(
+                Masher = new FunctionCall(
                     Plus.Builtin, Identity.Instance, new Literal { Value = Json.Number(2) })
             };
 
@@ -119,7 +119,7 @@ namespace JsonMasher.Tests
                 PathExpression = Compose.AllParams(
                     new StringSelector { Key = "a" },
                     new StringSelector { Key = "c" }),
-                Masher = FunctionCall.Builtin(
+                Masher = new FunctionCall(
                     Plus.Builtin, Identity.Instance, new Literal { Value = Json.Number(2) })
             };
 
@@ -141,7 +141,7 @@ namespace JsonMasher.Tests
                 PathExpression = Compose.AllParams(
                     Enumerate.Instance,
                     new Selector { Index = new Literal { Value = Json.Number(0) } }),
-                Masher = FunctionCall.Builtin(
+                Masher = new FunctionCall(
                     Plus.Builtin, Identity.Instance, new Literal { Value = Json.Number(2) })
             };
 
@@ -163,7 +163,7 @@ namespace JsonMasher.Tests
                 PathExpression = Compose.AllParams(
                     Enumerate.Instance,
                     new Selector { Index = new Literal { Value = Json.String("b") } }),
-                Masher = FunctionCall.Builtin(
+                Masher = new FunctionCall(
                     Plus.Builtin, Identity.Instance, new Literal { Value = Json.Number(2) })
             };
 

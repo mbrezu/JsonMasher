@@ -17,10 +17,6 @@ namespace JsonMasher.Mashers.Combinators
         public List<Thunk> ThunkedArguments { get; private set; }
         public List<IJsonMasherOperator> Arguments { get; private set; }
 
-        // TODO: remove me
-        public static FunctionCall Builtin(Builtin builtin, params IJsonMasherOperator[] arguments) 
-            => new FunctionCall(builtin, arguments);
-        
         public FunctionCall(FunctionDescriptor descriptor, params IJsonMasherOperator[] arguments)
         {
             Descriptor = descriptor;

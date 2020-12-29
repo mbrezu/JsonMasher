@@ -182,39 +182,39 @@ namespace JsonMasher.Tests.Compiler
         {
             yield return new TestItem(
                 "1 + 1", 
-                FunctionCall.Builtin(
+                new FunctionCall(
                     Plus.Builtin,
                     new Literal { Value = Json.Number(1) },
                     new Literal { Value = Json.Number(1) }));
             yield return new TestItem(
                 "1 - 1", 
-                FunctionCall.Builtin(
+                new FunctionCall(
                     Minus.Builtin,
                     new Literal { Value = Json.Number(1) },
                     new Literal { Value = Json.Number(1) }));
             yield return new TestItem(
                 "1 + 1 + 1", 
-                FunctionCall.Builtin(
+                new FunctionCall(
                     Plus.Builtin, 
-                    FunctionCall.Builtin(
+                    new FunctionCall(
                         Plus.Builtin, 
                         new Literal { Value = Json.Number(1) },
                         new Literal { Value = Json.Number(1) }),
                     new Literal { Value = Json.Number(1) }));
             yield return new TestItem(
                 "1 - 1 + 1", 
-                FunctionCall.Builtin(
+                new FunctionCall(
                     Plus.Builtin,
-                    FunctionCall.Builtin(
+                    new FunctionCall(
                         Minus.Builtin,
                         new Literal { Value = Json.Number(1) },
                         new Literal { Value = Json.Number(1) }),
                     new Literal { Value = Json.Number(1) }));
             yield return new TestItem(
                 "1 + 1 - 1", 
-                FunctionCall.Builtin(
+                new FunctionCall(
                     Minus.Builtin, 
-                    FunctionCall.Builtin(
+                    new FunctionCall(
                         Plus.Builtin,
                         new Literal { Value = Json.Number(1) },
                         new Literal { Value = Json.Number(1) }),
@@ -225,19 +225,19 @@ namespace JsonMasher.Tests.Compiler
         {
             yield return new TestItem(
                 "1 + 2 * 2", 
-                FunctionCall.Builtin(
+                new FunctionCall(
                     Plus.Builtin,
                     new Literal { Value = Json.Number(1) },
-                    FunctionCall.Builtin(
+                    new FunctionCall(
                         Times.Builtin,
                         new Literal { Value = Json.Number(2) },
                         new Literal { Value = Json.Number(2) })));
             yield return new TestItem(
                 "1 + 2 / 2", 
-                FunctionCall.Builtin(
+                new FunctionCall(
                     Plus.Builtin,
                     new Literal { Value = Json.Number(1) },
-                    FunctionCall.Builtin(
+                    new FunctionCall(
                         Divide.Builtin,
                         new Literal { Value = Json.Number(2) },
                         new Literal { Value = Json.Number(2) })));
@@ -247,10 +247,10 @@ namespace JsonMasher.Tests.Compiler
         {
             yield return new TestItem(
                 "1 + (1 - 1)",
-                FunctionCall.Builtin(
+                new FunctionCall(
                     Plus.Builtin,
                     new Literal { Value = Json.Number(1) },
-                    FunctionCall.Builtin(
+                    new FunctionCall(
                         Minus.Builtin,
                         new Literal { Value = Json.Number(1) },
                         new Literal { Value = Json.Number(1) })));
@@ -262,9 +262,9 @@ namespace JsonMasher.Tests.Compiler
             ));
             yield return new TestItem(
                 "(1 + 2) * 2",
-                FunctionCall.Builtin(
+                new FunctionCall(
                     Times.Builtin,
-                    FunctionCall.Builtin(
+                    new FunctionCall(
                         Plus.Builtin,
                         new Literal { Value = Json.Number(1) },
                         new Literal { Value = Json.Number(2) }),
@@ -275,7 +275,7 @@ namespace JsonMasher.Tests.Compiler
         {
             yield return new TestItem(
                 "1 == 2",
-                FunctionCall.Builtin(
+                new FunctionCall(
                     EqualsEquals.Builtin,
                     new Literal { Value = Json.Number(1) },
                     new Literal { Value = Json.Number(2) }));
@@ -309,7 +309,7 @@ namespace JsonMasher.Tests.Compiler
         {
             yield return new TestItem(". |= . + 2", new PipeAssignment {
                 PathExpression = Identity.Instance,
-                Masher = FunctionCall.Builtin(
+                Masher = new FunctionCall(
                     Plus.Builtin,
                     Identity.Instance,
                     new Literal { Value = Json.Number(2) })
@@ -317,14 +317,14 @@ namespace JsonMasher.Tests.Compiler
             yield return new TestItem(". |= . + 2 | . |= . + 2", Compose.AllParams(
                 new PipeAssignment {
                     PathExpression = Identity.Instance,
-                    Masher = FunctionCall.Builtin(
+                    Masher = new FunctionCall(
                         Plus.Builtin,
                         Identity.Instance,
                         new Literal { Value = Json.Number(2) })
                 },
                 new PipeAssignment {
                     PathExpression = Identity.Instance,
-                    Masher = FunctionCall.Builtin(
+                    Masher = new FunctionCall(
                         Plus.Builtin,
                         Identity.Instance,
                         new Literal { Value = Json.Number(2) })
@@ -335,7 +335,7 @@ namespace JsonMasher.Tests.Compiler
         {
             yield return new TestItem(". + 2 as $test | .", new Let {
                 Name = "test",
-                Value = FunctionCall.Builtin(
+                Value = new FunctionCall(
                     Plus.Builtin,
                     Identity.Instance,
                     new Literal { Value = Json.Number(2) }),

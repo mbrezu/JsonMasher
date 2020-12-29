@@ -169,8 +169,7 @@ namespace JsonMasher.Compiler
             {
                 var op = state.Current;
                 state.Advance();
-                accum = FunctionCall.Builtin(
-                    builtinFunc(op), accum, termParser(state));
+                accum = new FunctionCall(builtinFunc(op), accum, termParser(state));
             }
             return accum;
         }

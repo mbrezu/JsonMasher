@@ -13,7 +13,7 @@ namespace JsonMasher.Tests.Operators
         {
             // Arrange
             var data = Json.Null;
-            var op = FunctionCall.Builtin(
+            var op = new FunctionCall(
                 Times.Builtin,
                 new Literal { Value = Json.Number(2) },
                 new Literal { Value = Json.Number(3) });
@@ -32,7 +32,7 @@ namespace JsonMasher.Tests.Operators
         {
             // Arrange
             var data = Json.Null;
-            var op = FunctionCall.Builtin(
+            var op = new FunctionCall(
                 Times.Builtin,
                 new Literal { Value = Json.String("ab") },
                 new Literal { Value = Json.Number(3) });
@@ -51,7 +51,7 @@ namespace JsonMasher.Tests.Operators
         {
             // Arrange
             var data = Json.Null;
-            var op = FunctionCall.Builtin(
+            var op = new FunctionCall(
                 Times.Builtin,
                 new Literal { Value = Json.Number(3) },
                 new Literal { Value = Json.String("ba") });

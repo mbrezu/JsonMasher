@@ -13,7 +13,7 @@ namespace JsonMasher.Tests.Operators
         {
             // Arrange
             var data = Json.Number(1);
-            var op = FunctionCall.Builtin(Plus.Builtin, Identity.Instance, Identity.Instance);
+            var op = new FunctionCall(Plus.Builtin, Identity.Instance, Identity.Instance);
 
             // Act
             var result = op.RunAsSequence(data);
@@ -31,7 +31,7 @@ namespace JsonMasher.Tests.Operators
             var data = Utils.JsonNumberArray(1, 2, 3);
             var op = Compose.AllParams(
                 Enumerate.Instance,
-                FunctionCall.Builtin(Plus.Builtin, Identity.Instance, Identity.Instance));
+                new FunctionCall(Plus.Builtin, Identity.Instance, Identity.Instance));
 
             // Act
             var result = op.RunAsSequence(data);
@@ -47,7 +47,7 @@ namespace JsonMasher.Tests.Operators
         {
             // Arrange
             var data = Utils.JsonNumberArray(1, 2, 3);
-            var op = FunctionCall.Builtin(Plus.Builtin, Enumerate.Instance, Enumerate.Instance);
+            var op = new FunctionCall(Plus.Builtin, Enumerate.Instance, Enumerate.Instance);
 
             // Act
             var result = op.RunAsSequence(data);
@@ -63,7 +63,7 @@ namespace JsonMasher.Tests.Operators
         {
             // Arrange
             var data = Json.ArrayParams(Json.Number(1));
-            var op = FunctionCall.Builtin(Plus.Builtin, Identity.Instance, Identity.Instance);
+            var op = new FunctionCall(Plus.Builtin, Identity.Instance, Identity.Instance);
 
             // Act
             var result = op.RunAsSequence(data);
@@ -79,7 +79,7 @@ namespace JsonMasher.Tests.Operators
         {
             // Arrange
             var data = Json.String("a");
-            var op = FunctionCall.Builtin(Plus.Builtin, Identity.Instance, Identity.Instance);
+            var op = new FunctionCall(Plus.Builtin, Identity.Instance, Identity.Instance);
 
             // Act
             var result = op.RunAsSequence(data);
@@ -95,7 +95,7 @@ namespace JsonMasher.Tests.Operators
         {
             // Arrange
             var data = Json.ObjectParams(new JsonProperty("a", Json.Number(1)));
-            var op = FunctionCall.Builtin(
+            var op = new FunctionCall(
                 Plus.Builtin, 
                 Identity.Instance, 
                 new Literal { Value = Json.ObjectParams(new JsonProperty("b", Json.Number(2))) });

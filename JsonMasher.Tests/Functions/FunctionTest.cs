@@ -19,7 +19,7 @@ namespace JsonMasher.Tests.Functions
                 new FunctionDefinition { 
                     Name = "test",
                     Arguments = new List<string>(),
-                    Body = FunctionCall.Builtin(
+                    Body = new FunctionCall(
                         Plus.Builtin, Identity.Instance, new Literal { Value = Json.Number(2) })
                 },
                 Enumerate.Instance,

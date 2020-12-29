@@ -13,7 +13,7 @@ namespace JsonMasher.Tests.Operators
         {
             // Arrange
             var data = Json.Null;
-            var op = FunctionCall.Builtin(
+            var op = new FunctionCall(
                 Divide.Builtin,
                 new Literal { Value = Json.Number(1) },
                 new Literal { Value = Json.Number(2) });
