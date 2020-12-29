@@ -11,7 +11,7 @@ namespace JsonMasher.Mashers.Combinators
         public IEnumerable<Json> Mash(Json json, IMashContext context)
         {
             if (Arguments == null || Arguments.Count == 0) {
-                context.SetCallable(Name, new Thunk(Body));
+                context.SetCallable(Name, Body);
             }
             else
             {

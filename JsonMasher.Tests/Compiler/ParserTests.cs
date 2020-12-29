@@ -37,7 +37,6 @@ namespace JsonMasher.Tests.Compiler
                     .WithStrictOrdering()
                     .ComparingByValue<Builtin>()
                     .ComparingByMembers<PropertyDescriptor>()
-                    .ComparingByMembers<Thunk>()
                     .ComparingByMembers<FunctionName>());
         }
 
