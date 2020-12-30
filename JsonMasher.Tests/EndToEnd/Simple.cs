@@ -122,6 +122,9 @@ namespace JsonMasher.Tests.EndToEnd
             yield return new TestItem("empty", "null", "[]");
             yield return new TestItem(". | empty", "[1, 2, 3]", "[]");
             yield return new TestItem("empty | .", "[1, 2, 3]", "[]");
+            yield return new TestItem("range(3)", "null", "[0, 1, 2]");
+            yield return new TestItem("range(2, 3)", "null", "[0, 1, 0, 1, 2]");
+            yield return new TestItem("range(range(3))", "null", "[0, 0, 1]");
         }
 
         private static IEnumerable<TestItem> IfThenElsePrograms()
