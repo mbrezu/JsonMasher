@@ -28,40 +28,19 @@ namespace JsonMasher
                 _ => throw new InvalidOperationException()
             };
 
-        public virtual IEnumerable<Json> EnumerateArray()
-        {
-            throw new NotImplementedException();
-        }
+        public virtual IEnumerable<Json> EnumerateArray() => throw new NotImplementedException();
 
-        public virtual IEnumerable<JsonProperty> EnumerateObject()
-        {
-            throw new NotImplementedException();
-        }
+        public virtual IEnumerable<JsonProperty> EnumerateObject() => throw new NotImplementedException();
 
-        public virtual double GetNumber()
-        {
-            throw new NotImplementedException();
-        }
+        public virtual double GetNumber() => throw new NotImplementedException();
 
-        public virtual string GetString()
-        {
-            throw new NotImplementedException();
-        }
+        public virtual string GetString() => throw new NotImplementedException();
 
-        public virtual Json GetElementAt(int index)
-        {
-            throw new NotImplementedException();
-        }
+        public virtual Json GetElementAt(int index) => throw new NotImplementedException();
 
-        public virtual Json GetElementAt(string key)
-        {
-            throw new NotImplementedException();
-        }
+        public virtual Json GetElementAt(string key) => throw new NotImplementedException();
 
-        public virtual int GetLength()
-        {
-            throw new NotImplementedException();
-        }
+        public virtual int GetLength() => throw new NotImplementedException();
 
         public bool DeepEqual(Json other)
         {
@@ -137,8 +116,7 @@ namespace JsonMasher
                 _ => new JsonString(str)
             };
         
-        public static Json ArrayParams(params Json[] args) =>
-            Array(args);
+        public static Json ArrayParams(params Json[] args) => Array(args);
 
         public static Json Array(IEnumerable<Json> args) =>
             args.Count() switch {
@@ -146,8 +124,7 @@ namespace JsonMasher
                 _ => new JsonArray(args)
             };
 
-        public static Json ObjectParams(params JsonProperty[] args) =>
-            Object(args);
+        public static Json ObjectParams(params JsonProperty[] args) => Object(args);
 
         public static Json Object(IEnumerable<JsonProperty> args) =>
             args.Count() switch {
@@ -181,8 +158,9 @@ namespace JsonMasher
             Type = JsonValueType.String;
         }
 
-        public override string GetString()
-            => _value;
+        public override string GetString() => _value;
+
+        public override int GetLength() => _value.Length;
     }
 
     class JsonArray : Json
@@ -196,16 +174,11 @@ namespace JsonMasher
             Type = JsonValueType.Array;
         }
 
-        public override IEnumerable<Json> EnumerateArray()
-        {
-            return _values;
-        }
+        public override IEnumerable<Json> EnumerateArray() => _values;
 
-        public override Json GetElementAt(int index)
-            => _values[index];
+        public override Json GetElementAt(int index) => _values[index];
 
-        public override int GetLength()
-            => _values.Count;
+        public override int GetLength() => _values.Count;
     }
 
     class JsonObject : Json
@@ -230,10 +203,8 @@ namespace JsonMasher
             }
         }
 
-        public override Json GetElementAt(string key)
-            => _values[key];
+        public override Json GetElementAt(string key) => _values[key];
 
-        public override int GetLength()
-            => _values.Count;
+        public override int GetLength() => _values.Count;
     }
 }

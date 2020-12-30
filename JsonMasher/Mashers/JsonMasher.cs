@@ -16,6 +16,7 @@ namespace JsonMasher.Mashers
             _context.SetCallable(new FunctionName("range", 1), Range.Builtin_1);
             _context.SetCallable(new FunctionName("range", 2), Range.Builtin_2);
             _context.SetCallable(new FunctionName("range", 3), Range.Builtin_3);
+            _context.SetCallable(new FunctionName("length", 0), Length.Builtin);
             return (sequence: seq.SelectMany(json => op.Mash(json, _context)), context: _context);
         }
     }

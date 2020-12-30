@@ -1,6 +1,5 @@
 # Things to do next
 
-- [ ] length builtin
 - [ ] limit builtin
 - [ ] slice selectors
 - [ ] switch to System.Collections.Immutable for Json

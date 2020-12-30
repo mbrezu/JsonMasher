@@ -80,34 +80,6 @@ namespace JsonMasher.Tests
         }
 
         [Fact]
-        public void ArrayLength()
-        {
-            // Arrange
-            var data = MakeArray();
-            var op = Length.Instance;
-
-            // Act
-            var result = op.RunAsScalar(data);
-
-            // Assert
-            result.DeepEqual(Json.Number(3)).Should().BeTrue();
-        }
-
-        [Fact]
-        public void ObjectLength()
-        {
-            // Arrange
-            var data = MakeObject();
-            var op = Length.Instance;
-
-            // Act
-            var result = op.RunAsScalar(data);
-
-            // Assert
-            result.DeepEqual(Json.Number(3)).Should().BeTrue();
-        }
-
-        [Fact]
         public void ComposeArrayEnumerations()
         {
             // Arrange
