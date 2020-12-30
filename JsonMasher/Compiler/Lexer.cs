@@ -54,7 +54,7 @@ namespace JsonMasher.Compiler
                 var position = positionNullable == null ? _index : positionNullable.Value;
                 var length = lengthNullable == null ? 1 : lengthNullable.Value;
                 var programWithLines = new ProgramWithLines(_program);
-                return new LexerException(
+                return new JsonMasherException(
                     message, 
                     programWithLines.GetLineNumber(position) + 1,
                     programWithLines.GetColumnNumber(position) + 1,

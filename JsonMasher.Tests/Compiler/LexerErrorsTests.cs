@@ -6,7 +6,7 @@ using Xunit;
 
 namespace JsonMasher.Tests.Compiler
 {
-    public class LexerExceptionTests
+    public class LexerErrorsTests
     {
         [Fact]
         public void UnexpectedToken()
@@ -23,7 +23,7 @@ Line 1:                 ^
 
             // Assert
             action
-                .Should().Throw<LexerException>()
+                .Should().Throw<JsonMasherException>()
                 .Where(e => VerifyException(
                     e, Messages.Lexer.UnexpectedCharacter, 1, 17, expectedHighlights));
         }
@@ -44,7 +44,7 @@ Line 2:     ^
 
             // Assert
             action
-                .Should().Throw<LexerException>()
+                .Should().Throw<JsonMasherException>()
                 .Where(e => VerifyException(
                     e, Messages.Lexer.EoiInsideString, 2, 5, expectedHighlights));
         }
@@ -64,13 +64,13 @@ Line 1: ^^^^^^^^^^
 
             // Assert
             action
-                .Should().Throw<LexerException>()
+                .Should().Throw<JsonMasherException>()
                 .Where(e => VerifyException(
                     e, Messages.Lexer.InvalidEscapeSequence, 1, 1, expectedHighlights));
         }
 
         private bool VerifyException(
-            LexerException e, string message, int line, int column, string highlights)
+            JsonMasherException e, string message, int line, int column, string highlights)
         {
             e.Message.Should().Be(message);
             e.Line.Should().Be(line);

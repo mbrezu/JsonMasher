@@ -1,11 +1,31 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace JsonMasher.Compiler
 {
-    public interface Token {}
+    public interface Token 
+    {
+        public string GetDisplayNameForException();
+    }
 
-    record Identifier(string Id): Token;
-    record VariableIdentifier(string Id): Token;
-    record String(string Value): Token;
-    record Number(double Value): Token;
+    record Identifier(string Id): Token
+    {
+        public string GetDisplayNameForException() => $"'{Id}'";
+    }
+
+    record VariableIdentifier(string Id): Token
+    {
+        public string GetDisplayNameForException() => $"'${Id}'";
+    }
+
+    record String(string Value): Token
+    {
+        public string GetDisplayNameForException() => $"\"{Value}\"";
+    }
+
+    record Number(double Value): Token
+    {
+        public string GetDisplayNameForException() => $"'{Value}'";
+    }
 
     public record TokenWithPos(Token Token, int StartPos, int EndPos);
 
@@ -13,27 +33,49 @@ namespace JsonMasher.Compiler
     {
         private enum SimpleTokenType
         {
+            [Display(Name=".")]
             Dot,
+            [Display(Name="|")]
             Pipe,
+            [Display(Name="(")]
             OpenParen,
+            [Display(Name=")")]
             CloseParen,
+            [Display(Name="[")]
             OpenSquareParen,
+            [Display(Name="]")]
             CloseSquareParen,
+            [Display(Name="{")]
             OpenBrace,
+            [Display(Name="}")]
             CloseBrace,
+            [Display(Name=",")]
             Comma,
+            [Display(Name=";")]
             Semicolon,
+            [Display(Name=":")]
             Colon,
+            [Display(Name="..")]
             DotDot,
+            [Display(Name="+")]
             Plus,
+            [Display(Name="-")]
             Minus,
+            [Display(Name="*")]
             Times,
+            [Display(Name="==")]
             EqualsEquals,
+            [Display(Name="|=")]
             PipeEquals,
+            [Display(Name="/")]
             Divide,
+            [Display(Name="<")]
             LessThan,
+            [Display(Name="<=")]
             LessThanOrEqual,
+            [Display(Name=">")]
             GreaterThan,
+            [Display(Name=">=")]
             GreaterThanOrEqual
         }
 
@@ -50,8 +92,15 @@ namespace JsonMasher.Compiler
             Elif
         }
 
-        private record SimpleToken(SimpleTokenType Type): Token;
-        private record Keyword(KeywordType Type): Token;
+        private record SimpleToken(SimpleTokenType Type): Token
+        {
+            public string GetDisplayNameForException() => $"'{Type.GetEnumDisplayName()}'";
+        }
+
+        private record Keyword(KeywordType Type): Token
+        {
+            public string GetDisplayNameForException() => $"'{Type.ToString().ToLower()}'";
+        }
 
         private static Token _dot = new SimpleToken(SimpleTokenType.Dot);
         public static Token Dot => _dot;

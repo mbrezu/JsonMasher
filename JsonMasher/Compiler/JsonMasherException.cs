@@ -2,13 +2,13 @@ using System;
 
 namespace JsonMasher.Compiler
 {
-    public class LexerException : Exception
+    public class JsonMasherException : Exception
     {
         public int Line { get; private set; }
         public int Column { get; private set; }
         public string Highlights { get; private set; }
 
-        public LexerException(
+        public JsonMasherException(
             string message,
             int line,
             int column,

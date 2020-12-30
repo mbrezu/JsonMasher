@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.Json;
 using JsonMasher.Mashers;
@@ -55,5 +57,11 @@ namespace JsonMasher
             }
             return sb.ToString();
         }
+
+        public static string GetEnumDisplayName(this Enum value)
+            => value.GetType().GetMember(value.ToString())
+                .First()
+                .GetCustomAttribute<DisplayAttribute>()
+                ?.Name ?? value.ToString();
     }
 }

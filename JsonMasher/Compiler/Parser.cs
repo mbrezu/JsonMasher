@@ -12,20 +12,22 @@ namespace JsonMasher.Compiler
     {
         class State
         {
-            private Token[] _tokens;
+            private string _program;
+            private TokenWithPos[] _tokens;
             private int _index;
 
-            public State(IEnumerable<Token> tokens)
+            public State(string program, IEnumerable<TokenWithPos> tokens)
             {
+                _program = program;
                 _tokens = tokens.ToArray();
                 _index = 0;
             }
 
             public bool AtEnd => _index == _tokens.Length;
 
-            public Token Current => _index < _tokens.Length ? _tokens[_index] : null;
+            public Token Current => _index < _tokens.Length ? _tokens[_index].Token : null;
 
-            public Token Next => _index >= _tokens.Length - 1 ? null : _tokens[_index + 1];
+            public Token Next => _index >= _tokens.Length - 1 ? null : _tokens[_index + 1].Token;
 
             public State Advance()
             {
@@ -39,10 +41,46 @@ namespace JsonMasher.Compiler
             {
                 if (Current != expected)
                 {
-                    throw new InvalidOperationException();
+                    throw ErrorExpected(expected);
                 }
                 Advance();
             }
+
+            public Exception ErrorExpected(params Token[] expected)
+            {
+                var expectation = string.Join(" or ", expected.Select(x => x.GetDisplayNameForException()));
+                return ErrorExpected(expectation);
+            }
+
+            public Exception ErrorExpected(string expectation)
+            {
+                if (AtEnd)
+                {
+                    return Error($"Expected {expectation}, but reached end of input.");
+                }
+                else
+                {
+                    return Error($"Expected {expectation}, but got {Current.GetDisplayNameForException()}.");
+                }
+            }
+
+            public Exception Error(string message)
+            {
+                var startPos = AtEnd ? _tokens[_index - 1].EndPos : _tokens[_index].StartPos;
+                var endPos = AtEnd ? _tokens[_index - 1].EndPos : _tokens[_index].EndPos;
+                var programWithLines = new ProgramWithLines(_program);
+                return new JsonMasherException(
+                    message,
+                    programWithLines.GetLineNumber(startPos) + 1,
+                    programWithLines.GetColumnNumber(startPos) + 1,
+                    PositionHighlighter.Highlight(programWithLines, startPos, endPos));
+            }
+
+            public Exception ErrorIdentifierExpected()
+                => ErrorExpected("an identifier");
+
+            internal Exception ErrorVariableIdentifierExpected()
+                => ErrorExpected("a variable identifier (e.g. '$a')");
         }
 
         public IJsonMasherOperator Parse(string program)
@@ -51,11 +89,11 @@ namespace JsonMasher.Compiler
             {
                 return Identity.Instance;
             }
-            var state = new State(new Lexer().Tokenize(program).Select(t => t.Token));
+            var state = new State(program, new Lexer().Tokenize(program));
             var result = ParseDefinitionOrFilter(state);
             if (!state.AtEnd)
             {
-                throw new InvalidOperationException();
+                throw state.Error(Messages.Parser.ExtraInput);
             }
             return result;
         }
@@ -83,10 +121,7 @@ namespace JsonMasher.Compiler
         private IJsonMasherOperator ParseDefinition(State state)
         {
             state.Match(Tokens.Keywords.Def);
-            var name = state.Current switch {
-                Identifier identifier => identifier.Id,
-                _ => throw new InvalidOperationException()
-            };
+            var name = GetIdentifierName(state);
             state.Advance();
             var arguments = new List<string>();
             if (state.Current == Tokens.OpenParen)
@@ -94,20 +129,18 @@ namespace JsonMasher.Compiler
                 state.Advance();
                 if (state.Current == Tokens.CloseParen)
                 {
-                    throw new InvalidOperationException();
+                    throw state.Error(Messages.Parser.EmptyParameterList);
                 }
                 while (state.Current != Tokens.CloseParen)
                 {
-                    arguments.Add(state.Current switch {
-                        Identifier identifier => identifier.Id,
-                        _ => throw new InvalidOperationException()
-                    });
+                    arguments.Add(GetIdentifierName(state));
                     state.Advance();
-                    if (state.Current == Tokens.Semicolon) {
+                    if (state.Current == Tokens.Semicolon)
+                    {
                         state.Advance();
                         if (state.Current == Tokens.CloseParen)
                         {
-                            throw new InvalidOperationException();
+                            throw state.ErrorIdentifierExpected();
                         }
                     }
                 }
@@ -116,12 +149,19 @@ namespace JsonMasher.Compiler
             state.Match(Tokens.Colon);
             var body = ParseDefinitionOrFilter(state);
             state.Match(Tokens.Semicolon);
-            return new FunctionDefinition {
+            return new FunctionDefinition
+            {
                 Name = name,
                 Arguments = arguments.Count > 0 ? arguments : null,
                 Body = body
             };
         }
+
+        private string GetIdentifierName(State state) => state.Current switch
+        {
+            Identifier identifier => identifier.Id,
+            _ => throw state.ErrorIdentifierExpected()
+        };
 
         private IJsonMasherOperator ParseFilter(State state)
             => ChainIntoArray(
@@ -179,7 +219,7 @@ namespace JsonMasher.Compiler
                 }
                 else
                 {
-                    throw new InvalidOperationException();
+                    throw state.ErrorVariableIdentifierExpected();
                 }
             }
             else
@@ -337,7 +377,7 @@ namespace JsonMasher.Compiler
             }
             else
             {
-                throw new InvalidOperationException();
+                throw state.Error(Messages.Parser.UnknownConstruct);
             }
         }
 
@@ -348,7 +388,7 @@ namespace JsonMasher.Compiler
                 state.Advance();
                 if (state.Current == Tokens.CloseParen)
                 {
-                    throw new InvalidOperationException();
+                    throw state.Error(Messages.Parser.EmptyParameterList);
                 }
                 var arguments = new List<IJsonMasherOperator>();
                 while (state.Current != Tokens.CloseParen)
@@ -359,7 +399,7 @@ namespace JsonMasher.Compiler
                         state.Advance();
                         if (state.Current == Tokens.CloseParen)
                         {
-                            throw new InvalidOperationException();
+                            throw state.Error(Messages.Parser.FilterExpected);
                         }
                     }
                 }
@@ -399,7 +439,7 @@ namespace JsonMasher.Compiler
             }
             else
             {
-                throw new InvalidOperationException();
+                throw state.ErrorExpected(Tokens.Keywords.Else, Tokens.Keywords.Elif);
             }
         }
 
@@ -484,7 +524,7 @@ namespace JsonMasher.Compiler
                 string key = state.Current switch {
                     Identifier identifier => identifier.Id,
                     String str => str.Value,
-                    _ => throw new InvalidOperationException()
+                    _ => throw state.ErrorExpected("a string (e.g. '\"test\"') or an identifier (e.g. 'x')")
                 };
                 state.Advance();
                 state.Match(Tokens.Colon);
@@ -495,7 +535,7 @@ namespace JsonMasher.Compiler
                     state.Advance();
                     if (state.Current == Tokens.CloseBrace)
                     {
-                        throw new InvalidOperationException();
+                        throw state.ErrorExpected("a key-value pair (e.g. 'a:1')");
                     }
                 }
             }

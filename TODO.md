@@ -1,7 +1,9 @@
 # Things to do next
 
 - [ ] error handling
-  - [ ] lexer/parser tokens position information for errors
+  - [ ] parser position for errors
+    - [ ] state.Error extra length or include extra token?
+  - [ ] runtime positions for errors
   - [ ] stack trace
     - [ ] pretty printing operators?
 - [ ] switch to System.Collections.Immutable for Json
