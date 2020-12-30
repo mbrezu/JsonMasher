@@ -134,4 +134,4 @@ jq -n '[1, 2] | .0'
 
 jq -n '{a:1, b:2} | length'
 
-jq -n 'limit(range(4); 2)'
+jq -n 'limit(2, 3; range(4))'

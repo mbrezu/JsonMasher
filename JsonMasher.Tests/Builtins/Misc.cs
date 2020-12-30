@@ -34,7 +34,8 @@ namespace JsonMasher.Tests.Builtins
         private static IEnumerable<TestItem> GetTestData()
             => Enumerable.Empty<TestItem>()
                 .Concat(RangeTests())
-                .Concat(LengthTests());
+                .Concat(LengthTests())
+                .Concat(LimitTests());
 
         private static IEnumerable<TestItem> RangeTests()
         {
@@ -68,6 +69,14 @@ namespace JsonMasher.Tests.Builtins
                 new FunctionCall(Length.Builtin), "{\"a\": 1, \"b\": 2}", "[2]");
             yield return new TestItem(
                 new FunctionCall(Length.Builtin), "\"abcdef\"", "[6]");
+        }
+
+        private static IEnumerable<TestItem> LimitTests()
+        {
+            yield return new TestItem(
+                new FunctionCall(Limit.Builtin, new Literal(2), Enumerate.Instance),
+                "[1, 2, 3]",
+                "[1, 2]");
         }
     }
 }

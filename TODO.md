@@ -1,6 +1,5 @@
 # Things to do next
 
-- [ ] limit builtin
 - [ ] slice selectors
 - [ ] switch to System.Collections.Immutable for Json
 - [ ] pretty printing (FancyPen?) for Json values

@@ -145,6 +145,9 @@ namespace JsonMasher.Tests.EndToEnd
             yield return new TestItem("length", "\"test\"", "[4]");
             yield return new TestItem("length", "[1, 2, 3]", "[3]");
             yield return new TestItem("{a: 1, b: 2, c: 3} | length", "null", "[3]");
+
+            yield return new TestItem("limit(2; .[])", "[1, 2, 3]", "[1, 2]");
+            yield return new TestItem("limit(1, 2, 3; .[])", "[1, 2, 3]", "[1, 1, 2, 1, 2, 3]");
         }
 
         private static IEnumerable<TestItem> IfThenElsePrograms()
