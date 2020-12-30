@@ -1,7 +1,9 @@
 # Things to do next
 
-- [ ] range builtin
+- [ ] numbers in '.5' format (without leading 0)
 - [ ] length builtin
+- [ ] limit builtin
+- [ ] slice selectors
 - [ ] switch to System.Collections.Immutable for Json
 - [ ] pretty printing (FancyPen?) for Json values
 - [ ] assignments WIP

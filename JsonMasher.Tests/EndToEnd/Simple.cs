@@ -126,14 +126,22 @@ namespace JsonMasher.Tests.EndToEnd
             yield return new TestItem("range(3)", "null", "[0, 1, 2]");
             yield return new TestItem("range(2, 3)", "null", "[0, 1, 0, 1, 2]");
             yield return new TestItem("range(range(3))", "null", "[0, 0, 1]");
-            yield return new TestItem("range(1;3)", "null", "[1, 2]");
+            yield return new TestItem("range(1; 3)", "null", "[1, 2]");
             yield return new TestItem(
-                "range(2,3;5,6)", "null", "[2, 3, 4, 2, 3, 4, 5, 3, 4, 3, 4, 5]");
+                "range(2,3; 5,6)", "null", "[2, 3, 4, 2, 3, 4, 5, 3, 4, 3, 4, 5]");
+            yield return new TestItem(
+                "range(1; 6; 2)", "null", "[1, 3, 5]");
+            yield return new TestItem(
+                "range(1; 3; 0.5)", "null", "[1, 1.5, 2, 2.5]");
+            yield return new TestItem(
+                "range(1; 3,4; 0.5)", "null", "[1, 1.5, 2, 2.5, 1, 1.5, 2, 2.5, 3, 3.5]");
+            yield return new TestItem(
+                "range(1,2; 2,3; 1,0.5)", "null", "[1, 1, 1.5, 1, 2, 1, 1.5, 2, 2.5, 2, 2, 2.5]");
         }
 
         private static IEnumerable<TestItem> IfThenElsePrograms()
         {
-            yield return new TestItem("if true, false then 1 else 2 end", "null", "[1, 2]");
+            yield return new TestItem("if true,  false then 1 else 2 end", "null", "[1, 2]");
             yield return new TestItem("if . < 3 then 1 else 2 end", "2", "[1]");
             yield return new TestItem("if . == 4 then 1 else 2 end", "2", "[2]");
             yield return new TestItem(

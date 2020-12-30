@@ -51,6 +51,10 @@ namespace JsonMasher.Tests.Builtins
                 new FunctionCall(Range.Builtin_2, new Literal(1), new Literal(3)),
                 "null",
                 "[1, 2]");
+            yield return new TestItem(
+                new FunctionCall(Range.Builtin_3, new Literal(1), new Literal(6), new Literal(2)),
+                "null",
+                "[1, 3, 5]");
         }
     }
 }

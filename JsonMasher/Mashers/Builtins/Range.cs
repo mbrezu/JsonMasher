@@ -38,7 +38,31 @@ namespace JsonMasher.Mashers.Builtins
             }
         }
 
+        private static Builtin _builtin_3 = new Builtin(Function_3 , 3);
+
+        private static IEnumerable<Json> Function_3(
+            List<IJsonMasherOperator> mashers, Json json, IMashContext context)
+        {
+            foreach (var startValue in mashers[0].Mash(json, context))
+            {
+                foreach (var maxValue in mashers[1].Mash(json, context))
+                {
+                    foreach (var stepValue in mashers[2].Mash(json, context))
+                    {
+                        double start = startValue.GetNumber();
+                        double max = maxValue.GetNumber();
+                        double step = stepValue.GetNumber();
+                        for (double i = start; i < max; i += step)
+                        {
+                            yield return Json.Number(i);
+                        }
+                    }
+                }
+            }
+        }
+
         public static Builtin Builtin_1 => _builtin_1;
         public static Builtin Builtin_2 => _builtin_2;
+        public static Builtin Builtin_3 => _builtin_3;
     }
 }

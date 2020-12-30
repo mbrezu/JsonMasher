@@ -125,3 +125,11 @@ jq -n 'def test:1; test'
 jq -n 'range(1;10;2)'
 
 jq -n 'range(2, 3;5,6)'
+
+jq -n 'range(2;6;2)'
+
+jq -n 'range(2;6.5;.5)'
+
+jq -n '[1, 2] | .0'
+
+jq -n 'range(1,2; 2,3; 1,0.5)'
