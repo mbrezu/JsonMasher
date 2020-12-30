@@ -5,7 +5,7 @@ using System.Linq;
 namespace JsonMasher.Mashers.Combinators
 {
     public interface FunctionDescriptor {};
-    public record FunctionName(string Name): FunctionDescriptor;
+    public record FunctionName(string Name, int Arity): FunctionDescriptor;
     public record Builtin(
         Func<List<IJsonMasherOperator>, Json, IMashContext, IEnumerable<Json>> Function,
         int Arity)
@@ -30,16 +30,16 @@ namespace JsonMasher.Mashers.Combinators
 
         public IEnumerable<Json> Mash(Json json, IMashContext context)
             => Descriptor switch {
-                FunctionName name => GetThenCallCallable(name.Name, json, context),
+                FunctionName name => CallFunctionName(name, json, context),
                 Builtin builtin => RunBuiltin(builtin, json, context),
                 _ => throw new InvalidOperationException()
             };
 
-        private IEnumerable<Json> GetThenCallCallable(string name, Json json, IMashContext context)
+        private IEnumerable<Json> CallFunctionName(FunctionName name, Json json, IMashContext context)
             => context.GetCallable(name) switch
             {
                 IJsonMasherOperator op => op.Mash(json, context),
-                Function func => Call(json, func, context),
+                Function func => CallFunction(json, func, context),
                 Builtin builtin => RunBuiltin(builtin, json, context),
                 _ => throw new InvalidOperationException()
             };
@@ -54,9 +54,9 @@ namespace JsonMasher.Mashers.Combinators
         }
 
         public static FunctionCall ZeroArity(string name)
-            => new FunctionCall(new FunctionName(name));
+            => new FunctionCall(new FunctionName(name, 0));
 
-        private IEnumerable<Json> Call(Json json, Function func, IMashContext context)
+        private IEnumerable<Json> CallFunction(Json json, Function func, IMashContext context)
         {
             if (Arguments.Count != func.Arguments.Count)
             {

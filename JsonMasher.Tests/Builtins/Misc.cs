@@ -38,15 +38,19 @@ namespace JsonMasher.Tests.Builtins
         private static IEnumerable<TestItem> RangeTests()
         {
             yield return new TestItem(
-                new FunctionCall(Range.Builtin, new Literal(3)),
+                new FunctionCall(Range.Builtin_1, new Literal(3)),
                 "null",
                 "[0, 1, 2]");
             yield return new TestItem(
                 new FunctionCall(
-                    Range.Builtin, 
+                    Range.Builtin_1, 
                     Concat.AllParams(new Literal(3), new Literal(4))),
                 "null",
                 "[0, 1, 2, 0, 1, 2, 3]");
+            yield return new TestItem(
+                new FunctionCall(Range.Builtin_2, new Literal(1), new Literal(3)),
+                "null",
+                "[1, 2]");
         }
     }
 }

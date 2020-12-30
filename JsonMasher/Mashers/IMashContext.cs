@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using JsonMasher.Mashers.Combinators;
 
 namespace JsonMasher.Mashers
 {
@@ -10,6 +11,8 @@ namespace JsonMasher.Mashers
         void PopEnvironmentFrame();
         void SetVariable(string name, Json value);
         Json GetVariable(string name);
+        void SetCallable(FunctionName name, Callable value);
+        Callable GetCallable(FunctionName name);
         void SetCallable(string name, Callable value);
         Callable GetCallable(string name);
     }

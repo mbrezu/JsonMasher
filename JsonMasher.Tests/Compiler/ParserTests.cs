@@ -122,7 +122,7 @@ namespace JsonMasher.Tests.Compiler
         {
             yield return new TestItem(
                 ". | not", 
-                Compose.AllParams(Identity.Instance, new FunctionCall(new FunctionName("not"))));
+                Compose.AllParams(Identity.Instance, new FunctionCall(new FunctionName("not", 0))));
             yield return new TestItem(
                 "true or false", 
                 new FunctionCall(Or.Builtin, new Literal(true), new Literal(false)));
@@ -459,7 +459,7 @@ namespace JsonMasher.Tests.Compiler
 
         private static IEnumerable<TestItem> EmptyTests()
         {
-            yield return new TestItem("empty", new FunctionCall(new FunctionName("empty")));
+            yield return new TestItem("empty", new FunctionCall(new FunctionName("empty", 0)));
         }
 
         private static IEnumerable<TestItem> FunctionTests()
@@ -478,7 +478,7 @@ namespace JsonMasher.Tests.Compiler
                         Name = "test",
                         Body = new Literal(1)
                     },
-                    new FunctionCall(new FunctionName("test"))));
+                    new FunctionCall(new FunctionName("test", 0))));
 
             yield return new TestItem(
                 "def test(a): 1 + a;",
@@ -488,7 +488,7 @@ namespace JsonMasher.Tests.Compiler
                     Body = new FunctionCall(
                         Plus.Builtin,
                         new Literal(1),
-                        new FunctionCall(new FunctionName("a")))
+                        new FunctionCall(new FunctionName("a", 0)))
                 });
 
             yield return new TestItem(
@@ -498,8 +498,8 @@ namespace JsonMasher.Tests.Compiler
                     Arguments = new List<string> { "x", "y" },
                     Body = new ConstructArray {
                         Elements = Concat.AllParams(
-                            new FunctionCall(new FunctionName("x")),
-                            new FunctionCall(new FunctionName("y")))
+                            new FunctionCall(new FunctionName("x", 0)),
+                            new FunctionCall(new FunctionName("y", 0)))
                     }
                 });
 
@@ -510,9 +510,9 @@ namespace JsonMasher.Tests.Compiler
                     Arguments = new List<string> { "x", "y", "z" },
                     Body = new ConstructArray {
                         Elements = Concat.AllParams(
-                            new FunctionCall(new FunctionName("x")),
-                            new FunctionCall(new FunctionName("y")),
-                            new FunctionCall(new FunctionName("z")))
+                            new FunctionCall(new FunctionName("x", 0)),
+                            new FunctionCall(new FunctionName("y", 0)),
+                            new FunctionCall(new FunctionName("z", 0)))
                     }
                 });
 
@@ -524,12 +524,12 @@ namespace JsonMasher.Tests.Compiler
                         Arguments = new List<string> { "x", "y" },
                         Body = new ConstructArray {
                             Elements = Concat.AllParams(
-                                new FunctionCall(new FunctionName("x")),
-                                new FunctionCall(new FunctionName("y")))
+                                new FunctionCall(new FunctionName("x", 0)),
+                                new FunctionCall(new FunctionName("y", 0)))
                         }
                     },
                     new FunctionCall(
-                        new FunctionName("point"),
+                        new FunctionName("point", 2),
                         new Literal(1),
                         new Literal(2))));
         }

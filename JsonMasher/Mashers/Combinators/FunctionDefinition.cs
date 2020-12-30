@@ -10,12 +10,15 @@ namespace JsonMasher.Mashers.Combinators
 
         public IEnumerable<Json> Mash(Json json, IMashContext context)
         {
-            if (Arguments == null || Arguments.Count == 0) {
+            if (Arguments == null || Arguments.Count == 0)
+            {
                 context.SetCallable(Name, Body);
             }
             else
             {
-                context.SetCallable(Name, new Function(Body, Arguments));
+                context.SetCallable(
+                    new FunctionName(Name, Arguments.Count),
+                    new Function(Body, Arguments));
             }
             return json.AsEnumerable();
         }

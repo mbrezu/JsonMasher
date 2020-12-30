@@ -359,11 +359,11 @@ namespace JsonMasher.Compiler
                     }
                 }
                 state.Match(Tokens.CloseParen);
-                return new FunctionCall(new FunctionName(function), arguments);
+                return new FunctionCall(new FunctionName(function, arguments.Count), arguments);
             }
             else
             {
-                return new FunctionCall(new FunctionName(function));
+                return FunctionCall.ZeroArity(function);
             }
         }
 
