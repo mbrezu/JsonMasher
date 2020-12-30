@@ -1,14 +1,13 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using JsonMasher.Compiler;
 using JsonMasher.Mashers;
 using JsonMasher.Mashers.Combinators;
-using JsonMasher.Mashers.Operators;
+using JsonMasher.Mashers.Builtins;
 using JsonMasher.Mashers.Primitives;
 using Xunit;
-using Ops = JsonMasher.Mashers.Operators;
+using Ops = JsonMasher.Mashers.Builtins;
 
 namespace JsonMasher.Tests.Compiler
 {

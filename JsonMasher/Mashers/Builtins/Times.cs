@@ -2,7 +2,7 @@ using System;
 using System.Text;
 using JsonMasher.Mashers.Combinators;
 
-namespace JsonMasher.Mashers.Operators
+namespace JsonMasher.Mashers.Builtins
 {
     public class Times
     {

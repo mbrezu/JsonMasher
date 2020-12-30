@@ -1,17 +1,21 @@
 # Things to do next
 
-- [ ] jq -n '{a : 1 | 2}' (seems I need to be able to parse pipes inside dicts)
+- [ ] range builtin
+- [ ] length builtin
 - [ ] switch to System.Collections.Immutable for Json
 - [ ] pretty printing (FancyPen?) for Json values
-- [ ] pretty printing operators
 - [ ] assignments WIP
-- [ ] lexer/parser tokens position information for errors
 - [ ] using Object.ReferenceEquals and RuntimeHelpers.GetHashCode for keys on IJsonMasherOperator
 - [ ] has(key), keys, map, map_values
 - [ ] del, to_entries, from_entries, select, error, transpose, range
 - [ ] min/max/group/sort
 - [ ] .. (recurse)
 - [ ] error handling
-- [ ] stack trace
+  - [ ] lexer/parser tokens position information for errors
+  - [ ] stack trace
+    - [ ] pretty printing operators?
 - [ ] documentation
 - [ ] nuget packages
+- [ ] jq -n '{a : 1 | 2}' (seems I need to be able to parse pipes inside dicts)
+- [ ] destructuring bind
+- [ ] benchmarks (https://benchmarkdotnet.org/articles/guides/getting-started.html)

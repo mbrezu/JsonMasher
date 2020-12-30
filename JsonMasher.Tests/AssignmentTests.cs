@@ -1,6 +1,6 @@
 using FluentAssertions;
 using JsonMasher.Mashers.Combinators;
-using JsonMasher.Mashers.Operators;
+using JsonMasher.Mashers.Builtins;
 using JsonMasher.Mashers.Primitives;
 using Xunit;
 

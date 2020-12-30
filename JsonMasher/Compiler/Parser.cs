@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using JsonMasher.Mashers;
 using JsonMasher.Mashers.Combinators;
-using JsonMasher.Mashers.Operators;
+using JsonMasher.Mashers.Builtins;
 using JsonMasher.Mashers.Primitives;
 
 namespace JsonMasher.Compiler

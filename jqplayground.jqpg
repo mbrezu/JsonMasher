@@ -121,3 +121,5 @@ jq -n 'def plus(a; b): [a, b]; plus(1; 2)'
 jq -n 'plus(1; 2)'
 
 jq -n 'def test:1; test'
+
+jq -n 'range(1;10;2)'

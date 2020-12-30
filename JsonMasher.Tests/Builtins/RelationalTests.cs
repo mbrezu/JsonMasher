@@ -3,12 +3,12 @@ using System.Linq;
 using FluentAssertions;
 using JsonMasher.Mashers;
 using JsonMasher.Mashers.Combinators;
-using JsonMasher.Mashers.Operators;
+using JsonMasher.Mashers.Builtins;
 using JsonMasher.Mashers.Primitives;
 using Xunit;
-using Ops = JsonMasher.Mashers.Operators;
+using Ops = JsonMasher.Mashers.Builtins;
 
-namespace JsonMasher.Tests.Operators
+namespace JsonMasher.Tests.Builtins
 {
     public class RelationalTests
     {
