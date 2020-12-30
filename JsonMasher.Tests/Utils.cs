@@ -33,5 +33,7 @@ namespace JsonMasher.Tests
 
         public static Json AsJson(this string json)
             => JsonDocument.Parse(json).AsJson();
+
+        public static string CleanCR(this string str) => str.Replace("\r", "");
     }
 }

@@ -21,12 +21,12 @@ namespace JsonMasher.Tests.Compiler
             var lexer = new Lexer();
 
             // Act
-            var result = lexer.Tokenize(program);
+            var result = lexer.Tokenize(program).Select(t => t.Token);
 
             // Assert
             result.Should().BeEquivalentTo(
                 expectedTokens, 
-                options => options.RespectingRuntimeTypes());
+                options => options.RespectingRuntimeTypes().WithStrictOrdering());
         }
 
         private static IEnumerable<TestItem> GetTestData()

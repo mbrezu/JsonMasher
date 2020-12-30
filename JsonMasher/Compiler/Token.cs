@@ -7,6 +7,8 @@ namespace JsonMasher.Compiler
     record String(string Value): Token;
     record Number(double Value): Token;
 
+    public record TokenWithPos(Token Token, int StartPos, int EndPos);
+
     public static class Tokens
     {
         private enum SimpleTokenType

@@ -5,7 +5,7 @@ using JsonMasher.Mashers.Combinators;
 
 namespace JsonMasher.Mashers
 {
-    public class JsonMasher : IJsonMasher
+    public class JsonMasher
     {
         public (IEnumerable<Json> sequence, IMashContext context) Mash(IEnumerable<Json> seq, IJsonMasherOperator op)
         {

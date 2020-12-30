@@ -1,5 +1,4 @@
 using System;
-using System.Text;
 using JsonMasher.Mashers.Combinators;
 
 namespace JsonMasher.Mashers.Builtins
@@ -14,20 +13,10 @@ namespace JsonMasher.Mashers.Builtins
                 (JsonValueType.Number, JsonValueType.Number)
                     => Json.Number(t1.GetNumber() * t2.GetNumber()),
                 (JsonValueType.String, JsonValueType.Number)
-                    => Json.String(Repeat(t1.GetString(), (int)t2.GetNumber())),
+                    => Json.String(t1.GetString().Repeat((int)t2.GetNumber())),
                 (JsonValueType.Number, JsonValueType.String)
-                    => Json.String(Repeat(t2.GetString(), (int)t1.GetNumber())),
+                    => Json.String(t2.GetString().Repeat((int)t1.GetNumber())),
                 _ => throw new InvalidOperationException()
             };
-
-        static string Repeat(string str, int times)
-        {
-            var sb = new StringBuilder();
-            for (int i = 0; i < times; i++)
-            {
-                sb.Append(str);
-            }
-            return sb.ToString();
-        }
     }
 }

@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 
 namespace JsonMasher.Compiler
 {
-    public class Lexer : ILexer
+    public class Lexer
     {
         class State
         {
@@ -33,12 +33,20 @@ namespace JsonMasher.Compiler
 
             public void Advance(int amount = 1) => _index += amount;
 
-            internal void Mark() => _mark = _index;
+            public void SetMark() => _mark = _index;
+            public int Mark => _mark;
 
-            internal string GetFromMark() => _program.Substring(_mark, _index - _mark);
+            public string GetFromMark() => _program.Substring(_mark, _index - _mark);
+
+            public TokenWithPos TokenWithPos(
+                Token dotDot, int length = 1, int? startPosNullable = null)
+            {
+                var startPos = startPosNullable ?? _index;
+                return new TokenWithPos(dotDot, startPos, startPos + length);
+            }
         }
 
-        public IEnumerable<Token> Tokenize(string program)
+        public IEnumerable<TokenWithPos> Tokenize(string program)
         {
             var state = new State(program);
             state.SkipSpaces();
@@ -46,7 +54,7 @@ namespace JsonMasher.Compiler
             {
                 if (state.Char == '.' && state.NextChar == '.')
                 {
-                    yield return Tokens.DotDot;
+                    yield return state.TokenWithPos(Tokens.DotDot, 2);
                     state.Advance(2);
                 }
                 else if (state.Char == '.' 
@@ -57,22 +65,22 @@ namespace JsonMasher.Compiler
                 }
                 else if (state.Char == '=' && state.NextChar == '=')
                 {
-                    yield return Tokens.EqualsEquals;
+                    yield return state.TokenWithPos(Tokens.EqualsEquals, 2);
                     state.Advance(2);
                 }
                 else if (state.Char == '|' && state.NextChar == '=')
                 {
-                    yield return Tokens.PipeEquals;
+                    yield return state.TokenWithPos(Tokens.PipeEquals, 2);
                     state.Advance(2);
                 }
                 else if (state.Char == '<' && state.NextChar == '=')
                 {
-                    yield return Tokens.LessThanOrEqual;
+                    yield return state.TokenWithPos(Tokens.LessThanOrEqual, 2);
                     state.Advance(2);
                 }
                 else if (state.Char == '>' && state.NextChar == '=')
                 {
-                    yield return Tokens.GreaterThanOrEqual;
+                    yield return state.TokenWithPos(Tokens.GreaterThanOrEqual, 2);
                     state.Advance(2);
                 }
                 else 
@@ -80,71 +88,71 @@ namespace JsonMasher.Compiler
                     switch (state.Char)
                     {
                         case '.':
-                            yield return Tokens.Dot;
+                            yield return state.TokenWithPos(Tokens.Dot);
                             state.Advance();
                             break;
                         case '|':
-                            yield return Tokens.Pipe;
+                            yield return state.TokenWithPos(Tokens.Pipe);
                             state.Advance();
                             break;
                         case '(':
-                            yield return Tokens.OpenParen;
+                            yield return state.TokenWithPos(Tokens.OpenParen);
                             state.Advance();
                             break;
                         case ')':
-                            yield return Tokens.CloseParen;
+                            yield return state.TokenWithPos(Tokens.CloseParen);
                             state.Advance();
                             break;
                         case '[':
-                            yield return Tokens.OpenSquareParen;
+                            yield return state.TokenWithPos(Tokens.OpenSquareParen);
                             state.Advance();
                             break;
                         case ']':
-                            yield return Tokens.CloseSquareParen;
+                            yield return state.TokenWithPos(Tokens.CloseSquareParen);
                             state.Advance();
                             break;
                         case '{':
-                            yield return Tokens.OpenBrace;
+                            yield return state.TokenWithPos(Tokens.OpenBrace);
                             state.Advance();
                             break;
                         case '}':
-                            yield return Tokens.CloseBrace;
+                            yield return state.TokenWithPos(Tokens.CloseBrace);
                             state.Advance();
                             break;
                         case ',':
-                            yield return Tokens.Comma;
+                            yield return state.TokenWithPos(Tokens.Comma);
                             state.Advance();
                             break;
                         case ';':
-                            yield return Tokens.Semicolon;
+                            yield return state.TokenWithPos(Tokens.Semicolon);
                             state.Advance();
                             break;
                         case ':':
-                            yield return Tokens.Colon;
+                            yield return state.TokenWithPos(Tokens.Colon);
                             state.Advance();
                             break;
                         case '+':
-                            yield return Tokens.Plus;
+                            yield return state.TokenWithPos(Tokens.Plus);
                             state.Advance();
                             break;
                         case '-':
-                            yield return Tokens.Minus;
+                            yield return state.TokenWithPos(Tokens.Minus);
                             state.Advance();
                             break;
                         case '*':
-                            yield return Tokens.Times;
+                            yield return state.TokenWithPos(Tokens.Times);
                             state.Advance();
                             break;
                         case '/':
-                            yield return Tokens.Divide;
+                            yield return state.TokenWithPos(Tokens.Divide);
                             state.Advance();
                             break;
                         case '<':
-                            yield return Tokens.LessThan;
+                            yield return state.TokenWithPos(Tokens.LessThan);
                             state.Advance();
                             break;
                         case '>':
-                            yield return Tokens.GreaterThan;
+                            yield return state.TokenWithPos(Tokens.GreaterThan);
                             state.Advance();
                             break;
                         default:
@@ -156,7 +164,7 @@ namespace JsonMasher.Compiler
             }
         }
 
-        private Token ComplexToken(State state)
+        private TokenWithPos ComplexToken(State state)
         {
             if (Char.IsDigit(state.Char))
             {
@@ -176,9 +184,9 @@ namespace JsonMasher.Compiler
             }
         }
 
-        private Token Number(State state)
+        private TokenWithPos Number(State state)
         {
-            state.Mark();
+            state.SetMark();
             bool seenDot = false;
             bool inNumber() => (!seenDot && state.Char == '.') || Char.IsDigit(state.Char);
             while (!state.AtEnd && inNumber())
@@ -189,19 +197,24 @@ namespace JsonMasher.Compiler
                 }
                 state.Advance();
             }
-            return Tokens.Number(double.Parse(state.GetFromMark()));
+
+            string tokenString = state.GetFromMark();
+            return state.TokenWithPos(
+                Tokens.Number(double.Parse(tokenString)),
+                tokenString.Length,
+                state.Mark);
         }
 
-        private Token Identifier(State state)
+        private TokenWithPos Identifier(State state)
         {
-            state.Mark();
+            state.SetMark();
             state.Advance();
             while (!state.AtEnd && (state.Char == '_' || Char.IsLetterOrDigit(state.Char)))
             {
                 state.Advance();
             }
             var id = state.GetFromMark();
-            return id switch {
+            var token = id switch {
                 "def" => Tokens.Keywords.Def,
                 "as" => Tokens.Keywords.As,
                 "and" => Tokens.Keywords.And,
@@ -213,6 +226,7 @@ namespace JsonMasher.Compiler
                 "elif" => Tokens.Keywords.Elif,
                 _ => MakeIdentifier(id)
             };
+            return state.TokenWithPos(token, id.Length, state.Mark);
         }
 
         private Token MakeIdentifier(string id)
@@ -220,10 +234,10 @@ namespace JsonMasher.Compiler
                 ? Tokens.VariableIdentifier(id.Substring(1))
                 : Tokens.Identifier(id);
 
-        private Token String(State state)
+        private TokenWithPos String(State state)
         {
             state.Advance();
-            state.Mark();
+            state.SetMark();
             while(true) {
                 if (state.AtEnd) {
                     throw new InvalidOperationException();
@@ -235,7 +249,10 @@ namespace JsonMasher.Compiler
                     try 
                     {
                         var unescaped = Regex.Unescape(value);
-                        return new String(unescaped);
+                        return state.TokenWithPos(
+                            new String(unescaped),
+                            value.Length + 2,
+                            state.Mark - 1);
                     }
                     catch (RegexParseException ex)
                     {

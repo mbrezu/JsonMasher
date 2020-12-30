@@ -8,7 +8,7 @@ using JsonMasher.Mashers.Primitives;
 
 namespace JsonMasher.Compiler
 {
-    public class Parser : IParser
+    public class Parser
     {
         class State
         {
@@ -51,7 +51,7 @@ namespace JsonMasher.Compiler
             {
                 return Identity.Instance;
             }
-            var state = new State(new Lexer().Tokenize(program));
+            var state = new State(new Lexer().Tokenize(program).Select(t => t.Token));
             var result = ParseDefinitionOrFilter(state);
             if (!state.AtEnd)
             {

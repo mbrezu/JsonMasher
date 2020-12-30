@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Text.Json;
 using JsonMasher.Mashers;
 using JsonMasher.Mashers.Primitives;
@@ -45,5 +46,14 @@ namespace JsonMasher
                 _ => combiner(mashers.First(), mashers.Skip(1).Fold(combiner))
             };
 
+        public static string Repeat(this string str, int times)
+        {
+            var sb = new StringBuilder();
+            for (int i = 0; i < times; i++)
+            {
+                sb.Append(str);
+            }
+            return sb.ToString();
+        }
     }
 }
