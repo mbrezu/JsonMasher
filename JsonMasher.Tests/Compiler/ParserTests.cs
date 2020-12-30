@@ -26,7 +26,7 @@ namespace JsonMasher.Tests.Compiler
             var parser = new Parser();
 
             // Act
-            var result = parser.Parse(program);
+            var (result, _) = parser.Parse(program);
 
             // Assert
             result.Should().BeEquivalentTo(

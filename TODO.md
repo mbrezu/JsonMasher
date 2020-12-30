@@ -1,8 +1,6 @@
 # Things to do next
 
 - [ ] error handling
-  - [ ] parser position for errors
-    - [ ] state.Error extra length or include extra token?
   - [ ] runtime positions for errors
   - [ ] stack trace
     - [ ] pretty printing operators?

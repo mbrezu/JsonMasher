@@ -16,11 +16,39 @@ namespace JsonMasher.Compiler
             private TokenWithPos[] _tokens;
             private int _index;
 
+            public SourceInformation SourceInformation { get; private set; }
+
             public State(string program, IEnumerable<TokenWithPos> tokens)
             {
                 _program = program;
                 _tokens = tokens.ToArray();
                 _index = 0;
+                SourceInformation = new SourceInformation();
+            }
+
+            public int Position => AtEnd ? _program.Length : _tokens[_index].StartPos;
+            
+            public IJsonMasherOperator RecordPosition(IJsonMasherOperator ast, int startPosition)
+            {
+                SourceInformation.SetProgramPosition(
+                    ast,
+                    new ProgramPosition(startPosition, _tokens[_index - 1].EndPos));
+                return ast;
+            }
+
+            public IJsonMasherOperator RecordPosition(
+                IJsonMasherOperator ast,
+                IJsonMasherOperator first,
+                IJsonMasherOperator last)
+            {
+                var posFirst = SourceInformation.GetProgramPosition(first);
+                var posLast = SourceInformation.GetProgramPosition(last);
+                SourceInformation.SetProgramPosition(
+                    ast,
+                    new ProgramPosition(
+                        posFirst?.StartPosition ?? 0,
+                        posLast?.EndPosition ?? 0));
+                return ast;
             }
 
             public bool AtEnd => _index == _tokens.Length;
@@ -83,19 +111,19 @@ namespace JsonMasher.Compiler
                 => ErrorExpected("a variable identifier (e.g. '$a')");
         }
 
-        public IJsonMasherOperator Parse(string program)
+        public (IJsonMasherOperator, SourceInformation) Parse(string program)
         {
+            var state = new State(program, new Lexer().Tokenize(program));
             if (string.IsNullOrWhiteSpace(program))
             {
-                return Identity.Instance;
+                return (Identity.Instance, state.SourceInformation);
             }
-            var state = new State(program, new Lexer().Tokenize(program));
             var result = ParseDefinitionOrFilter(state);
             if (!state.AtEnd)
             {
                 throw state.Error(Messages.Parser.ExtraInput);
             }
-            return result;
+            return (result, state.SourceInformation);
         }
 
         private IJsonMasherOperator ParseDefinitionOrFilter(State state)
@@ -109,7 +137,9 @@ namespace JsonMasher.Compiler
                 }
                 else
                 {
-                    return Compose.AllParams(def, ParseDefinitionOrFilter(state));
+                    var first = def;
+                    var last = ParseDefinitionOrFilter(state);
+                    return state.RecordPosition(Compose.AllParams(first, last), first, last);
                 }
             }
             else
@@ -120,6 +150,7 @@ namespace JsonMasher.Compiler
 
         private IJsonMasherOperator ParseDefinition(State state)
         {
+            var startPosition = state.Position;
             state.Match(Tokens.Keywords.Def);
             var name = GetIdentifierName(state);
             state.Advance();
@@ -149,12 +180,14 @@ namespace JsonMasher.Compiler
             state.Match(Tokens.Colon);
             var body = ParseDefinitionOrFilter(state);
             state.Match(Tokens.Semicolon);
-            return new FunctionDefinition
-            {
-                Name = name,
-                Arguments = arguments.Count > 0 ? arguments : null,
-                Body = body
-            };
+            return state.RecordPosition(
+                new FunctionDefinition
+                {
+                    Name = name,
+                    Arguments = arguments.Count > 0 ? arguments : null,
+                    Body = body
+                },
+                startPosition);
         }
 
         private string GetIdentifierName(State state) => state.Current switch
@@ -185,7 +218,9 @@ namespace JsonMasher.Compiler
             }
             if (terms.Count > 1)
             {
-                return combiner(terms);
+                var first = terms.First();
+                var last = terms.Last();
+                return state.RecordPosition(combiner(terms), first, last);
             }
             else
             {
@@ -202,6 +237,7 @@ namespace JsonMasher.Compiler
 
         private IJsonMasherOperator ParseBinding(State state)
         {
+            var position = state.Position;
             var t1 = ParseRelationalLowerExpression(state);
             if (state.Current == Tokens.Keywords.As)
             {
@@ -211,11 +247,11 @@ namespace JsonMasher.Compiler
                     state.Advance();
                     state.Match(Tokens.Pipe);
                     var body = ParseFilter(state);
-                    return new Let {
+                    return state.RecordPosition(new Let {
                         Name = identifier.Id,
                         Value = t1,
                         Body = body
-                    };
+                    }, position);
                 }
                 else
                 {
@@ -244,14 +280,15 @@ namespace JsonMasher.Compiler
 
         private IJsonMasherOperator ParseAssignmentExpression(State state)
         {
+            var position = state.Position;
             var t1 = ParseRelationalExpression(state);
             if (state.Current == Tokens.PipeEquals) {
                 state.Advance();
                 var t2 = ParseRelationalExpression(state);
-                return new PipeAssignment {
+                return state.RecordPosition(new PipeAssignment {
                     PathExpression = t1,
                     Masher = t2
-                };
+                }, position);
             }
             else
             {
@@ -261,6 +298,7 @@ namespace JsonMasher.Compiler
 
         private IJsonMasherOperator ParseRelationalExpression(State state) 
         {
+            var position = state.Position;
             var t1 = ParseArithmeticLowerExpression(state);
             var op = state.Current switch
             {
@@ -274,7 +312,7 @@ namespace JsonMasher.Compiler
             if (op != null) {
                 state.Advance();
                 var t2 = ParseArithmeticLowerExpression(state);
-                return new FunctionCall(op, t1, t2);
+                return state.RecordPosition(new FunctionCall(op, t1, t2), position);
             }
             else
             {
@@ -300,7 +338,10 @@ namespace JsonMasher.Compiler
             {
                 var op = state.Current;
                 state.Advance();
-                accum = new FunctionCall(builtinFunc(op), accum, termParser(state));
+                var first = accum;
+                var last = termParser(state);
+                accum = state.RecordPosition(
+                    new FunctionCall(builtinFunc(op), first, last), first, last);
             }
             return accum;
         }
@@ -314,10 +355,12 @@ namespace JsonMasher.Compiler
 
         private IJsonMasherOperator ParseTerm(State state)
         {
+            var position = state.Position;
             if (state.Current == Tokens.Minus)
             {
                 state.Advance();
-                return new FunctionCall(Minus.Builtin_1, ParseTerm(state));
+                return state.RecordPosition(
+                    new FunctionCall(Minus.Builtin_1, ParseTerm(state)), position);
             }
             else if (state.Current == Tokens.Keywords.If)
             {
@@ -331,42 +374,45 @@ namespace JsonMasher.Compiler
             else if (state.Current is Number n)
             {
                 state.Advance();
-                return new Literal(n.Value);
+                return state.RecordPosition(new Literal(n.Value), position);
             }
             else if (state.Current is String s)
             {
                 state.Advance();
-                return new Literal(s.Value);
+                return state.RecordPosition(new Literal(s.Value), position);
             }
             else if (state.Current is Identifier identifier)
             {
                 state.Advance();
-                return identifier.Id switch {
+                IJsonMasherOperator ast = identifier.Id switch
+                {
                     "null" => new Literal(Json.Null),
                     "true" => new Literal(Json.True),
                     "false" => new Literal(Json.False),
-                    string function => ParseFunctionCall(state, function),
-                    _ => throw new InvalidOperationException()
+                    string function => ParseFunctionCallArguments(state, function),
                 };
+                return state.RecordPosition(ast, position);
             }
             else if (state.Current is VariableIdentifier variableIdentifier)
             {
                 state.Advance();
-                return new GetVariable { Name = variableIdentifier.Id };
+                return state.RecordPosition(
+                    new GetVariable { Name = variableIdentifier.Id }, position);
             }
             else if (state.Current == Tokens.OpenSquareParen)
             {
                 state.Advance();
                 var elements = ParseFilter(state);
                 state.Match(Tokens.CloseSquareParen);
-                return new ConstructArray { Elements = elements };
+                return state.RecordPosition(new ConstructArray { Elements = elements }, position);
             }
             else if (state.Current == Tokens.OpenBrace)
             {
                 state.Advance();
                 var properties = ParseProperties(state);
                 state.Match(Tokens.CloseBrace);
-                return new ConstructObject { Descriptors = properties };
+                return state.RecordPosition(
+                    new ConstructObject { Descriptors = properties }, position);
             }
             else if (state.Current == Tokens.OpenParen)
             {
@@ -381,7 +427,7 @@ namespace JsonMasher.Compiler
             }
         }
 
-        private IJsonMasherOperator ParseFunctionCall(State state, string function)
+        private IJsonMasherOperator ParseFunctionCallArguments(State state, string function)
         {
             if (state.Current == Tokens.OpenParen)
             {
@@ -414,6 +460,7 @@ namespace JsonMasher.Compiler
 
         private IJsonMasherOperator ParseIf(State state)
         {
+            var position = state.Position;
             var cond = ParseFilter(state);
             state.Match(Tokens.Keywords.Then);
             var thenFilter = ParseFilter(state);
@@ -422,20 +469,20 @@ namespace JsonMasher.Compiler
                 state.Advance();
                 var elseFilter = ParseFilter(state);
                 state.Match(Tokens.Keywords.End);
-                return new IfThenElse {
+                return state.RecordPosition(new IfThenElse {
                     Cond = cond,
                     Then = thenFilter,
                     Else = elseFilter
-                };
+                }, position);
             }
             else if (state.Current == Tokens.Keywords.Elif)
             {
                 state.Advance();
-                return new IfThenElse {
+                return state.RecordPosition(new IfThenElse {
                     Cond = cond,
                     Then = thenFilter,
                     Else = ParseIf(state)
-                };
+                }, position);
             }
             else
             {
@@ -478,7 +525,9 @@ namespace JsonMasher.Compiler
             }
             if (terms.Count > 1)
             {
-                return Compose.All(terms);
+                var first = terms.First();
+                var last = terms.Last();
+                return state.RecordPosition(Compose.All(terms), first, last);
             }
             else
             {
@@ -488,11 +537,12 @@ namespace JsonMasher.Compiler
 
         private IJsonMasherOperator ParseDotOrStringSelector(State state)
         {
+            var position = state.Position;
             state.Match(Tokens.Dot);
             if (state.Current is Identifier identifier)
             {
                 state.Advance();
-                return new StringSelector { Key = identifier.Id };
+                return state.RecordPosition(new StringSelector { Key = identifier.Id }, position);
             }
             else
             {
@@ -502,6 +552,7 @@ namespace JsonMasher.Compiler
 
         private IJsonMasherOperator ParseSelector(State state)
         {
+            var position = state.Position;
             state.Advance();
             if (state.Current == Tokens.CloseSquareParen)
             {
@@ -512,7 +563,7 @@ namespace JsonMasher.Compiler
             {
                 var filter = ParsePipeTerm(state);
                 state.Match(Tokens.CloseSquareParen);
-                return new Selector { Index = filter };
+                return state.RecordPosition(new Selector { Index = filter }, position);
             }
         }
 
