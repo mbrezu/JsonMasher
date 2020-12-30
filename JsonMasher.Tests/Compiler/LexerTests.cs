@@ -78,6 +78,8 @@ namespace JsonMasher.Tests.Compiler
             yield return new TestItem(" 102.3 ", TokensParams(Tokens.Number(102.3)));
             yield return new TestItem(
                 " 102.3.. ", TokensParams(Tokens.Number(102.3), Tokens.DotDot));
+            yield return new TestItem(
+                " .5 .2 ", TokensParams(Tokens.Number(.5), Tokens.Number(.2)));
         }
 
         private static IEnumerable<TestItem> IdentfierTests()

@@ -1,6 +1,5 @@
 # Things to do next
 
-- [ ] numbers in '.5' format (without leading 0)
 - [ ] length builtin
 - [ ] limit builtin
 - [ ] slice selectors

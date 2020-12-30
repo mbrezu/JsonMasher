@@ -49,6 +49,12 @@ namespace JsonMasher.Compiler
                     yield return Tokens.DotDot;
                     state.Advance(2);
                 }
+                else if (state.Char == '.' 
+                    && state.NextChar.HasValue 
+                    && Char.IsDigit(state.NextChar.Value))
+                {
+                    yield return Number(state);
+                }
                 else if (state.Char == '=' && state.NextChar == '=')
                 {
                     yield return Tokens.EqualsEquals;
