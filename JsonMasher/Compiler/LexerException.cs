@@ -4,13 +4,20 @@ namespace JsonMasher.Compiler
 {
     public class LexerException : Exception
     {
-        public int Position { get; private set; }
+        public int Line { get; private set; }
+        public int Column { get; private set; }
         public string Highlights { get; private set; }
 
-        public LexerException(string message, int position, string highlights)
-            : base(message)
+        public LexerException(
+            string message,
+            int line,
+            int column,
+            string highlights,
+            Exception innerException = null)
+            : base(message, innerException)
         {
-            Position = position;
+            Line = line;
+            Column = column;
             Highlights = highlights;
         }
     }

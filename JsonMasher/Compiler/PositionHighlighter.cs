@@ -86,9 +86,14 @@ namespace JsonMasher.Compiler
 
     public class PositionHighlighter
     {
-        public string Highlight(string program, int startPosition, int endPosition)
+        public static string Highlight(string program, int startPosition, int endPosition)
         {
             var programWithLines = new ProgramWithLines(program);
+            return Highlight(programWithLines, startPosition, endPosition);
+        }
+
+        public static string Highlight(ProgramWithLines programWithLines, int startPosition, int endPosition)
+        {
             var highlights = programWithLines.GetHighlights(startPosition, endPosition);
             var result = new StringBuilder();
             foreach (var highlight in highlights.Where(h => h.ColumnEnd - h.ColumnStart > 0))
@@ -100,9 +105,8 @@ namespace JsonMasher.Compiler
             return result.ToString();
         }
 
-        private static string ColumnMarkers(Highlight highlight)
-        {
-            return " ".Repeat(highlight.ColumnStart) + "^".Repeat(highlight.ColumnEnd);
-        }
+        private static string ColumnMarkers(Highlight highlight) 
+            => " ".Repeat(highlight.ColumnStart) 
+                + "^".Repeat(highlight.ColumnEnd - highlight.ColumnStart);
     }
 }

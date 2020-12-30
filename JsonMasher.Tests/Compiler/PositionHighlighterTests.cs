@@ -46,10 +46,9 @@ line5".CleanCR());
         public void ProgramHighlighterTests()
         {
             // Arrange
-            var positionHighlighter = new PositionHighlighter();
 
             // Act
-            var result = positionHighlighter.Highlight(@"line1
+            var result = PositionHighlighter.Highlight(@"line1
 line2
 
 line4
@@ -57,7 +56,7 @@ line5".CleanCR(), 2, 20);
 
             // Assert
             result.Should().Be(@"Line 1: line1
-Line 1:   ^^^^^
+Line 1:   ^^^
 Line 2: line2
 Line 2: ^^^^^
 Line 4: line4

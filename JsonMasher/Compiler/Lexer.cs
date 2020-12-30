@@ -44,6 +44,23 @@ namespace JsonMasher.Compiler
                 var startPos = startPosNullable ?? _index;
                 return new TokenWithPos(dotDot, startPos, startPos + length);
             }
+
+            internal Exception Error(
+                string message,
+                int? positionNullable = null,
+                int? lengthNullable = null,
+                Exception ex = null)
+            {
+                var position = positionNullable == null ? _index : positionNullable.Value;
+                var length = lengthNullable == null ? 1 : lengthNullable.Value;
+                var programWithLines = new ProgramWithLines(_program);
+                return new LexerException(
+                    message, 
+                    programWithLines.GetLineNumber(position) + 1,
+                    programWithLines.GetColumnNumber(position) + 1,
+                    PositionHighlighter.Highlight(programWithLines, position, position + length),
+                    ex);
+            }
         }
 
         public IEnumerable<TokenWithPos> Tokenize(string program)
@@ -180,7 +197,7 @@ namespace JsonMasher.Compiler
             }
             else
             {
-                throw new InvalidOperationException();
+                throw state.Error(Messages.Lexer.UnexpectedCharacter);
             }
         }
 
@@ -239,8 +256,9 @@ namespace JsonMasher.Compiler
             state.Advance();
             state.SetMark();
             while(true) {
-                if (state.AtEnd) {
-                    throw new InvalidOperationException();
+                if (state.AtEnd) 
+                {
+                    throw state.Error(Messages.Lexer.EoiInsideString);
                 }
                 else if (state.Char == '\"')
                 {
@@ -250,22 +268,17 @@ namespace JsonMasher.Compiler
                     {
                         var unescaped = Regex.Unescape(value);
                         return state.TokenWithPos(
-                            new String(unescaped),
-                            value.Length + 2,
-                            state.Mark - 1);
+                            new String(unescaped), value.Length + 2, state.Mark - 1);
                     }
                     catch (RegexParseException ex)
                     {
-                        throw new InvalidOperationException("", ex);
+                        throw state.Error(
+                            Messages.Lexer.InvalidEscapeSequence, state.Mark - 1, value.Length + 2, ex);
                     }
                 }
                 else if (state.Char == '\\' && state.NextChar != null)
                 {
                     state.Advance(2);
-                }
-                else if (state.Char == '\\')
-                {
-                    throw new InvalidOperationException();
                 }
                 else
                 {
