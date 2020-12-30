@@ -247,7 +247,7 @@ namespace JsonMasher.Compiler
                 state,
                 ParseArithmeticHigherExpression,
                 op => op == Tokens.Plus || op == Tokens.Minus,
-                op => op == Tokens.Plus ? Plus.Builtin : Minus.Builtin);
+                op => op == Tokens.Plus ? Plus.Builtin : Minus.Builtin_2);
 
         private IJsonMasherOperator ChainAssocLeft(
             State state, 
@@ -274,7 +274,12 @@ namespace JsonMasher.Compiler
 
         private IJsonMasherOperator ParseTerm(State state)
         {
-            if (state.Current == Tokens.Keywords.If)
+            if (state.Current == Tokens.Minus)
+            {
+                state.Advance();
+                return new FunctionCall(Minus.Builtin_1, ParseTerm(state));
+            }
+            else if (state.Current == Tokens.Keywords.If)
             {
                 state.Advance();
                 return ParseIf(state);

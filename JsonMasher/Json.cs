@@ -176,7 +176,8 @@ namespace JsonMasher
 
         public override IEnumerable<Json> EnumerateArray() => _values;
 
-        public override Json GetElementAt(int index) => _values[index];
+        public override Json GetElementAt(int index) => 
+            index >= 0 ? _values[index] : _values[_values.Count + index];
 
         public override int GetLength() => _values.Count;
     }

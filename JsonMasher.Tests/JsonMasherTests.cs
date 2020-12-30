@@ -222,6 +222,22 @@ namespace JsonMasher.Tests
         }
 
         [Fact]
+        public void SelectorTestNegativeNumber()
+        {
+            // Arrange
+            var data = MakeArray();
+            var op = new Selector { Index = new Literal(-2) };
+
+            // Act
+            var result = op.RunAsSequence(data);
+
+            // Assert
+            Json.Array(result)
+                .DeepEqual(Utils.JsonNumberArray(2))
+                .Should().BeTrue();
+        }
+
+        [Fact]
         public void SelectorTestSequence()
         {
             // Arrange

@@ -267,7 +267,7 @@ namespace JsonMasher.Tests.Compiler
             yield return new TestItem(
                 "1 - 1", 
                 new FunctionCall(
-                    Minus.Builtin,
+                    Minus.Builtin_2,
                     new Literal(1),
                     new Literal(1)));
             yield return new TestItem(
@@ -284,19 +284,25 @@ namespace JsonMasher.Tests.Compiler
                 new FunctionCall(
                     Plus.Builtin,
                     new FunctionCall(
-                        Minus.Builtin,
+                        Minus.Builtin_2,
                         new Literal(1),
                         new Literal(1)),
                     new Literal(1)));
             yield return new TestItem(
                 "1 + 1 - 1", 
                 new FunctionCall(
-                    Minus.Builtin, 
+                    Minus.Builtin_2, 
                     new FunctionCall(
                         Plus.Builtin,
                         new Literal(1),
                         new Literal(1)),
                     new Literal(1)));
+            yield return new TestItem(
+                "- 1", 
+                new FunctionCall(Minus.Builtin_1, new Literal(1)));
+            yield return new TestItem(
+                "- .", 
+                new FunctionCall(Minus.Builtin_1, Identity.Instance));
         }
 
         private static IEnumerable<TestItem> TimesDivisionTests()
@@ -329,7 +335,7 @@ namespace JsonMasher.Tests.Compiler
                     Plus.Builtin,
                     new Literal(1),
                     new FunctionCall(
-                        Minus.Builtin,
+                        Minus.Builtin_2,
                         new Literal(1),
                         new Literal(1))));
             yield return new TestItem("(. | .) | .", Compose.AllParams(

@@ -137,6 +137,8 @@ namespace JsonMasher.Tests.EndToEnd
                 "range(1; 3,4; 0.5)", "null", "[1, 1.5, 2, 2.5, 1, 1.5, 2, 2.5, 3, 3.5]");
             yield return new TestItem(
                 "range(1,2; 2,3; 1,0.5)", "null", "[1, 1, 1.5, 1, 2, 1, 1.5, 2, 2.5, 2, 2, 2.5]");
+            yield return new TestItem(
+                "range(-2; 0)", "null", "[-2, -1]");
 
             yield return new TestItem("length", "null", "[1]");
             yield return new TestItem("length", "true", "[1]");
@@ -148,6 +150,13 @@ namespace JsonMasher.Tests.EndToEnd
 
             yield return new TestItem("limit(2; .[])", "[1, 2, 3]", "[1, 2]");
             yield return new TestItem("limit(1, 2, 3; .[])", "[1, 2, 3]", "[1, 1, 2, 1, 2, 3]");
+
+            yield return new TestItem("-.2", "null", "[-0.2]");
+            yield return new TestItem("1 + -2", "null", "[-1]");
+            yield return new TestItem("-(1 + -2)", "null", "[1]");
+            yield return new TestItem(".[-1]", "[1, 2, 3]", "[3]");
+            yield return new TestItem(".[-2]", "[1, 2, 3]", "[2]");
+            yield return new TestItem(".[range(-2; 0)]", "[1, 2, 3]", "[2, 3]");
         }
 
         private static IEnumerable<TestItem> IfThenElsePrograms()
