@@ -12,7 +12,11 @@ namespace JsonMasher.Compiler
             _object = obj;
         }
 
-        public override bool Equals(object obj) => Object.ReferenceEquals(_object, obj);
+        public override bool Equals(object obj)
+            => obj switch {
+                ObjectKey key => Object.ReferenceEquals(_object, key._object),
+                _ => false
+            };
 
         public override int GetHashCode() => RuntimeHelpers.GetHashCode(_object);
     }
