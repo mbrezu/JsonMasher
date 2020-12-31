@@ -21,7 +21,7 @@ namespace JsonMasher.Tests.Functions
                     Body = new FunctionCall(
                         Plus.Builtin, Identity.Instance, new Literal { Value = Json.Number(2) })
                 },
-                Enumerate.Instance,
+                new Enumerate(),
                 FunctionCall.ZeroArity("test"));
 
             // Act
@@ -51,7 +51,7 @@ namespace JsonMasher.Tests.Functions
                             FunctionCall.ZeroArity("test2"))
                     }
                 },
-                new FunctionCall(new FunctionName("x", 2), Enumerate.Instance, Identity.Instance));
+                new FunctionCall(new FunctionName("x", 2), new Enumerate(), Identity.Instance));
 
             // Act
             var result = op.RunAsScalar(data);

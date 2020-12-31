@@ -501,6 +501,7 @@ namespace JsonMasher.Compiler
 
         private IJsonMasherOperator ParseDot(State state)
         {
+            var position = state.Position;
             state.Advance();
             var terms = new List<IJsonMasherOperator>();
             if (state.Current == Tokens.OpenSquareParen)
@@ -510,12 +511,14 @@ namespace JsonMasher.Compiler
             else if (state.Current is Identifier identifier)
             {
                 state.Advance();
-                terms.Add(new StringSelector { Key = identifier.Id });
+                terms.Add(state.RecordPosition(
+                    new StringSelector { Key = identifier.Id }, position));
             }
             else if (state.Current is String str)
             {
                 state.Advance();
-                terms.Add(new StringSelector { Key = str.Value });
+                terms.Add(state.RecordPosition(
+                    new StringSelector { Key = str.Value }, position));
             }
             else
             {
@@ -566,7 +569,7 @@ namespace JsonMasher.Compiler
             if (state.Current == Tokens.CloseSquareParen)
             {
                 state.Advance();
-                return Enumerate.Instance;
+                return state.RecordPosition(new Enumerate(), position);
             }
             else
             {

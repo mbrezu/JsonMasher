@@ -41,7 +41,7 @@ namespace JsonMasher.Mashers
         public void SetVariable(string name, Json value)
             => _env[_env.Count - 1].Variables[name] = value;
 
-        public Json GetVariable(string name)
+        public Json GetVariable(string name, IMashStack stack)
         {
             for (int i = _env.Count - 1; i > -1; i--)
             {
@@ -51,7 +51,7 @@ namespace JsonMasher.Mashers
                     return frame.Variables[name];
                 }
             }
-            throw new InvalidOperationException();
+            throw Error($"Cannot find variable ${name}.", stack);
         }
 
         public void SetCallable(FunctionName name, Callable value)
@@ -66,11 +66,11 @@ namespace JsonMasher.Mashers
             }
         }
 
-        public Callable GetCallable(FunctionName name)
+        public Callable GetCallable(FunctionName name, IMashStack stack)
         {
             if (name.Arity == 0)
             {
-                return GetCallable(name.Name);
+                return GetCallable(name.Name, stack);
             }
             else
             {
@@ -82,7 +82,7 @@ namespace JsonMasher.Mashers
                         return frame.Callables[name];
                     }
                 }
-                throw new InvalidOperationException();
+                throw Error($"Function {name.Name}/{name.Arity} is not known.", stack);
             }
         }
 
@@ -91,7 +91,7 @@ namespace JsonMasher.Mashers
             _env[_env.Count - 1].ZeroArityCallables[name] = value;
         }
 
-        public Callable GetCallable(string name)
+        public Callable GetCallable(string name, IMashStack stack)
         {
             for (int i = _env.Count - 1; i > -1; i--)
             {
@@ -101,7 +101,7 @@ namespace JsonMasher.Mashers
                     return frame.ZeroArityCallables[name];
                 }
             }
-            throw new InvalidOperationException();
+            throw Error($"Function {name}/0 is not known.", stack);
         }
 
         public Exception Error(string message, IMashStack stack)

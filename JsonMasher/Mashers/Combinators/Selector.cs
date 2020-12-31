@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -19,25 +18,27 @@ namespace JsonMasher.Mashers.Combinators
                 (index.Type, json.Type) switch {
                     (JsonValueType.Number, JsonValueType.Array) => json.GetElementAt((int)(index.GetNumber())),
                     (JsonValueType.String, JsonValueType.Object) => json.GetElementAt(index.GetString()),
-                    _ => throw new InvalidOperationException()
+                    _ => throw context.Error($"Can't index {json.Type} with {index.Type}.", stack)
                 });
 
         public ZipStage ZipDown(Json json, IMashContext context, IMashStack stack)
         {
-            context.Tick(stack);
-            var indices = Index.Mash(json, context, stack.Push(this));
+            var newStack = stack.Push(this);
+            context.Tick(newStack);
+            var indices = Index.Mash(json, context, newStack);
             return json.Type switch {
-                JsonValueType.Array => ZipDownArray(indices, json, context),
-                JsonValueType.Object => ZipDownObject(indices, json, context),
-                _ => throw new InvalidOperationException()
+                JsonValueType.Array => ZipDownArray(indices, json, context, newStack),
+                JsonValueType.Object => ZipDownObject(indices, json, context, newStack),
+                _ => throw context.Error($"Can't iterate {json.Type}.", newStack)
             };
         }
 
-        private ZipStage ZipDownArray(IEnumerable<Json> indices, Json json, IMashContext context)
+        private ZipStage ZipDownArray(
+            IEnumerable<Json> indices, Json json, IMashContext context, IMashStack stack)
         {
             if (!indices.All(x => x.Type == JsonValueType.Number))
             {
-                throw new InvalidOperationException();
+                throw context.Error("Not all indices are numbers.", stack);
             }
             var intIndices = indices.Select(i => (int)(i.GetNumber())).ToArray();
             var parts = intIndices.Select(i => json.GetElementAt(i));
@@ -56,11 +57,12 @@ namespace JsonMasher.Mashers.Combinators
             return Json.Array(jsonValues);
         }
 
-        private ZipStage ZipDownObject(IEnumerable<Json> indices, Json json, IMashContext context)
+        private ZipStage ZipDownObject(
+            IEnumerable<Json> indices, Json json, IMashContext context, IMashStack stack)
         {
             if (!indices.All(x => x.Type == JsonValueType.String))
             {
-                throw new InvalidOperationException();
+                throw context.Error("Not all indices are strings.", stack);
             }
             var stringIndices = indices.Select(i => i.GetString()).ToArray();
             var parts = stringIndices.Select(i => json.GetElementAt(i));

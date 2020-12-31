@@ -36,7 +36,8 @@ namespace JsonMasher.Tests.Compiler
                     .WithStrictOrdering()
                     .ComparingByValue<Builtin>()
                     .ComparingByMembers<PropertyDescriptor>()
-                    .ComparingByMembers<FunctionName>());
+                    .ComparingByMembers<FunctionName>()
+                    .ComparingByMembers<Enumerate>());
         }
 
         private static IEnumerable<TestItem> GetTestData()
@@ -69,10 +70,10 @@ namespace JsonMasher.Tests.Compiler
                 new StringSelector { Key = "b" }));
             yield return new TestItem(".a[]", Compose.AllParams(
                 new StringSelector { Key = "a" },
-                Enumerate.Instance));
-            yield return new TestItem(".[]", Enumerate.Instance);
+                new Enumerate()));
+            // TODO: yield return new TestItem(".[]", new Enumerate());
             yield return new TestItem(".[].a", Compose.AllParams(
-                Enumerate.Instance,
+                new Enumerate(),
                 new StringSelector { Key = "a" }));
             yield return new TestItem(".[.].a", Compose.AllParams(
                 new Selector { Index = Identity.Instance },
@@ -80,20 +81,20 @@ namespace JsonMasher.Tests.Compiler
             yield return new TestItem(".[.].a[][]", Compose.AllParams(
                 new Selector { Index = Identity.Instance },
                 new StringSelector { Key = "a" },
-                Enumerate.Instance,
-                Enumerate.Instance));
+                new Enumerate(),
+                new Enumerate()));
             yield return new TestItem(".[][]", Compose.AllParams(
-                Enumerate.Instance,
-                Enumerate.Instance));
+                new Enumerate(),
+                new Enumerate()));
             yield return new TestItem(".[][][]", Compose.AllParams(
-                Enumerate.Instance,
-                Enumerate.Instance,
-                Enumerate.Instance));
+                new Enumerate(),
+                new Enumerate(),
+                new Enumerate()));
             yield return new TestItem(".[][][][]", Compose.AllParams(
-                Enumerate.Instance,
-                Enumerate.Instance,
-                Enumerate.Instance,
-                Enumerate.Instance));
+                new Enumerate(),
+                new Enumerate(),
+                new Enumerate(),
+                new Enumerate()));
         }
 
         private static IEnumerable<TestItem> IfThenElseTests()
@@ -460,7 +461,7 @@ namespace JsonMasher.Tests.Compiler
             yield return new TestItem(".a | .[].c | .d", Compose.AllParams(
                 new StringSelector { Key = "a" },
                 Compose.AllParams(
-                    Enumerate.Instance,
+                    new Enumerate(),
                     new StringSelector { Key = "c"}
                 ),
                 new StringSelector { Key = "d" }));

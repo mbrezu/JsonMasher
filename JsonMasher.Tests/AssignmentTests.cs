@@ -34,7 +34,7 @@ namespace JsonMasher.Tests
             // Arrange
             var data = "[1, 2]".AsJson();
             var op = new PipeAssignment {
-                PathExpression = Enumerate.Instance,
+                PathExpression = new Enumerate(),
                 Masher = new FunctionCall(
                     Plus.Builtin, Identity.Instance, new Literal(2))
             };
@@ -55,8 +55,8 @@ namespace JsonMasher.Tests
             var data = "[[1, 2], [3, 4]]".AsJson();
             var op = new PipeAssignment {
                 PathExpression = Compose.AllParams(
-                    Enumerate.Instance,
-                    Enumerate.Instance),
+                    new Enumerate(),
+                    new Enumerate()),
                 Masher = new FunctionCall(
                     Plus.Builtin, Identity.Instance, new Literal(2))
             };
@@ -76,7 +76,7 @@ namespace JsonMasher.Tests
             // Arrange
             var data = "{ \"a\": 1, \"b\": 2 }".AsJson();
             var op = new PipeAssignment {
-                PathExpression = Enumerate.Instance,
+                PathExpression = new Enumerate(),
                 Masher = new FunctionCall(
                     Plus.Builtin, Identity.Instance, new Literal(2))
             };
@@ -139,7 +139,7 @@ namespace JsonMasher.Tests
             var data = "[[1, 2], [3, 4]]".AsJson();
             var op = new PipeAssignment {
                 PathExpression = Compose.AllParams(
-                    Enumerate.Instance,
+                    new Enumerate(),
                     new Selector { Index = new Literal(0) }),
                 Masher = new FunctionCall(
                     Plus.Builtin, Identity.Instance, new Literal(2))
@@ -161,7 +161,7 @@ namespace JsonMasher.Tests
             var data = "[{ \"a\": 1, \"b\": 2 }, { \"a\": 3, \"b\": 4 }]".AsJson();
             var op = new PipeAssignment {
                 PathExpression = Compose.AllParams(
-                    Enumerate.Instance,
+                    new Enumerate(),
                     new Selector { Index = new Literal { Value = Json.String("b") } }),
                 Masher = new FunctionCall(
                     Plus.Builtin, Identity.Instance, new Literal(2))

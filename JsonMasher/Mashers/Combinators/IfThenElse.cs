@@ -15,15 +15,13 @@ namespace JsonMasher.Mashers.Combinators
             var newStack = stack.Push(this);
             context.Tick(stack);
             var condSequence = Cond.Mash(json, context, newStack);
-            if (!condSequence.Any())
-            {
-                throw new InvalidOperationException();
-            }
             foreach (var condValue in condSequence)
             {
                 if (condValue.Type != JsonValueType.True && condValue.Type != JsonValueType.False)
                 {
-                    throw new InvalidOperationException();
+                    throw context.Error(
+                        $"If condition must be a boolean, but found {condValue.Type}.",
+                        newStack.Push(Cond));
                 }
                 var resultSequence = condValue.GetBool()
                     ? Then.Mash(json, context, newStack)

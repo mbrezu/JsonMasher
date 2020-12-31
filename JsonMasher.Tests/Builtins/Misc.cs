@@ -74,7 +74,7 @@ namespace JsonMasher.Tests.Builtins
         private static IEnumerable<TestItem> LimitTests()
         {
             yield return new TestItem(
-                new FunctionCall(Limit.Builtin, new Literal(2), Enumerate.Instance),
+                new FunctionCall(Limit.Builtin, new Literal(2), new Enumerate()),
                 "[1, 2, 3]",
                 "[1, 2]");
         }

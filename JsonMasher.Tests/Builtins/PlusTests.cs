@@ -30,7 +30,7 @@ namespace JsonMasher.Tests.Builtins
             // Arrange
             var data = Utils.JsonNumberArray(1, 2, 3);
             var op = Compose.AllParams(
-                Enumerate.Instance,
+                new Enumerate(),
                 new FunctionCall(Plus.Builtin, Identity.Instance, Identity.Instance));
 
             // Act
@@ -47,7 +47,7 @@ namespace JsonMasher.Tests.Builtins
         {
             // Arrange
             var data = Utils.JsonNumberArray(1, 2, 3);
-            var op = new FunctionCall(Plus.Builtin, Enumerate.Instance, Enumerate.Instance);
+            var op = new FunctionCall(Plus.Builtin, new Enumerate(), new Enumerate());
 
             // Act
             var result = op.RunAsSequence(data);

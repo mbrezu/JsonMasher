@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -11,7 +10,7 @@ namespace JsonMasher.Mashers.Primitives
             {
                 JsonValueType.Array => json.EnumerateArray(),
                 JsonValueType.Object => json.EnumerateObject().Select(kv => kv.Value),
-                _ => throw new InvalidOperationException("Can't enumerate value.")
+                _ => throw context.Error($"Can't enumerate {json.Type}.", stack.Push(this))
             };
 
         public ZipStage ZipDown(Json json, IMashContext context, IMashStack stack)
@@ -21,7 +20,7 @@ namespace JsonMasher.Mashers.Primitives
                     parts => Json.Array(parts),
                     Mash(json, context, stack)),
                 JsonValueType.Object => ZipDownObject(json),
-                _ => throw new InvalidOperationException("Can't enumerate value.")
+                _ => throw context.Error($"Can't enumerate {json.Type}.", stack.Push(this))
             };
 
         private ZipStage ZipDownObject(Json json)
@@ -32,12 +31,5 @@ namespace JsonMasher.Mashers.Primitives
                 properties.Select(kv => kv.Value)
             );
         }
-
-        private Enumerate()
-        {
-        }
-
-        private static Enumerate _instance = new Enumerate();
-        public static Enumerate Instance => _instance;
     }
 }

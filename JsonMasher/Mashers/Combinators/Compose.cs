@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -30,20 +29,21 @@ namespace JsonMasher.Mashers.Combinators
 
         public ZipStage ZipDown(Json json, IMashContext context, IMashStack stack)
         {
+            var newStack = stack.Push(this);
             if (First is IJsonZipper zipper1)
             {
                 if (Second is IJsonZipper zipper2)
                 {
-                    context.Tick(stack);
-                    var zipStage1 = zipper1.ZipDown(json, context, stack);
+                    context.Tick(newStack);
+                    var zipStage1 = zipper1.ZipDown(json, context, newStack);
                     var zipStages2 = zipStage1.Parts.Select(
-                        part => zipper2.ZipDown(part, context, stack));
+                        part => zipper2.ZipDown(part, context, newStack));
                     return new ZipStage(
                         parts => Reconstruct(zipStage1, zipStages2, parts),
                         zipStages2.SelectMany(stage => stage.Parts));
                 }
             }
-            throw new InvalidOperationException();
+            throw context.Error($"Not a path expression.", newStack);
         }
 
         private Json Reconstruct(

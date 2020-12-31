@@ -42,7 +42,7 @@ namespace JsonMasher.Mashers.Combinators
 
         private IEnumerable<Json> CallFunctionName(
             FunctionName name, Json json, IMashContext context, IMashStack stack)
-            => context.GetCallable(name) switch
+            => context.GetCallable(name, stack) switch
             {
                 IJsonMasherOperator op => op.Mash(json, context, stack),
                 Function func => CallFunction(json, func, context, stack),

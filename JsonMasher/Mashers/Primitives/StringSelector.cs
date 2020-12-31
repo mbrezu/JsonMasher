@@ -9,7 +9,7 @@ namespace JsonMasher.Mashers.Primitives
         public string Key { get; init; }
 
         public IEnumerable<Json> Mash(Json json, IMashContext context, IMashStack stack)
-            => MashOne(json).AsEnumerable();
+            => MashOne(json, context, stack.Push(this)).AsEnumerable();
 
         public ZipStage ZipDown(Json json, IMashContext context, IMashStack stack)
         {
@@ -28,10 +28,10 @@ namespace JsonMasher.Mashers.Primitives
             }
         }
 
-        private Json MashOne(Json json)
+        private Json MashOne(Json json, IMashContext context, IMashStack stack)
             => json.Type switch {
                 JsonValueType.Object => json.GetElementAt(Key),
-                _ => throw new InvalidOperationException()
+                _ => throw context.Error($"Can't enumerate {json.Type}.", stack)
             };
     }
 }

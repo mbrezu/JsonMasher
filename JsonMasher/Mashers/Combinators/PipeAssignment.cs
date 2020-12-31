@@ -21,7 +21,7 @@ namespace JsonMasher.Mashers.Combinators
             }
             else
             {
-                throw new InvalidOperationException();
+                throw context.Error($"Not a path expression.", newStack.Push(PathExpression));
             }
         }
     }

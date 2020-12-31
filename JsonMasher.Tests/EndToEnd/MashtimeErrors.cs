@@ -237,6 +237,136 @@ Line 1: ^^^^^^^^^
                 new PositionInformation(1, 1, @"Line 1: 1 or [1, 2]
 Line 1: ^^^^^^^^^^^
 "));
+            yield return new TestItem(
+                "(1 | 2) |= 1",
+                "null",
+                "Not a path expression.",
+                new PositionInformation(1, 2, @"Line 1: (1 | 2) |= 1
+Line 1:  ^^^^^
+Line 1: (1 | 2) |= 1
+Line 1: ^^^^^^^^^^^^
+"));
+            yield return new TestItem(
+                "range",
+                "null",
+                "Function range/0 is not known.",
+                new PositionInformation(1, 1, @"Line 1: range
+Line 1: ^^^^^
+"));
+            yield return new TestItem(
+                "def a(x; y): .; a(2)",
+                "null",
+                "Function a/1 is not known.",
+                new PositionInformation(1, 17, @"Line 1: def a(x; y): .; a(2)
+Line 1:                 ^^^^
+Line 1: def a(x; y): .; a(2)
+Line 1: ^^^^^^^^^^^^^^^^^^^^
+"));
+            yield return new TestItem(
+                "if 1 then 2 else 3 end",
+                "null",
+                "If condition must be a boolean, but found Number.",
+                new PositionInformation(1, 4, @"Line 1: if 1 then 2 else 3 end
+Line 1:    ^
+Line 1: if 1 then 2 else 3 end
+Line 1: ^^^^^^^^^^^^^^^^^^^^^^
+"));
+            yield return new TestItem(
+                "10 |= 2",
+                "null",
+                "Not a path expression.",
+                new PositionInformation(1, 1, @"Line 1: 10 |= 2
+Line 1: ^^
+Line 1: 10 |= 2
+Line 1: ^^^^^^^
+"));
+            yield return new TestItem(
+                "$test",
+                "null",
+                "Cannot find variable $test.",
+                new PositionInformation(1, 1, @"Line 1: $test
+Line 1: ^^^^^
+"));
+            yield return new TestItem(
+                "0 | .[]",
+                "null",
+                "Can't enumerate Number.",
+                new PositionInformation(1, 5, @"Line 1: 0 | .[]
+Line 1:     ^^^
+Line 1: 0 | .[]
+Line 1: ^^^^^^^
+"));
+            yield return new TestItem(
+                "0 | .[] |= 2",
+                "null",
+                "Can't enumerate Number.",
+                new PositionInformation(1, 5, @"Line 1: 0 | .[] |= 2
+Line 1:     ^^^
+Line 1: 0 | .[] |= 2
+Line 1:     ^^^^^^^^
+Line 1: 0 | .[] |= 2
+Line 1: ^^^^^^^^^^^^
+"));
+            yield return new TestItem(
+                "0 | .a",
+                "null",
+                "Can't enumerate Number.",
+                new PositionInformation(1, 5, @"Line 1: 0 | .a
+Line 1:     ^^
+Line 1: 0 | .a
+Line 1: ^^^^^^
+"));
+            yield return new TestItem(
+                "0 | .\"a\"",
+                "null",
+                "Can't enumerate Number.",
+                new PositionInformation(1, 5, @"Line 1: 0 | .""a""
+Line 1:     ^^^^
+Line 1: 0 | .""a""
+Line 1: ^^^^^^^^
+"));
+            yield return new TestItem(
+                "{} | .[0]",
+                "null",
+                "Can't index Object with Number.",
+                new PositionInformation(1, 6, @"Line 1: {} | .[0]
+Line 1:      ^^^^
+Line 1: {} | .[0]
+Line 1: ^^^^^^^^^
+"));
+            yield return new TestItem(
+                "{} | .[0] |= 1",
+                "null",
+                "Not all indices are strings.",
+                new PositionInformation(1, 6, @"Line 1: {} | .[0] |= 1
+Line 1:      ^^^^
+Line 1: {} | .[0] |= 1
+Line 1:      ^^^^^^^^^
+Line 1: {} | .[0] |= 1
+Line 1: ^^^^^^^^^^^^^^
+"));
+            yield return new TestItem(
+                "[] | .[\"a\"] |= 1",
+                "null",
+                "Not all indices are numbers.",
+                new PositionInformation(1, 6, @"Line 1: [] | .[""a""] |= 1
+Line 1:      ^^^^^^
+Line 1: [] | .[""a""] |= 1
+Line 1:      ^^^^^^^^^^^
+Line 1: [] | .[""a""] |= 1
+Line 1: ^^^^^^^^^^^^^^^^
+"));
+            yield return new TestItem(
+                "1 | .[\"a\"] |= 1",
+                "null",
+                "Can't iterate Number.",
+                new PositionInformation(1, 5, @"Line 1: 1 | .[""a""] |= 1
+Line 1:     ^^^^^^
+Line 1: 1 | .[""a""] |= 1
+Line 1:     ^^^^^^^^^^^
+Line 1: 1 | .[""a""] |= 1
+Line 1: ^^^^^^^^^^^^^^^
+"));
         }
     }
 }

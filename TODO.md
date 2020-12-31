@@ -1,9 +1,8 @@
 # Things to do next
 
-- [ ] tick limitation
-- [ ] CLI interface
 - [ ] error handling
-  - [ ] when a value causes an error, include the error in the exception.
+- [ ] CLI interface
+  - [ ]  - [ ] when a value causes an error, include the value in the exception (e.g. plus, minus etc.).
 - [ ] benchmarks (https://benchmarkdotnet.org/articles/guides/getting-started.html)
 - [ ] interface as web site
 - [ ] debugger (extend DebugMashStack)

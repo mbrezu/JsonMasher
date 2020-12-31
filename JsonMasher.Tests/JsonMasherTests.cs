@@ -56,7 +56,7 @@ namespace JsonMasher.Tests
         {
             // Arrange
             var data = MakeArray();
-            var op = Enumerate.Instance;
+            var op = new Enumerate();
 
             // Act
             var result = op.RunAsSequence(data);
@@ -70,7 +70,7 @@ namespace JsonMasher.Tests
         {
             // Arrange
             var data = MakeObject();
-            var op = Enumerate.Instance;
+            var op = new Enumerate();
 
             // Act
             var result = op.RunAsSequence(data);
@@ -84,7 +84,7 @@ namespace JsonMasher.Tests
         {
             // Arrange
             var data = MakeNestedArray();
-            var op = Compose.AllParams(Enumerate.Instance, Enumerate.Instance);
+            var op = Compose.AllParams(new Enumerate(), new Enumerate());
 
             // Act
             var result = op.RunAsSequence(data);
@@ -142,7 +142,7 @@ namespace JsonMasher.Tests
         {
             // Arrange
             var data = MakeArray();
-            var op = Concat.AllParams(Enumerate.Instance, Enumerate.Instance);
+            var op = Concat.AllParams(new Enumerate(), new Enumerate());
 
             // Act
             var result = op.RunAsSequence(data);
@@ -159,7 +159,7 @@ namespace JsonMasher.Tests
             // Arrange
             var data = MakeArray();
             var op = Compose.AllParams(
-                Enumerate.Instance,
+                new Enumerate(),
                 Concat.AllParams(
                     Identity.Instance,
                     Identity.Instance));
@@ -278,7 +278,7 @@ namespace JsonMasher.Tests
         {
             // Arrange
             var data = MakeArray();
-            var op = new ConstructArray { Elements = Enumerate.Instance };
+            var op = new ConstructArray { Elements = new Enumerate() };
 
             // Act
             var result = op.RunAsSequence(data);
@@ -294,7 +294,7 @@ namespace JsonMasher.Tests
             // Arrange
             var data = MakeArray();
             var op = Compose.AllParams(
-                Enumerate.Instance,
+                new Enumerate(),
                 new ConstructObject(
                     new PropertyDescriptor("a", Identity.Instance)));
 
@@ -317,7 +317,7 @@ namespace JsonMasher.Tests
             var data = MakeArray();
             var op = new ConstructObject(
                 new PropertyDescriptor("a", Identity.Instance),
-                new PropertyDescriptor("b", Enumerate.Instance));
+                new PropertyDescriptor("b", new Enumerate()));
 
             // Act
             var result = op.RunAsSequence(data);
@@ -343,7 +343,7 @@ namespace JsonMasher.Tests
             // Arrange
             var data = MakeArray();
             var op = new Compose {
-                First = Enumerate.Instance,
+                First = new Enumerate(),
                 Second = new ConstructObject(
                     new PropertyDescriptor("a", Identity.Instance),
                     new PropertyDescriptor("b", Identity.Instance))};
@@ -372,7 +372,7 @@ namespace JsonMasher.Tests
             // Arrange
             var data = MakeArray();
             var op = new Compose {
-                First = Enumerate.Instance,
+                First = new Enumerate(),
                 Second = Debug.Instance
             };
 
@@ -417,7 +417,7 @@ namespace JsonMasher.Tests
             var data = MakeArray();
             var op = new ConstructArray{
                 Elements = new Let { 
-                    Value = Enumerate.Instance,
+                    Value = new Enumerate(),
                     Name = "var",
                     Body = new GetVariable { Name = "var" }
                 }
