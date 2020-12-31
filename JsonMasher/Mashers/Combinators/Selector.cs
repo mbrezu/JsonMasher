@@ -18,7 +18,7 @@ namespace JsonMasher.Mashers.Combinators
                 (index.Type, json.Type) switch {
                     (JsonValueType.Number, JsonValueType.Array) => json.GetElementAt((int)(index.GetNumber())),
                     (JsonValueType.String, JsonValueType.Object) => json.GetElementAt(index.GetString()),
-                    _ => throw context.Error($"Can't index {json.Type} with {index.Type}.", stack)
+                    _ => throw context.Error($"Can't index {json.Type} with {index.Type}.", stack, json, index)
                 });
 
         public ZipStage ZipDown(Json json, IMashContext context, IMashStack stack)
@@ -29,7 +29,7 @@ namespace JsonMasher.Mashers.Combinators
             return json.Type switch {
                 JsonValueType.Array => ZipDownArray(indices, json, context, newStack),
                 JsonValueType.Object => ZipDownObject(indices, json, context, newStack),
-                _ => throw context.Error($"Can't iterate {json.Type}.", newStack)
+                _ => throw context.Error($"Can't iterate {json.Type}.", newStack, json)
             };
         }
 
@@ -38,7 +38,7 @@ namespace JsonMasher.Mashers.Combinators
         {
             if (!indices.All(x => x.Type == JsonValueType.Number))
             {
-                throw context.Error("Not all indices are numbers.", stack);
+                throw context.Error("Not all indices are numbers.", stack, indices.ToArray());
             }
             var intIndices = indices.Select(i => (int)(i.GetNumber())).ToArray();
             var parts = intIndices.Select(i => json.GetElementAt(i));
@@ -62,7 +62,7 @@ namespace JsonMasher.Mashers.Combinators
         {
             if (!indices.All(x => x.Type == JsonValueType.String))
             {
-                throw context.Error("Not all indices are strings.", stack);
+                throw context.Error("Not all indices are strings.", stack, indices.ToArray());
             }
             var stringIndices = indices.Select(i => i.GetString()).ToArray();
             var parts = stringIndices.Select(i => json.GetElementAt(i));

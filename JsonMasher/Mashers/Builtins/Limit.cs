@@ -15,7 +15,7 @@ namespace JsonMasher.Mashers.Builtins
             {
                 if (limitValue.Type != JsonValueType.Number)
                 {
-                    throw context.Error($"Can't use {limitValue.Type} as limit.", stack);
+                    throw context.Error($"Can't use {limitValue.Type} as limit.", stack, limitValue);
                 }
                 int limit = (int)limitValue.GetNumber();
                 foreach (var result in mashers[1].Mash(json, context, stack).Take(limit))

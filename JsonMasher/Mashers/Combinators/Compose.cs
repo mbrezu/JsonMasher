@@ -42,8 +42,15 @@ namespace JsonMasher.Mashers.Combinators
                         parts => Reconstruct(zipStage1, zipStages2, parts),
                         zipStages2.SelectMany(stage => stage.Parts));
                 }
+                else
+                {
+                    throw context.Error($"Not a path expression.", newStack.Push(Second));
+                }
             }
-            throw context.Error($"Not a path expression.", newStack);
+            else
+            {
+                throw context.Error($"Not a path expression.", newStack.Push(First));
+            }
         }
 
         private Json Reconstruct(

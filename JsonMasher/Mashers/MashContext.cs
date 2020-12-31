@@ -104,7 +104,7 @@ namespace JsonMasher.Mashers
             throw Error($"Function {name}/0 is not known.", stack);
         }
 
-        public Exception Error(string message, IMashStack stack)
+        public Exception Error(string message, IMashStack stack, params Json[] values)
         {
             var programWithLines = SourceInformation != null 
                 ? new ProgramWithLines(SourceInformation.Program)
@@ -135,7 +135,7 @@ namespace JsonMasher.Mashers
                     column = programWithLines.GetColumnNumber(position.StartPosition) + 1;
                 }
             }
-            return new JsonMasherException(message, line, column, stackSb.ToString());
+            return new JsonMasherException(message, line, column, stackSb.ToString(), null, values);
         }
 
         public void Tick(IMashStack stack)

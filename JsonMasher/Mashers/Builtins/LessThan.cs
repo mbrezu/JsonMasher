@@ -12,7 +12,7 @@ namespace JsonMasher.Mashers.Builtins
                     => Json.Bool(t1.GetNumber() < t2.GetNumber()),
                 (JsonValueType.String, JsonValueType.String) 
                     => Json.Bool(t1.GetString().CompareTo(t2.GetString()) < 0),
-                _ => throw context.Error($"Can't compare {t1.Type} and {t2.Type}.", stack)
+                _ => throw context.Error($"Can't compare {t1.Type} and {t2.Type}.", stack, t1, t2)
             };
     }
 }

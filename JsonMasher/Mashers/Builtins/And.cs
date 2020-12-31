@@ -12,7 +12,7 @@ namespace JsonMasher.Mashers.Builtins
                 (JsonValueType.True or JsonValueType.False, JsonValueType.True or JsonValueType.False)
                     => Json.Bool(t1.GetBool() && t2.GetBool()),
                 _ => throw context.Error(
-                    $"Can't 'and' {t1.Type} and {t2.Type} (need two booleans).", stack)
+                    $"Can't 'and' {t1.Type} and {t2.Type} (need two booleans).", stack, t1, t2)
             };
     }
 }

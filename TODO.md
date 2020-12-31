@@ -1,8 +1,8 @@
 # Things to do next
 
 - [ ] error handling
+  - [ ] 
 - [ ] CLI interface
-  - [ ]  - [ ] when a value causes an error, include the value in the exception (e.g. plus, minus etc.).
 - [ ] benchmarks (https://benchmarkdotnet.org/articles/guides/getting-started.html)
 - [ ] interface as web site
 - [ ] debugger (extend DebugMashStack)

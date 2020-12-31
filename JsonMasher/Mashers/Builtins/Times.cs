@@ -15,7 +15,7 @@ namespace JsonMasher.Mashers.Builtins
                     => Json.String(t1.GetString().Repeat((int)t2.GetNumber())),
                 (JsonValueType.Number, JsonValueType.String)
                     => Json.String(t2.GetString().Repeat((int)t1.GetNumber())),
-                _ => throw context.Error($"Can't multiply {t1.Type} and {t2.Type}.", stack)
+                _ => throw context.Error($"Can't multiply {t1.Type} and {t2.Type}.", stack, t1, t2)
             };
     }
 }

@@ -242,6 +242,8 @@ Line 1: ^^^^^^^^^^^
                 "null",
                 "Not a path expression.",
                 new PositionInformation(1, 2, @"Line 1: (1 | 2) |= 1
+Line 1:  ^
+Line 1: (1 | 2) |= 1
 Line 1:  ^^^^^
 Line 1: (1 | 2) |= 1
 Line 1: ^^^^^^^^^^^^
@@ -265,7 +267,7 @@ Line 1: ^^^^^^^^^^^^^^^^^^^^
             yield return new TestItem(
                 "if 1 then 2 else 3 end",
                 "null",
-                "If condition must be a boolean, but found Number.",
+                "If condition value must be a boolean, but found Number.",
                 new PositionInformation(1, 4, @"Line 1: if 1 then 2 else 3 end
 Line 1:    ^
 Line 1: if 1 then 2 else 3 end

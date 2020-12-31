@@ -18,7 +18,7 @@ namespace JsonMasher.Mashers.Builtins
                     => Json.Array(t1.EnumerateArray().Concat(t2.EnumerateArray())),
                 (JsonValueType.Object, JsonValueType.Object)
                     => Json.Object(t1.EnumerateObject().Concat(t2.EnumerateObject())),
-                _ => throw context.Error($"Can't add {t1.Type} and {t2.Type}.", stack)
+                _ => throw context.Error($"Can't add {t1.Type} and {t2.Type}.", stack, t1, t2)
             };
     }
 }

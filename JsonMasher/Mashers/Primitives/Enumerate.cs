@@ -10,7 +10,7 @@ namespace JsonMasher.Mashers.Primitives
             {
                 JsonValueType.Array => json.EnumerateArray(),
                 JsonValueType.Object => json.EnumerateObject().Select(kv => kv.Value),
-                _ => throw context.Error($"Can't enumerate {json.Type}.", stack.Push(this))
+                _ => throw context.Error($"Can't enumerate {json.Type}.", stack.Push(this), json)
             };
 
         public ZipStage ZipDown(Json json, IMashContext context, IMashStack stack)
@@ -20,7 +20,7 @@ namespace JsonMasher.Mashers.Primitives
                     parts => Json.Array(parts),
                     Mash(json, context, stack)),
                 JsonValueType.Object => ZipDownObject(json),
-                _ => throw context.Error($"Can't enumerate {json.Type}.", stack.Push(this))
+                _ => throw context.Error($"Can't enumerate {json.Type}.", stack.Push(this), json)
             };
 
         private ZipStage ZipDownObject(Json json)

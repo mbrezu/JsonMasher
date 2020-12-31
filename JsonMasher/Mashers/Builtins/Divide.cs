@@ -11,7 +11,7 @@ namespace JsonMasher.Mashers.Builtins
             {
                 (JsonValueType.Number, JsonValueType.Number)
                     => Json.Number(t1.GetNumber() / t2.GetNumber()),
-                _ => throw context.Error($"Can't divide {t1.Type} and {t2.Type}.", stack)
+                _ => throw context.Error($"Can't divide {t1.Type} and {t2.Type}.", stack, t1, t2)
             };
     }
 }

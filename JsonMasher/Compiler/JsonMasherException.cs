@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace JsonMasher.Compiler
 {
@@ -7,6 +8,7 @@ namespace JsonMasher.Compiler
         public int Line { get; private set; }
         public int Column { get; private set; }
         public string Highlights { get; private set; }
+        public IEnumerable<Json> Values { get; private set; }
 
         public JsonMasherException(
             string message,
@@ -20,12 +22,14 @@ namespace JsonMasher.Compiler
             int line,
             int column,
             string highlights,
-            Exception innerException = null)
+            Exception innerException = null,
+            params Json[] values)
             : this(message, innerException)
         {
             Line = line;
             Column = column;
             Highlights = highlights;
+            Values = values;
         }
     }
 }

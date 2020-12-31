@@ -10,7 +10,7 @@ namespace JsonMasher.Mashers.Builtins
                 {
                     if (json.Type != JsonValueType.True && json.Type != JsonValueType.False)
                     {
-                        throw context.Error($"Can't 'not' a {json.Type}.", stack);
+                        throw context.Error($"Can't 'not' a {json.Type}.", stack, json);
                     }
                     return Json.Bool(!json.GetBool()).AsEnumerable();
                 },
