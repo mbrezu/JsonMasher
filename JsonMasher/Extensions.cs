@@ -33,6 +33,8 @@ namespace JsonMasher
                 _ => throw new InvalidOperationException()
             };
 
+        public static Json AsJson(this string json) => JsonDocument.Parse(json).AsJson();
+
         public static IEnumerable<Json> AsEnumerable(this Json json)
         {
             yield return json;

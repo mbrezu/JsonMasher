@@ -1,20 +1,17 @@
 # Things to do next
 
-- [ ] error handling
-  - [ ] 
+- [ ] pretty printing (FancyPen?) for Json values
 - [ ] CLI interface
-- [ ] benchmarks (https://benchmarkdotnet.org/articles/guides/getting-started.html)
 - [ ] interface as web site
 - [ ] debugger (extend DebugMashStack)
   - [ ] stepping through
   - [ ] setting breakpoints
   - [ ] include in web site
 - [ ] switch to System.Collections.Immutable for Json
-- [ ] pretty printing (FancyPen?) for Json values
 - [ ] assignments WIP
 - [ ] slice selectors (I thought that .[a:b] would be the same as .[range(a; b)], but apparently that's not true; maybe make `<f>:<g>` syntactic sugar for `range(<f>; <g>)` ?
-- [ ] has(key), keys, map, map_values
-- [ ] del, to_entries, from_entries, select, error, transpose, range
+- [ ] has(key), keys, map_values
+- [ ] del, to_entries, from_entries, error, transpose
 - [ ] min/max/group/sort
 - [ ] .. (recurse)
 - [ ] documentation
