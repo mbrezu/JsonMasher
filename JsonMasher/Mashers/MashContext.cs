@@ -1,5 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using JsonMasher.Compiler;
 using JsonMasher.Mashers.Combinators;
 
 namespace JsonMasher.Mashers
@@ -15,6 +18,7 @@ namespace JsonMasher.Mashers
         List<Frame> _env = new();
 
         public IEnumerable<Json> Log => _log;
+        public SourceInformation SourceInformation { get; init; }
 
         public MashContext()
         {
@@ -97,6 +101,40 @@ namespace JsonMasher.Mashers
                 }
             }
             throw new InvalidOperationException();
+        }
+
+        public Exception Error(string message, IMashStack stack)
+        {
+            var programWithLines = SourceInformation != null 
+                ? new ProgramWithLines(SourceInformation.Program)
+                : null;
+            var stackSb = new StringBuilder();
+            foreach (var frame in stack.GetValues())
+            {
+                var position = SourceInformation?.GetProgramPosition(frame);
+                if (position != null)
+                {
+                    stackSb.Append(PositionHighlighter.Highlight(
+                        programWithLines, position.StartPosition, position.EndPosition));
+                }
+                else
+                {
+                    stackSb.AppendLine(frame.GetType().Name.ToString());
+                }
+            }
+            var line = 0;
+            var column = 0;
+            var topFrame = stack.Top;
+            if (topFrame != null)
+            {
+                var position = SourceInformation?.GetProgramPosition(topFrame);
+                if (position != null)
+                {
+                    line = programWithLines.GetLineNumber(position.StartPosition) + 1;
+                    column = programWithLines.GetColumnNumber(position.StartPosition) + 1;
+                }
+            }
+            return new JsonMasherException(message, line, column, stackSb.ToString());
         }
     }
 }

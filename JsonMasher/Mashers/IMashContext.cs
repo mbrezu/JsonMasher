@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using JsonMasher.Mashers.Combinators;
 
@@ -15,5 +16,6 @@ namespace JsonMasher.Mashers
         Callable GetCallable(FunctionName name);
         void SetCallable(string name, Callable value);
         Callable GetCallable(string name);
+        Exception Error(string message, IMashStack stack);
     }
 }

@@ -11,7 +11,7 @@ namespace JsonMasher.Tests
             this IJsonMasherOperator op, Json data)
         {
             var masher = new Mashers.JsonMasher();
-            var result = masher.Mash(data.AsEnumerable(), op);
+            var result = masher.Mash(data.AsEnumerable(), op, DefaultMashStack.Instance);
             return (json: result.sequence, context: result.context);
         }
 

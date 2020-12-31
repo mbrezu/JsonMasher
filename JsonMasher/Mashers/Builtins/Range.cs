@@ -8,9 +8,9 @@ namespace JsonMasher.Mashers.Builtins
         private static Builtin _builtin_1 = new Builtin(Function_1 , 1);
 
         private static IEnumerable<Json> Function_1(
-            List<IJsonMasherOperator> mashers, Json json, IMashContext context)
+            List<IJsonMasherOperator> mashers, Json json, IMashContext context, IMashStack stack)
         {
-            foreach (var maxValue in mashers[0].Mash(json, context))
+            foreach (var maxValue in mashers[0].Mash(json, context, stack))
             {
                 for (int i = 0; i < maxValue.GetNumber(); i++)
                 {
@@ -22,11 +22,11 @@ namespace JsonMasher.Mashers.Builtins
         private static Builtin _builtin_2 = new Builtin(Function_2 , 2);
 
         private static IEnumerable<Json> Function_2(
-            List<IJsonMasherOperator> mashers, Json json, IMashContext context)
+            List<IJsonMasherOperator> mashers, Json json, IMashContext context, IMashStack stack)
         {
-            foreach (var startValue in mashers[0].Mash(json, context))
+            foreach (var startValue in mashers[0].Mash(json, context, stack))
             {
-                foreach (var maxValue in mashers[1].Mash(json, context))
+                foreach (var maxValue in mashers[1].Mash(json, context, stack))
                 {
                     int start = (int)startValue.GetNumber();
                     int max = (int)maxValue.GetNumber();
@@ -41,13 +41,13 @@ namespace JsonMasher.Mashers.Builtins
         private static Builtin _builtin_3 = new Builtin(Function_3 , 3);
 
         private static IEnumerable<Json> Function_3(
-            List<IJsonMasherOperator> mashers, Json json, IMashContext context)
+            List<IJsonMasherOperator> mashers, Json json, IMashContext context, IMashStack stack)
         {
-            foreach (var startValue in mashers[0].Mash(json, context))
+            foreach (var startValue in mashers[0].Mash(json, context, stack))
             {
-                foreach (var maxValue in mashers[1].Mash(json, context))
+                foreach (var maxValue in mashers[1].Mash(json, context, stack))
                 {
-                    foreach (var stepValue in mashers[2].Mash(json, context))
+                    foreach (var stepValue in mashers[2].Mash(json, context, stack))
                     {
                         double start = startValue.GetNumber();
                         double max = maxValue.GetNumber();

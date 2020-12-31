@@ -1,13 +1,14 @@
 # Things to do next
 
+- [ ] parse empty arrays! (and empty dictionaries)
 - [ ] error handling
-  - [ ] runtime positions for errors
-  - [ ] stack trace
-    - [ ] pretty printing operators?
+  - [ ] when a value causes an error, include the error in the exception.
+- [ ] debugger
+- [ ] site
+- [ ] tick limitation
 - [ ] switch to System.Collections.Immutable for Json
 - [ ] pretty printing (FancyPen?) for Json values
 - [ ] assignments WIP
-- [ ] using Object.ReferenceEquals and RuntimeHelpers.GetHashCode for keys on IJsonMasherOperator
 - [ ] slice selectors (I thought that .[a:b] would be the same as .[range(a; b)], but apparently that's not true; maybe make `<f>:<g>` syntactic sugar for `range(<f>; <g>)` ?
 - [ ] has(key), keys, map, map_values
 - [ ] del, to_entries, from_entries, select, error, transpose, range
@@ -16,5 +17,7 @@
 - [ ] documentation
 - [ ] nuget packages
 - [ ] jq -n '{a : 1 | 2}' (seems I need to be able to parse pipes inside dicts)
+- [ ] jq -n '{a:1} | .b' (should be null, not exception)
+- [ ] jq -n '[1, 2, 3] | .[4]' (should be null, not exception)
 - [ ] destructuring bind
 - [ ] benchmarks (https://benchmarkdotnet.org/articles/guides/getting-started.html)

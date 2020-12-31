@@ -7,7 +7,7 @@ namespace JsonMasher.Mashers.Combinators
     public interface FunctionDescriptor {};
     public record FunctionName(string Name, int Arity): FunctionDescriptor;
     public record Builtin(
-        Func<List<IJsonMasherOperator>, Json, IMashContext, IEnumerable<Json>> Function,
+        Func<List<IJsonMasherOperator>, Json, IMashContext, IMashStack, IEnumerable<Json>> Function,
         int Arity)
     : FunctionDescriptor, Callable;
 
@@ -28,35 +28,42 @@ namespace JsonMasher.Mashers.Combinators
             Arguments = arguments;
         }
 
-        public IEnumerable<Json> Mash(Json json, IMashContext context)
-            => Descriptor switch {
-                FunctionName name => CallFunctionName(name, json, context),
-                Builtin builtin => RunBuiltin(builtin, json, context),
+        public IEnumerable<Json> Mash(Json json, IMashContext context, IMashStack stack)
+        {
+            var newStack = stack.Push(this);
+            var result = Descriptor switch {
+                FunctionName name => CallFunctionName(name, json, context, newStack),
+                Builtin builtin => RunBuiltin(builtin, json, context, newStack),
                 _ => throw new InvalidOperationException()
             };
+            return result;
+        }
 
-        private IEnumerable<Json> CallFunctionName(FunctionName name, Json json, IMashContext context)
+        private IEnumerable<Json> CallFunctionName(
+            FunctionName name, Json json, IMashContext context, IMashStack stack)
             => context.GetCallable(name) switch
             {
-                IJsonMasherOperator op => op.Mash(json, context),
-                Function func => CallFunction(json, func, context),
-                Builtin builtin => RunBuiltin(builtin, json, context),
+                IJsonMasherOperator op => op.Mash(json, context, stack),
+                Function func => CallFunction(json, func, context, stack),
+                Builtin builtin => RunBuiltin(builtin, json, context, stack),
                 _ => throw new InvalidOperationException()
             };
 
-        private IEnumerable<Json> RunBuiltin(Builtin builtin, Json json, IMashContext context)
+        private IEnumerable<Json> RunBuiltin(
+            Builtin builtin, Json json, IMashContext context, IMashStack stack)
         {
             if (builtin.Arity != Arguments.Count)
             {
                 throw new InvalidOperationException();
             }
-            return builtin.Function(Arguments, json, context);
+            return builtin.Function(Arguments, json, context, stack);
         }
 
         public static FunctionCall ZeroArity(string name)
             => new FunctionCall(new FunctionName(name, 0));
 
-        private IEnumerable<Json> CallFunction(Json json, Function func, IMashContext context)
+        private IEnumerable<Json> CallFunction(
+            Json json, Function func, IMashContext context, IMashStack stack)
         {
             if (Arguments.Count != func.Arguments.Count)
             {
@@ -67,7 +74,7 @@ namespace JsonMasher.Mashers.Combinators
             {
                 context.SetCallable(func.Arguments[i], Arguments[i]);
             }
-            foreach (var result in func.Op.Mash(json, context))
+            foreach (var result in func.Op.Mash(json, context, stack))
             {
                 yield return result;
             }

@@ -8,10 +8,10 @@ namespace JsonMasher.Mashers.Primitives
     {
         public string Key { get; init; }
 
-        public IEnumerable<Json> Mash(Json json, IMashContext context)
+        public IEnumerable<Json> Mash(Json json, IMashContext context, IMashStack stack)
             => MashOne(json).AsEnumerable();
 
-        public ZipStage ZipDown(Json json, IMashContext context)
+        public ZipStage ZipDown(Json json, IMashContext context, IMashStack stack)
         {
             if (json.Type == JsonValueType.Object)
             {

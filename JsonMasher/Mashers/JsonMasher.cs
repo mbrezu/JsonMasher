@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using JsonMasher.Compiler;
 using JsonMasher.Mashers.Builtins;
 using JsonMasher.Mashers.Combinators;
 
@@ -7,9 +8,15 @@ namespace JsonMasher.Mashers
 {
     public class JsonMasher
     {
-        public (IEnumerable<Json> sequence, IMashContext context) Mash(IEnumerable<Json> seq, IJsonMasherOperator op)
+        public (IEnumerable<Json> sequence, IMashContext context) Mash(
+            IEnumerable<Json> seq,
+            IJsonMasherOperator op,
+            IMashStack stack,
+            SourceInformation sourceInformation = null)
         {
-            MashContext _context = new();
+            MashContext _context = new() {
+                SourceInformation = sourceInformation
+            };
             _context.PushEnvironmentFrame();
             _context.SetCallable(new FunctionName("not", 0), Not.Builtin);
             _context.SetCallable(new FunctionName("empty", 0), Empty.Builtin);
@@ -18,7 +25,7 @@ namespace JsonMasher.Mashers
             _context.SetCallable(new FunctionName("range", 3), Range.Builtin_3);
             _context.SetCallable(new FunctionName("length", 0), Length.Builtin);
             _context.SetCallable(new FunctionName("limit", 2), Limit.Builtin);
-            return (sequence: seq.SelectMany(json => op.Mash(json, _context)), context: _context);
+            return (sequence: seq.SelectMany(json => op.Mash(json, _context, stack)), context: _context);
         }
     }
 }

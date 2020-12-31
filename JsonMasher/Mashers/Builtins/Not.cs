@@ -6,7 +6,14 @@ namespace JsonMasher.Mashers.Builtins
     {
         private static Builtin _builtin 
             = new Builtin(
-                (mashers, json, context) => Json.Bool(!json.GetBool()).AsEnumerable(),
+                (mashers, json, context, stack) =>
+                {
+                    if (json.Type != JsonValueType.True && json.Type != JsonValueType.False)
+                    {
+                        throw context.Error($"Can't 'not' a {json.Type}.", stack);
+                    }
+                    return Json.Bool(!json.GetBool()).AsEnumerable();
+                },
                 0);
         
         public static Builtin Builtin => _builtin;

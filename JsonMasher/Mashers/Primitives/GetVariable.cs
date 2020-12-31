@@ -6,7 +6,7 @@ namespace JsonMasher.Mashers.Primitives
     {
         public string Name { get; init; }
 
-        public IEnumerable<Json> Mash(Json json, IMashContext context)
+        public IEnumerable<Json> Mash(Json json, IMashContext context, IMashStack stack)
             => context.GetVariable(Name).AsEnumerable();
     }
 }

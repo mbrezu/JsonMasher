@@ -10,11 +10,18 @@ namespace JsonMasher.Compiler
 
         public JsonMasherException(
             string message,
+            Exception innerException = null)
+            : base(message, innerException)
+        {
+        }
+
+        public JsonMasherException(
+            string message,
             int line,
             int column,
             string highlights,
             Exception innerException = null)
-            : base(message, innerException)
+            : this(message, innerException)
         {
             Line = line;
             Column = column;

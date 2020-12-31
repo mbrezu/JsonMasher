@@ -9,11 +9,12 @@ namespace JsonMasher.Mashers.Combinators
         public IJsonMasherOperator First { get; init; }
         public IJsonMasherOperator Second { get; init; }
 
-        public IEnumerable<Json> Mash(Json json, IMashContext context)
+        public IEnumerable<Json> Mash(Json json, IMashContext context, IMashStack stack)
         {
-            foreach (var temp in First.Mash(json, context))
+            var newStack = stack.Push(this);
+            foreach (var temp in First.Mash(json, context, newStack))
             {
-                foreach (var result in Second.Mash(temp, context))
+                foreach (var result in Second.Mash(temp, context, newStack))
                 {
                     yield return result;
                 }
@@ -26,14 +27,15 @@ namespace JsonMasher.Mashers.Combinators
         public static IJsonMasherOperator All(IEnumerable<IJsonMasherOperator> mashers)
             => mashers.Fold((m1, m2) => new Compose { First = m1, Second = m2 });
 
-        public ZipStage ZipDown(Json json, IMashContext context)
+        public ZipStage ZipDown(Json json, IMashContext context, IMashStack stack)
         {
             if (First is IJsonZipper zipper1)
             {
                 if (Second is IJsonZipper zipper2)
                 {
-                    var zipStage1 = zipper1.ZipDown(json, context);
-                    var zipStages2 = zipStage1.Parts.Select(part => zipper2.ZipDown(part, context));
+                    var zipStage1 = zipper1.ZipDown(json, context, stack);
+                    var zipStages2 = zipStage1.Parts.Select(
+                        part => zipper2.ZipDown(part, context, stack));
                     return new ZipStage(
                         parts => Reconstruct(zipStage1, zipStages2, parts),
                         zipStages2.SelectMany(stage => stage.Parts));

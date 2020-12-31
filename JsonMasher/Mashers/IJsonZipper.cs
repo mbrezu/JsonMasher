@@ -8,6 +8,6 @@ namespace JsonMasher.Mashers
         IEnumerable<Json> Parts);
     public interface IJsonZipper
     {
-        ZipStage ZipDown(Json json, IMashContext context);
+        ZipStage ZipDown(Json json, IMashContext context, IMashStack stack);
     }
 }

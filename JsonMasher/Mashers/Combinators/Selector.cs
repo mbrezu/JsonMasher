@@ -8,12 +8,20 @@ namespace JsonMasher.Mashers.Combinators
     {
         public IJsonMasherOperator Index { get; init; }
 
-        public IEnumerable<Json> Mash(Json json, IMashContext context)
-            => MashOne(json, context).AsEnumerable();
+        public IEnumerable<Json> Mash(Json json, IMashContext context, IMashStack stack)
+            => MashOne(json, context, stack.Push(this)).AsEnumerable();
 
-        public ZipStage ZipDown(Json json, IMashContext context)
+        private IEnumerable<Json> MashOne(Json json, IMashContext context, IMashStack stack)
+            => Index.Mash(json, context, stack).Select(index => 
+                (index.Type, json.Type) switch {
+                    (JsonValueType.Number, JsonValueType.Array) => json.GetElementAt((int)(index.GetNumber())),
+                    (JsonValueType.String, JsonValueType.Object) => json.GetElementAt(index.GetString()),
+                    _ => throw new InvalidOperationException()
+                });
+
+        public ZipStage ZipDown(Json json, IMashContext context, IMashStack stack)
         {
-            var indices = Index.Mash(json, context);
+            var indices = Index.Mash(json, context, stack);
             return json.Type switch {
                 JsonValueType.Array => ZipDownArray(indices, json, context),
                 JsonValueType.Object => ZipDownObject(indices, json, context),
@@ -61,13 +69,5 @@ namespace JsonMasher.Mashers.Combinators
             => Json.Object(
                 json.EnumerateObject()
                 .Concat(stringIndices.Zip(values, (i, v) => new JsonProperty(i, v))));
-
-        private IEnumerable<Json> MashOne(Json json, IMashContext context)
-            => Index.Mash(json, context).Select(index => 
-                (index.Type, json.Type) switch {
-                    (JsonValueType.Number, JsonValueType.Array) => json.GetElementAt((int)(index.GetNumber())),
-                    (JsonValueType.String, JsonValueType.Object) => json.GetElementAt(index.GetString()),
-                    _ => throw new InvalidOperationException()
-                });
     }
 }

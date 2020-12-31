@@ -10,9 +10,10 @@ namespace JsonMasher.Mashers.Combinators
         public IJsonMasherOperator Then { get; init; }
         public IJsonMasherOperator Else { get; init; }
 
-        public IEnumerable<Json> Mash(Json json, IMashContext context)
+        public IEnumerable<Json> Mash(Json json, IMashContext context, IMashStack stack)
         {
-            var condSequence = Cond.Mash(json, context);
+            var newStack = stack.Push(this);
+            var condSequence = Cond.Mash(json, context, newStack);
             if (!condSequence.Any())
             {
                 throw new InvalidOperationException();
@@ -24,8 +25,8 @@ namespace JsonMasher.Mashers.Combinators
                     throw new InvalidOperationException();
                 }
                 var resultSequence = condValue.GetBool()
-                    ? Then.Mash(json, context)
-                    : Else.Mash(json, context);
+                    ? Then.Mash(json, context, newStack)
+                    : Else.Mash(json, context, newStack);
                 foreach (var result in resultSequence)
                 {
                     yield return result;

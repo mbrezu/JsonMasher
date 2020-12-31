@@ -6,7 +6,7 @@ namespace JsonMasher.Mashers.Primitives
 {
     public class Enumerate : IJsonMasherOperator, IJsonZipper
     {
-        public IEnumerable<Json> Mash(Json json, IMashContext context)
+        public IEnumerable<Json> Mash(Json json, IMashContext context, IMashStack stack)
             => json.Type switch 
             {
                 JsonValueType.Array => json.EnumerateArray(),
@@ -14,12 +14,12 @@ namespace JsonMasher.Mashers.Primitives
                 _ => throw new InvalidOperationException("Can't enumerate value.")
             };
 
-        public ZipStage ZipDown(Json json, IMashContext context)
+        public ZipStage ZipDown(Json json, IMashContext context, IMashStack stack)
             => json.Type switch 
             {
                 JsonValueType.Array => new ZipStage(
                     parts => Json.Array(parts),
-                    Mash(json, context)),
+                    Mash(json, context, stack)),
                 JsonValueType.Object => ZipDownObject(json),
                 _ => throw new InvalidOperationException("Can't enumerate value.")
             };

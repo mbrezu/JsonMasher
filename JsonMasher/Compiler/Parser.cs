@@ -23,10 +23,11 @@ namespace JsonMasher.Compiler
                 _program = program;
                 _tokens = tokens.ToArray();
                 _index = 0;
-                SourceInformation = new SourceInformation();
+                SourceInformation = new SourceInformation(program);
             }
 
             public int Position => AtEnd ? _program.Length : _tokens[_index].StartPos;
+            public int GetOffsetPosition(int offset) => _tokens[_index - offset].StartPos;
             
             public IJsonMasherOperator RecordPosition(IJsonMasherOperator ast, int startPosition)
             {
@@ -460,7 +461,7 @@ namespace JsonMasher.Compiler
 
         private IJsonMasherOperator ParseIf(State state)
         {
-            var position = state.Position;
+            var position = state.GetOffsetPosition(1);
             var cond = ParseFilter(state);
             state.Match(Tokens.Keywords.Then);
             var thenFilter = ParseFilter(state);
@@ -552,7 +553,7 @@ namespace JsonMasher.Compiler
 
         private IJsonMasherOperator ParseSelector(State state)
         {
-            var position = state.Position;
+            var position = state.GetOffsetPosition(1); // include the dot
             state.Advance();
             if (state.Current == Tokens.CloseSquareParen)
             {

@@ -134,6 +134,8 @@ jq -n '[1, 2] | .0'
 
 jq -n '{a:1, b:2} | length'
 
+jq -n '"test" | length'
+
 jq -n 'limit(2, 3; range(4))'
 
 jq -n '[1, 2, 3] | .[-3,-2:2]'
@@ -143,3 +145,7 @@ jq -n '[1, 2, 3] | .[range(-2; 1)]'
 jq -n '"test" | .[-1]'
 
 jq -n '-2: 0'
+
+jq -n '[1, 2, 3] | .[4]'
+
+jq -n '"test" * 4'

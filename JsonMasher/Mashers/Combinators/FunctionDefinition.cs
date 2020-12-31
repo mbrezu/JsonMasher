@@ -8,7 +8,7 @@ namespace JsonMasher.Mashers.Combinators
         public List<string> Arguments { get; init; }
         public IJsonMasherOperator Body { get; init; }
 
-        public IEnumerable<Json> Mash(Json json, IMashContext context)
+        public IEnumerable<Json> Mash(Json json, IMashContext context, IMashStack stack)
         {
             if (Arguments == null || Arguments.Count == 0)
             {

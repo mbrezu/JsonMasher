@@ -6,7 +6,14 @@ namespace JsonMasher.Compiler
     public record ProgramPosition(int StartPosition, int EndPosition);
     public class SourceInformation
     {
-        private Dictionary<ObjectKey, ProgramPosition> _astToPosition = new ();
+        public string Program { get; init; }
+
+        public SourceInformation(string program)
+        {
+            Program = program;
+        }
+
+        private Dictionary<ObjectKey, ProgramPosition> _astToPosition = new();
 
         public void SetProgramPosition(IJsonMasherOperator ast, ProgramPosition position)
             => _astToPosition[new ObjectKey(ast)] = position;

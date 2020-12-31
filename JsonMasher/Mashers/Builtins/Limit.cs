@@ -9,12 +9,16 @@ namespace JsonMasher.Mashers.Builtins
         private static Builtin _builtin = new Builtin(Function, 2);
 
         private static IEnumerable<Json> Function(
-            List<IJsonMasherOperator> mashers, Json json, IMashContext context)
+            List<IJsonMasherOperator> mashers, Json json, IMashContext context, IMashStack stack)
         {
-            foreach (var limitValue in mashers[0].Mash(json, context))
+            foreach (var limitValue in mashers[0].Mash(json, context, stack))
             {
+                if (limitValue.Type != JsonValueType.Number)
+                {
+                    throw context.Error($"Can't use {limitValue.Type} as limit.", stack);
+                }
                 int limit = (int)limitValue.GetNumber();
-                foreach (var result in mashers[1].Mash(json, context).Take(limit))
+                foreach (var result in mashers[1].Mash(json, context, stack).Take(limit))
                 {
                     yield return result;
                 }

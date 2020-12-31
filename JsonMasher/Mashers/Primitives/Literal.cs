@@ -30,7 +30,7 @@ namespace JsonMasher.Mashers.Primitives
             Value = Json.Bool(value);
         }
 
-        public IEnumerable<Json> Mash(Json json, IMashContext context)
+        public IEnumerable<Json> Mash(Json json, IMashContext context, IMashStack stack)
             => Value.AsEnumerable();
     }
 }

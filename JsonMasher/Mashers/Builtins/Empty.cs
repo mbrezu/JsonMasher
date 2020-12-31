@@ -6,7 +6,7 @@ namespace JsonMasher.Mashers.Builtins
     public class Empty
     {
         private static Builtin _builtin 
-            = new Builtin((mashers, json, context) => Enumerable.Empty<Json>() , 0);
+            = new Builtin((mashers, json, context, stack) => Enumerable.Empty<Json>() , 0);
         public static Builtin Builtin => _builtin;
     }
 }

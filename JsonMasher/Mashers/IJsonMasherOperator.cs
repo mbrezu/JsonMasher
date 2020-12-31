@@ -4,6 +4,6 @@ namespace JsonMasher.Mashers
 {
     public interface IJsonMasherOperator : Callable
     {
-        IEnumerable<Json> Mash(Json json, IMashContext context);
+        IEnumerable<Json> Mash(Json json, IMashContext context, IMashStack stack);
     }
 }

@@ -5,11 +5,11 @@ namespace JsonMasher.Mashers.Primitives
 {
     public class Identity : IJsonMasherOperator, IJsonZipper
     {
-        public IEnumerable<Json> Mash(Json json, IMashContext context)
+        public IEnumerable<Json> Mash(Json json, IMashContext context, IMashStack stack)
             => json.AsEnumerable();
 
-        public ZipStage ZipDown(Json json, IMashContext context)
-            => new ZipStage(parts => parts.First(), Mash(json, context));
+        public ZipStage ZipDown(Json json, IMashContext context, IMashStack stack)
+            => new ZipStage(parts => parts.First(), Mash(json, context, stack));
 
         private Identity()
         {

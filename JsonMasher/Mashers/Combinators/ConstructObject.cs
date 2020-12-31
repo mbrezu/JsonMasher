@@ -14,11 +14,11 @@ namespace JsonMasher.Mashers.Combinators
             Descriptors = descriptors.ToList();
         }
 
-        public IEnumerable<Json> Mash(Json json, IMashContext context)
-            => Mash(json, context, new List<JsonProperty>());
+        public IEnumerable<Json> Mash(Json json, IMashContext context, IMashStack stack)
+            => Mash(json, context, stack.Push(this), new List<JsonProperty>());
 
         private IEnumerable<Json> Mash(
-            Json json, IMashContext context, List<JsonProperty> properties)
+            Json json, IMashContext context, IMashStack stack, List<JsonProperty> properties)
         {
             int level = properties.Count;
             if (level == Descriptors.Count)
@@ -28,10 +28,10 @@ namespace JsonMasher.Mashers.Combinators
             else
             {
                 var descriptor = Descriptors[level];
-                foreach (var value in descriptor.Operator.Mash(json, context))
+                foreach (var value in descriptor.Operator.Mash(json, context, stack))
                 {
                     properties.Add(new JsonProperty(descriptor.Key, value));
-                    foreach (var result in Mash(json, context, properties))
+                    foreach (var result in Mash(json, context, stack, properties))
                     {
                         yield return result;
                     }

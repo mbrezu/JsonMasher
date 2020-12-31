@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using JsonMasher.Compiler;
+using JsonMasher.Mashers;
 using Xunit;
 
 namespace JsonMasher.Tests.EndToEnd
@@ -25,7 +26,7 @@ namespace JsonMasher.Tests.EndToEnd
             var input = inputJson.AsJson().AsEnumerable();
 
             // Act
-            var result = new Mashers.JsonMasher().Mash(input, filter);
+            var result = new Mashers.JsonMasher().Mash(input, filter, DefaultMashStack.Instance);
 
             // Assert
             Json.Array(result.sequence)
