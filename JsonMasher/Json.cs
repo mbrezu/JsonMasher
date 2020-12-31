@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
 namespace JsonMasher
@@ -42,6 +41,8 @@ namespace JsonMasher
         public virtual Json GetElementAt(string key) => throw new NotImplementedException();
 
         public virtual int GetLength() => throw new NotImplementedException();
+
+        public override string ToString() => JsonPrinter.AsString(this);
 
         public bool DeepEqual(Json other)
         {

@@ -1,6 +1,5 @@
 # Things to do next
 
-- [ ] pretty printing (FancyPen?) for Json values
 - [ ] CLI interface
 - [ ] interface as web site
 - [ ] debugger (extend DebugMashStack)
