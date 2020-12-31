@@ -13,6 +13,7 @@ namespace JsonMasher.Mashers.Combinators
         public IEnumerable<Json> Mash(Json json, IMashContext context, IMashStack stack)
         {
             var newStack = stack.Push(this);
+            context.Tick(stack);
             var condSequence = Cond.Mash(json, context, newStack);
             if (!condSequence.Any())
             {

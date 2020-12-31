@@ -12,6 +12,7 @@ namespace JsonMasher.Mashers.Combinators
         public IEnumerable<Json> Mash(Json json, IMashContext context, IMashStack stack)
         {
             var newStack = stack.Push(this);
+            context.Tick(stack);
             if (PathExpression is IJsonZipper zipper)
             {
                 var zipStage = zipper.ZipDown(json, context, newStack);

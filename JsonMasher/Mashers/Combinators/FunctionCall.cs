@@ -31,6 +31,7 @@ namespace JsonMasher.Mashers.Combinators
         public IEnumerable<Json> Mash(Json json, IMashContext context, IMashStack stack)
         {
             var newStack = stack.Push(this);
+            context.Tick(stack);
             var result = Descriptor switch {
                 FunctionName name => CallFunctionName(name, json, context, newStack),
                 Builtin builtin => RunBuiltin(builtin, json, context, newStack),

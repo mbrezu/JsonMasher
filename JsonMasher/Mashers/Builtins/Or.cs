@@ -1,4 +1,3 @@
-using System;
 using JsonMasher.Mashers.Combinators;
 
 namespace JsonMasher.Mashers.Builtins

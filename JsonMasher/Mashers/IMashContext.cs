@@ -17,5 +17,6 @@ namespace JsonMasher.Mashers
         void SetCallable(string name, Callable value);
         Callable GetCallable(string name);
         Exception Error(string message, IMashStack stack);
+        void Tick(IMashStack stack);
     }
 }

@@ -12,10 +12,12 @@ namespace JsonMasher.Mashers
             IEnumerable<Json> seq,
             IJsonMasherOperator op,
             IMashStack stack,
-            SourceInformation sourceInformation = null)
+            SourceInformation sourceInformation = null,
+            int tickLimit = 0)
         {
             MashContext _context = new() {
-                SourceInformation = sourceInformation
+                SourceInformation = sourceInformation,
+                TickLimit = tickLimit
             };
             _context.PushEnvironmentFrame();
             _context.SetCallable(new FunctionName("not", 0), Not.Builtin);

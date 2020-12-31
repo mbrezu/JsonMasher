@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using JsonMasher.Compiler;
 using JsonMasher.Mashers.Combinators;
@@ -16,6 +15,8 @@ namespace JsonMasher.Mashers
 
         List<Json> _log = new();
         List<Frame> _env = new();
+        int ticks = 0;
+        public int TickLimit { get; init; }
 
         public IEnumerable<Json> Log => _log;
         public SourceInformation SourceInformation { get; init; }
@@ -135,6 +136,18 @@ namespace JsonMasher.Mashers
                 }
             }
             return new JsonMasherException(message, line, column, stackSb.ToString());
+        }
+
+        public void Tick(IMashStack stack)
+        {
+            if (TickLimit != 0)
+            {
+                ticks ++;
+                if (ticks > TickLimit)
+                {
+                    throw Error($"Failed to complete in {TickLimit} ticks.", stack);
+                }
+            }
         }
     }
 }

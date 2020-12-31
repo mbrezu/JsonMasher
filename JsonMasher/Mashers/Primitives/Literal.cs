@@ -31,6 +31,9 @@ namespace JsonMasher.Mashers.Primitives
         }
 
         public IEnumerable<Json> Mash(Json json, IMashContext context, IMashStack stack)
-            => Value.AsEnumerable();
+        {
+            context.Tick(stack);
+            return Value.AsEnumerable();
+        }
     }
 }

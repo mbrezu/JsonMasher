@@ -13,6 +13,7 @@ namespace JsonMasher.Mashers.Primitives
 
         public ZipStage ZipDown(Json json, IMashContext context, IMashStack stack)
         {
+            context.Tick(stack);
             if (json.Type == JsonValueType.Object)
             {
                 return new ZipStage(

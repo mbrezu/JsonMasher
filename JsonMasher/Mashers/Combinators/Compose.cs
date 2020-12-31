@@ -12,6 +12,7 @@ namespace JsonMasher.Mashers.Combinators
         public IEnumerable<Json> Mash(Json json, IMashContext context, IMashStack stack)
         {
             var newStack = stack.Push(this);
+            context.Tick(stack);
             foreach (var temp in First.Mash(json, context, newStack))
             {
                 foreach (var result in Second.Mash(temp, context, newStack))
@@ -33,6 +34,7 @@ namespace JsonMasher.Mashers.Combinators
             {
                 if (Second is IJsonZipper zipper2)
                 {
+                    context.Tick(stack);
                     var zipStage1 = zipper1.ZipDown(json, context, stack);
                     var zipStages2 = zipStage1.Parts.Select(
                         part => zipper2.ZipDown(part, context, stack));

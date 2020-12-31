@@ -12,6 +12,7 @@ namespace JsonMasher.Mashers.Combinators
         {
             context.PushEnvironmentFrame();
             var newStack = stack.Push(this);
+            context.Tick(stack);
             foreach (var jsonValue in Value.Mash(json, context, newStack))
             {
                 context.SetVariable(Name, jsonValue);

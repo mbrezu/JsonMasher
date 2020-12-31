@@ -23,6 +23,7 @@ namespace JsonMasher.Mashers.Combinators
             int level = properties.Count;
             if (level == Descriptors.Count)
             {
+                context.Tick(stack);
                 yield return Json.Object(properties);
             }
             else

@@ -11,6 +11,7 @@ namespace JsonMasher.Mashers.Combinators
         public IEnumerable<Json> Mash(Json json, IMashContext context, IMashStack stack)
         {
             var newStack = stack.Push(this);
+            context.Tick(stack);
             return First.Mash(json, context, newStack)
                 .Concat(Second.Mash(json, context, newStack));
         }

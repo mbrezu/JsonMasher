@@ -14,6 +14,7 @@ namespace JsonMasher.Mashers.Builtins
             {
                 for (int i = 0; i < maxValue.GetNumber(); i++)
                 {
+                    context.Tick(stack);
                     yield return Json.Number(i);
                 }
             }
@@ -32,6 +33,7 @@ namespace JsonMasher.Mashers.Builtins
                     int max = (int)maxValue.GetNumber();
                     for (int i = start; i < max; i++)
                     {
+                        context.Tick(stack);
                         yield return Json.Number(i);
                     }
                 }
@@ -54,6 +56,7 @@ namespace JsonMasher.Mashers.Builtins
                         double step = stepValue.GetNumber();
                         for (double i = start; i < max; i += step)
                         {
+                            context.Tick(stack);
                             yield return Json.Number(i);
                         }
                     }

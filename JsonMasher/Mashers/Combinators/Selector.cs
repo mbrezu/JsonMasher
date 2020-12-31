@@ -9,7 +9,10 @@ namespace JsonMasher.Mashers.Combinators
         public IJsonMasherOperator Index { get; init; }
 
         public IEnumerable<Json> Mash(Json json, IMashContext context, IMashStack stack)
-            => MashOne(json, context, stack.Push(this)).AsEnumerable();
+        {
+            context.Tick(stack);
+            return MashOne(json, context, stack.Push(this)).AsEnumerable();
+        }
 
         private IEnumerable<Json> MashOne(Json json, IMashContext context, IMashStack stack)
             => Index.Mash(json, context, stack).Select(index => 
@@ -21,7 +24,8 @@ namespace JsonMasher.Mashers.Combinators
 
         public ZipStage ZipDown(Json json, IMashContext context, IMashStack stack)
         {
-            var indices = Index.Mash(json, context, stack);
+            context.Tick(stack);
+            var indices = Index.Mash(json, context, stack.Push(this));
             return json.Type switch {
                 JsonValueType.Array => ZipDownArray(indices, json, context),
                 JsonValueType.Object => ZipDownObject(indices, json, context),
