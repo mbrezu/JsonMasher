@@ -403,9 +403,17 @@ namespace JsonMasher.Compiler
             else if (state.Current == Tokens.OpenSquareParen)
             {
                 state.Advance();
-                var elements = ParseFilter(state);
-                state.Match(Tokens.CloseSquareParen);
-                return state.RecordPosition(new ConstructArray { Elements = elements }, position);
+                if (state.Current == Tokens.CloseSquareParen)
+                {
+                    state.Advance();
+                    return state.RecordPosition(new ConstructArray(), position);
+                }
+                else
+                {
+                    var elements = ParseFilter(state);
+                    state.Match(Tokens.CloseSquareParen);
+                    return state.RecordPosition(new ConstructArray { Elements = elements }, position);
+                }
             }
             else if (state.Current == Tokens.OpenBrace)
             {

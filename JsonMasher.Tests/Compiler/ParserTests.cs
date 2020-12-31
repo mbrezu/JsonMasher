@@ -172,6 +172,8 @@ namespace JsonMasher.Tests.Compiler
 
         private static IEnumerable<TestItem> ArrayConstructionTests()
         {
+            yield return new TestItem("[]", new ConstructArray {
+            });
             yield return new TestItem("[1]", new ConstructArray {
                 Elements = new Literal(1)
             });
@@ -190,6 +192,7 @@ namespace JsonMasher.Tests.Compiler
 
         private static IEnumerable<TestItem> ObjectConstructionTests()
         {
+            yield return new TestItem("{}", new ConstructObject());
             yield return new TestItem("{a:.}", new ConstructObject(
                 new PropertyDescriptor(
                     "a", 

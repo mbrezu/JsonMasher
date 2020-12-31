@@ -1,11 +1,14 @@
 # Things to do next
 
-- [ ] parse empty arrays! (and empty dictionaries)
 - [ ] error handling
   - [ ] when a value causes an error, include the error in the exception.
-- [ ] debugger
-- [ ] site
 - [ ] tick limitation
+- [ ] benchmarks (https://benchmarkdotnet.org/articles/guides/getting-started.html)
+- [ ] interface as web site
+- [ ] debugger (extend DebugMashStack)
+  - [ ] stepping through
+  - [ ] setting breakpoints
+  - [ ] include in web site
 - [ ] switch to System.Collections.Immutable for Json
 - [ ] pretty printing (FancyPen?) for Json values
 - [ ] assignments WIP
@@ -20,4 +23,3 @@
 - [ ] jq -n '{a:1} | .b' (should be null, not exception)
 - [ ] jq -n '[1, 2, 3] | .[4]' (should be null, not exception)
 - [ ] destructuring bind
-- [ ] benchmarks (https://benchmarkdotnet.org/articles/guides/getting-started.html)

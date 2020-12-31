@@ -7,6 +7,15 @@ namespace JsonMasher.Mashers.Combinators
         public IJsonMasherOperator Elements { get; init; }
 
         public IEnumerable<Json> Mash(Json json, IMashContext context, IMashStack stack)
-            => Json.Array(Elements.Mash(json, context, stack.Push(this))).AsEnumerable();
+        {
+            if (Elements != null)
+            {
+                return Json.Array(Elements.Mash(json, context, stack.Push(this))).AsEnumerable();
+            }
+            else
+            {
+                return Json.ArrayParams().AsEnumerable();
+            }
+        }
     }
 }
