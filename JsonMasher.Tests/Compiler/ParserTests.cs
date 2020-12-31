@@ -37,7 +37,8 @@ namespace JsonMasher.Tests.Compiler
                     .ComparingByValue<Builtin>()
                     .ComparingByMembers<PropertyDescriptor>()
                     .ComparingByMembers<FunctionName>()
-                    .ComparingByMembers<Enumerate>());
+                    .ComparingByValue<Enumerate>()
+                    .ComparingByValue<Identity>());
         }
 
         private static IEnumerable<TestItem> GetTestData()
@@ -61,8 +62,8 @@ namespace JsonMasher.Tests.Compiler
 
         private static IEnumerable<TestItem> DotTests()
         {
-            yield return new TestItem("", Identity.Instance);
-            yield return new TestItem(".", Identity.Instance);
+            yield return new TestItem("", new Identity());
+            yield return new TestItem(".", new Identity());
             yield return new TestItem(".a", new StringSelector { Key = "a" });
             yield return new TestItem(".\"a\"", new StringSelector { Key = "a" });
             yield return new TestItem(".a.b", Compose.AllParams(
@@ -71,15 +72,15 @@ namespace JsonMasher.Tests.Compiler
             yield return new TestItem(".a[]", Compose.AllParams(
                 new StringSelector { Key = "a" },
                 new Enumerate()));
-            // TODO: yield return new TestItem(".[]", new Enumerate());
+            yield return new TestItem(".[]", new Enumerate());
             yield return new TestItem(".[].a", Compose.AllParams(
                 new Enumerate(),
                 new StringSelector { Key = "a" }));
             yield return new TestItem(".[.].a", Compose.AllParams(
-                new Selector { Index = Identity.Instance },
+                new Selector { Index = new Identity() },
                 new StringSelector { Key = "a" }));
             yield return new TestItem(".[.].a[][]", Compose.AllParams(
-                new Selector { Index = Identity.Instance },
+                new Selector { Index = new Identity() },
                 new StringSelector { Key = "a" },
                 new Enumerate(),
                 new Enumerate()));
@@ -123,7 +124,7 @@ namespace JsonMasher.Tests.Compiler
         {
             yield return new TestItem(
                 ". | not", 
-                Compose.AllParams(Identity.Instance, new FunctionCall(new FunctionName("not", 0))));
+                Compose.AllParams(new Identity(), new FunctionCall(new FunctionName("not", 0))));
             yield return new TestItem(
                 "true or false", 
                 new FunctionCall(Or.Builtin, new Literal(true), new Literal(false)));
@@ -197,7 +198,7 @@ namespace JsonMasher.Tests.Compiler
             yield return new TestItem("{a:.}", new ConstructObject(
                 new PropertyDescriptor(
                     "a", 
-                    Identity.Instance)));
+                    new Identity())));
             yield return new TestItem("{a:1}", new ConstructObject(
                 new PropertyDescriptor(
                     "a", 
@@ -306,7 +307,7 @@ namespace JsonMasher.Tests.Compiler
                 new FunctionCall(Minus.Builtin_1, new Literal(1)));
             yield return new TestItem(
                 "- .", 
-                new FunctionCall(Minus.Builtin_1, Identity.Instance));
+                new FunctionCall(Minus.Builtin_1, new Identity()));
         }
 
         private static IEnumerable<TestItem> TimesDivisionTests()
@@ -344,9 +345,9 @@ namespace JsonMasher.Tests.Compiler
                         new Literal(1))));
             yield return new TestItem("(. | .) | .", Compose.AllParams(
                 Compose.AllParams(
-                    Identity.Instance,
-                    Identity.Instance),
-                Identity.Instance
+                    new Identity(),
+                    new Identity()),
+                new Identity()
             ));
             yield return new TestItem(
                 "(1 + 2) * 2",
@@ -396,7 +397,7 @@ namespace JsonMasher.Tests.Compiler
                         new Literal(1),
                         new Literal(2),
                         new Literal("a")),
-                    Identity.Instance,
+                    new Identity(),
                     Concat.AllParams(
                         new Literal(3),
                         new Literal { Value = Json.Number(4) })));
@@ -405,25 +406,25 @@ namespace JsonMasher.Tests.Compiler
         private static IEnumerable<TestItem> AssignmentTests()
         {
             yield return new TestItem(". |= . + 2", new PipeAssignment {
-                PathExpression = Identity.Instance,
+                PathExpression = new Identity(),
                 Masher = new FunctionCall(
                     Plus.Builtin,
-                    Identity.Instance,
+                    new Identity(),
                     new Literal(2))
             });
             yield return new TestItem(". |= . + 2 | . |= . + 2", Compose.AllParams(
                 new PipeAssignment {
-                    PathExpression = Identity.Instance,
+                    PathExpression = new Identity(),
                     Masher = new FunctionCall(
                         Plus.Builtin,
-                        Identity.Instance,
+                        new Identity(),
                         new Literal(2))
                 },
                 new PipeAssignment {
-                    PathExpression = Identity.Instance,
+                    PathExpression = new Identity(),
                     Masher = new FunctionCall(
                         Plus.Builtin,
-                        Identity.Instance,
+                        new Identity(),
                         new Literal(2))
                 }));
         }
@@ -434,9 +435,9 @@ namespace JsonMasher.Tests.Compiler
                 Name = "test",
                 Value = new FunctionCall(
                     Plus.Builtin,
-                    Identity.Instance,
+                    new Identity(),
                     new Literal(2)),
-                Body = Identity.Instance
+                Body = new Identity()
             });
             yield return new TestItem("$test", new GetVariable { Name = "test" });
         }
@@ -444,19 +445,19 @@ namespace JsonMasher.Tests.Compiler
         private static IEnumerable<TestItem> PipeTests()
         {
             yield return new TestItem(". | .", Compose.AllParams(
-                Identity.Instance,
-                Identity.Instance));
+                new Identity(),
+                new Identity()));
 
             yield return new TestItem(". | . | .", Compose.AllParams(
-                Identity.Instance,
-                Identity.Instance,
-                Identity.Instance));
+                new Identity(),
+                new Identity(),
+                new Identity()));
 
             yield return new TestItem(". | . | . | .", Compose.AllParams(
-                Identity.Instance,
-                Identity.Instance,
-                Identity.Instance,
-                Identity.Instance));
+                new Identity(),
+                new Identity(),
+                new Identity(),
+                new Identity()));
 
             yield return new TestItem(".a | .[].c | .d", Compose.AllParams(
                 new StringSelector { Key = "a" },

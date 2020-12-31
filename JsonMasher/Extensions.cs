@@ -43,7 +43,7 @@ namespace JsonMasher
             Func<IJsonMasherOperator, IJsonMasherOperator, IJsonMasherOperator> combiner)
         => mashers.Count() switch
             {
-                0 => Identity.Instance,
+                0 => new Identity(),
                 1 => mashers.First(),
                 _ => combiner(mashers.First(), mashers.Skip(1).Fold(combiner))
             };

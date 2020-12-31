@@ -31,5 +31,10 @@ namespace JsonMasher.Mashers.Primitives
                 properties.Select(kv => kv.Value)
             );
         }
+
+        // All these are the same for testing/FluentAssertions purposes,
+        // but different for SourceInformation purposes, so the singletons were removed.
+        public override bool Equals(object obj) => obj is Enumerate;
+        public override int GetHashCode() => 1;
     }
 }

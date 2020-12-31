@@ -117,7 +117,7 @@ namespace JsonMasher.Compiler
             var state = new State(program, new Lexer().Tokenize(program));
             if (string.IsNullOrWhiteSpace(program))
             {
-                return (Identity.Instance, state.SourceInformation);
+                return (new Identity(), state.SourceInformation);
             }
             var result = ParseDefinitionOrFilter(state);
             if (!state.AtEnd)
@@ -522,7 +522,7 @@ namespace JsonMasher.Compiler
             }
             else
             {
-                terms.Add(Identity.Instance);
+                terms.Add(state.RecordPosition(new Identity(), position));
             }
             while (state.Current == Tokens.Dot || state.Current == Tokens.OpenSquareParen)
             {
@@ -558,7 +558,7 @@ namespace JsonMasher.Compiler
             }
             else
             {
-                return Identity.Instance;
+                return state.RecordPosition(new Identity(), position);
             }
         }
 

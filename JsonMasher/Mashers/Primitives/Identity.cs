@@ -17,11 +17,9 @@ namespace JsonMasher.Mashers.Primitives
             return new ZipStage(parts => parts.First(), Mash(json, context, stack));
         }
 
-        private Identity()
-        {
-        }
-
-        private static Identity _instance = new Identity();
-        public static Identity Instance => _instance;
+        // All these are the same for testing/FluentAssertions purposes,
+        // but different for SourceInformation purposes, so the singletons were removed.
+        public override bool Equals(object obj) => obj is Identity;
+        public override int GetHashCode() => 1;
     }
 }
