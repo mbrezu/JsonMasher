@@ -110,24 +110,16 @@ namespace JsonMasher.Cli
         private static IEnumerable<Json> ReadAll(string input)
         {
             var result = new List<Json>();
-            while (!String.IsNullOrWhiteSpace(input))
+            var inputBytes = UTF8Encoding.UTF8.GetBytes(input.Trim());
+            int offset = 0;
+            int length = inputBytes.Length;
+            while (offset < inputBytes.Length)
             {
-                var json = ReadOneJson(ref input);
-                result.Add(json);
+                var stream = new Utf8JsonReader(new ReadOnlySpan<byte>(inputBytes, offset, length));
+                result.Add(JsonDocument.ParseValue(ref stream).AsJson());
+                offset += (int)stream.BytesConsumed;
+                length -= (int)stream.BytesConsumed;
             }
-            return result;
-        }
-
-        // #@@#$@@%#!!@# can't find a decent way to read multiple values with System.Text.Json.
-        private static Json ReadOneJson(ref string input)
-        {
-            var inputBytes = UTF8Encoding.UTF8.GetBytes(input);
-            var stream = new Utf8JsonReader(inputBytes);
-            var result = JsonDocument.ParseValue(ref stream).AsJson();
-            input = UTF32Encoding.UTF8.GetString(
-                inputBytes,
-                (int)stream.BytesConsumed,
-                (int)(inputBytes.Length - stream.BytesConsumed));
             return result;
         }
     }
