@@ -1,13 +1,15 @@
 # Things to do next
 
-- [ ] interface as web site
-- [ ] comments :-D
+- [ ] comments supported in lexer :-D
+- [ ] containerization for web version
 - [ ] debugger (extend DebugMashStack)
   - [ ] stepping through
   - [ ] setting breakpoints
   - [ ] include in web site
 - [ ] switch to System.Collections.Immutable for Json
 - [ ] assignments WIP
+  - [ ] more IJsonZipper implementations
+  - [ ] assignment (=, not |=) implementation
 - [ ] slice selectors (I thought that .[a:b] would be the same as .[range(a; b)], but apparently that's not true; maybe make `<f>:<g>` syntactic sugar for `range(<f>; <g>)` ?
 - [ ] has(key), keys, map_values
 - [ ] del, to_entries, from_entries, error, transpose
