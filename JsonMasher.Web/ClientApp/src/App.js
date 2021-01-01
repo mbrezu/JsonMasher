@@ -4,9 +4,15 @@ import './custom.css';
 
 const localStorageKey = 'program+input';
 
-const initialContent = JSON.parse(localStorage.getItem(localStorageKey));
+const initialContent = JSON.parse(localStorage.getItem(localStorageKey)) || {};
 
 const examples = [
+  `identity
+------
+.
+------
+1 2 3 4 5
+`,
   `construct array
 ------
 [.[] |. + 2]
@@ -60,7 +66,7 @@ const parsedExamples =
 
 const App = (_props) => {
   const [program, setProgram] = useState(initialContent.program || ".");
-  const [input, setInput] = useState(initialContent.input || "1\n2\n3\n4\n5");
+  const [input, setInput] = useState(initialContent.input || "1 2 3 4 5");
   const [output, setOutput] = useState("");
   const [slurp, setSlurp] = useState(initialContent.slurp || false);
   const run = () => {
