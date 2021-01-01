@@ -1,6 +1,7 @@
 # Things to do next
 
 - [ ] interface as web site
+- [ ] comments :-D
 - [ ] debugger (extend DebugMashStack)
   - [ ] stepping through
   - [ ] setting breakpoints

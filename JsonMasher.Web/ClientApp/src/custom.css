@@ -54,3 +54,23 @@ html, body {
 .separatorv {
   height: 20px;
 }
+
+textarea, pre {
+  font-family:Cascadia Code,Consolas,Monaco,Lucida Console,Liberation Mono,DejaVu Sans Mono,Bitstream Vera Sans Mono,Courier New, monospace;
+}
+
+.flexRow {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.filler {
+  flex-grow: 1;
+}
+
+.fixed {
+  flex-grow: 0;
+}
