@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace JsonMasher.Compiler
 {
@@ -15,6 +16,7 @@ namespace JsonMasher.Compiler
             Exception innerException = null)
             : base(message, innerException)
         {
+            Values = Enumerable.Empty<Json>();
         }
 
         public JsonMasherException(

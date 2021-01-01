@@ -506,7 +506,7 @@ namespace JsonMasher.Compiler
             var terms = new List<IJsonMasherOperator>();
             if (state.Current == Tokens.OpenSquareParen)
             {
-                terms.Add(ParseSelector(state));
+                terms.Add(ParseSelector(state, true));
             }
             else if (state.Current is Identifier identifier)
             {
@@ -532,7 +532,7 @@ namespace JsonMasher.Compiler
                 }
                 else if (state.Current == Tokens.OpenSquareParen)
                 {
-                    terms.Add(ParseSelector(state));
+                    terms.Add(ParseSelector(state, false));
                 }
             }
             if (terms.Count > 1)
@@ -562,9 +562,9 @@ namespace JsonMasher.Compiler
             }
         }
 
-        private IJsonMasherOperator ParseSelector(State state)
+        private IJsonMasherOperator ParseSelector(State state, bool offsetPosition)
         {
-            var position = state.GetOffsetPosition(1); // include the dot
+            var position = state.GetOffsetPosition(offsetPosition ? 1 : 0); // include the dot
             state.Advance();
             if (state.Current == Tokens.CloseSquareParen)
             {

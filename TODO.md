@@ -1,6 +1,5 @@
 # Things to do next
 
-- [ ] CLI interface
 - [ ] interface as web site
 - [ ] debugger (extend DebugMashStack)
   - [ ] stepping through
