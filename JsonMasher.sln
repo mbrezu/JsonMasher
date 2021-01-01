@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JsonMasher.Benchmarks", "Js
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JsonMasher.Cli", "JsonMasher.Cli\JsonMasher.Cli.csproj", "{AA8CEB6D-FF30-4142-8DF5-7FE16B7AA9AA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JsonMasher.Web", "JsonMasher.Web\JsonMasher.Web.csproj", "{393B551D-61CA-4704-B3C6-DC0DE67DC69C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -72,5 +74,17 @@ Global
 		{AA8CEB6D-FF30-4142-8DF5-7FE16B7AA9AA}.Release|x64.Build.0 = Release|Any CPU
 		{AA8CEB6D-FF30-4142-8DF5-7FE16B7AA9AA}.Release|x86.ActiveCfg = Release|Any CPU
 		{AA8CEB6D-FF30-4142-8DF5-7FE16B7AA9AA}.Release|x86.Build.0 = Release|Any CPU
+		{393B551D-61CA-4704-B3C6-DC0DE67DC69C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{393B551D-61CA-4704-B3C6-DC0DE67DC69C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{393B551D-61CA-4704-B3C6-DC0DE67DC69C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{393B551D-61CA-4704-B3C6-DC0DE67DC69C}.Debug|x64.Build.0 = Debug|Any CPU
+		{393B551D-61CA-4704-B3C6-DC0DE67DC69C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{393B551D-61CA-4704-B3C6-DC0DE67DC69C}.Debug|x86.Build.0 = Debug|Any CPU
+		{393B551D-61CA-4704-B3C6-DC0DE67DC69C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{393B551D-61CA-4704-B3C6-DC0DE67DC69C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{393B551D-61CA-4704-B3C6-DC0DE67DC69C}.Release|x64.ActiveCfg = Release|Any CPU
+		{393B551D-61CA-4704-B3C6-DC0DE67DC69C}.Release|x64.Build.0 = Release|Any CPU
+		{393B551D-61CA-4704-B3C6-DC0DE67DC69C}.Release|x86.ActiveCfg = Release|Any CPU
+		{393B551D-61CA-4704-B3C6-DC0DE67DC69C}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
