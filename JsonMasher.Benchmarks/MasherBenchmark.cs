@@ -9,18 +9,30 @@ namespace JsonMasher.Benchmarks
         private string _program = @"range(1000000) | . + 2 | empty";
         private IJsonMasherOperator _filter;
         private Mashers.JsonMasher _masher;
+        private SourceInformation _sourceInformation;
 
         public MasherBenchmark()
         {
-            var (filter, _) = new Parser().Parse(_program);
-            _filter = filter;
+            (_filter, _sourceInformation) = new Parser().Parse(_program);
             _masher = new();
         }
 
-        public void Mash()
+        public void MashWithoutDebug()
         {
             var (sequence, _) = _masher.Mash(
-                "null".AsJson().AsEnumerable(), _filter, DefaultMashStack.Instance);
+                "null".AsJson().AsEnumerable(),
+                _filter,
+                DefaultMashStack.Instance,
+                _sourceInformation);
+            sequence.ToList();
+        }
+        public void MashWithDebug()
+        {
+            var (sequence, _) = _masher.Mash(
+                "null".AsJson().AsEnumerable(),
+                _filter,
+                new DebugMashStack(),
+                _sourceInformation);
             sequence.ToList();
         }
     }

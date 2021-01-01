@@ -29,9 +29,15 @@ namespace JsonMasher.Benchmarks
         }
 
         [Benchmark]
-        public void Masher()
+        public void MasherWithoutDebug()
         {
-            _masherBenchmark.Mash();
+            _masherBenchmark.MashWithoutDebug();
+        }
+
+        [Benchmark]
+        public void MasherWithDebug()
+        {
+            _masherBenchmark.MashWithDebug();
         }
     }
     class Program
