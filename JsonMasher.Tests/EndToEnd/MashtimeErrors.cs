@@ -312,7 +312,7 @@ Line 1: ^^^^^^^^^^^^
             yield return new TestItem(
                 "0 | .a",
                 "null",
-                "Can't enumerate Number.",
+                "Can't index Number with a string.",
                 new PositionInformation(1, 5, @"Line 1: 0 | .a
 Line 1:     ^^
 Line 1: 0 | .a
@@ -321,7 +321,7 @@ Line 1: ^^^^^^
             yield return new TestItem(
                 "0 | .\"a\"",
                 "null",
-                "Can't enumerate Number.",
+                "Can't index Number with a string.",
                 new PositionInformation(1, 5, @"Line 1: 0 | .""a""
 Line 1:     ^^^^
 Line 1: 0 | .""a""

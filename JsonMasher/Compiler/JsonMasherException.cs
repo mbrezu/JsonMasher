@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace JsonMasher.Compiler
 {
@@ -32,6 +33,22 @@ namespace JsonMasher.Compiler
             Column = column;
             Highlights = highlights;
             Values = values;
+        }
+
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine(Message);
+            sb.AppendLine(Highlights);
+            if (Values.Any())
+            {
+                sb.AppendLine("Values involved:");
+                foreach (var value in Values)
+                {
+                    sb.AppendLine(value.ToString());
+                }
+            }
+            return sb.ToString();
         }
     }
 }

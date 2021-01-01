@@ -31,7 +31,7 @@ namespace JsonMasher.Mashers.Primitives
         private Json MashOne(Json json, IMashContext context, IMashStack stack)
             => json.Type switch {
                 JsonValueType.Object => json.GetElementAt(Key),
-                _ => throw context.Error($"Can't enumerate {json.Type}.", stack, json)
+                _ => throw context.Error($"Can't index {json.Type} with a string.", stack, json)
             };
     }
 }

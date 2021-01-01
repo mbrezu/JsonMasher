@@ -12,3 +12,45 @@ code {
   background-color: #1b6ec2;
   border-color: #1861ac;
 }
+
+html, body {
+  margin: 0;
+  height: 100%;
+}
+
+.fillall {
+  width: 100%;
+  height: 100%;
+}
+
+.containerv {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.containerh {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
+.title {
+  padding: 5px;
+  background: lightblue;
+}
+
+.subtitle {
+  padding: 5px;
+  background: lightyellow;
+}
+
+.separatorh {
+  width: 20px;
+}
+
+.separatorv {
+  height: 20px;
+}

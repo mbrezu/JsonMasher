@@ -35,6 +35,22 @@ namespace JsonMasher
 
         public static Json AsJson(this string json) => JsonDocument.Parse(json).AsJson();
 
+        public static IEnumerable<Json> AsMultipleJson(this string json)
+        {
+            var result = new List<Json>();
+            var inputBytes = UTF8Encoding.UTF8.GetBytes(json.Trim());
+            int offset = 0;
+            int length = inputBytes.Length;
+            while (offset < inputBytes.Length)
+            {
+                var stream = new Utf8JsonReader(new ReadOnlySpan<byte>(inputBytes, offset, length));
+                result.Add(JsonDocument.ParseValue(ref stream).AsJson());
+                offset += (int)stream.BytesConsumed;
+                length -= (int)stream.BytesConsumed;
+            }
+            return result;
+        }
+
         public static IEnumerable<Json> AsEnumerable(this Json json)
         {
             yield return json;
