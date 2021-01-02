@@ -13,11 +13,17 @@ namespace JsonMasher.Mashers.Builtins
             => json.Type switch
             {
                 JsonValueType.Object
-                    => Json.Array(json.EnumerateObject().Select(p => Json.String(p.Key))).AsEnumerable(),
+                    => Json.Array(ObjectKeys(json)).AsEnumerable(),
                 JsonValueType.Array
                     => Json.Array(ArrayKeys(json)).AsEnumerable(),
                 _ => throw context.Error($"{json.Type} has no keys.", stack, json)
             };
+
+        private static IEnumerable<Json> ObjectKeys(Json json)
+            => json.EnumerateObject()
+                .Select(p => p.Key)
+                .OrderBy(k => k)
+                .Select(k => Json.String(k));
 
         private static IEnumerable<Json> ArrayKeys(Json json)
             => Enumerable.Range(0, json.GetLength()).Select(n => Json.Number(n));

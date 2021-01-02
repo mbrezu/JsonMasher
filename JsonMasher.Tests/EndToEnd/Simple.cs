@@ -165,6 +165,7 @@ namespace JsonMasher.Tests.EndToEnd
             yield return new TestItem(".a", "{ \"b\": 2 }", "[null]");
 
             yield return new TestItem("keys", "{ \"b\": 2 }", "[[\"b\"]]");
+            yield return new TestItem("keys", "{ \"b\": 2, \"a\": 1 }", "[[\"a\", \"b\"]]");
             yield return new TestItem("keys", "[true, true]", "[[0, 1]]");
         }
 
