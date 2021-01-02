@@ -1,6 +1,5 @@
 # Things to do next
 
-- [ ] containerization for web version
 - [ ] debugger (extend DebugMashStack)
   - [ ] stepping through
   - [ ] setting breakpoints
