@@ -206,6 +206,22 @@ namespace JsonMasher.Tests
         }
 
         [Fact]
+        public void OptionalStringSelectorTest()
+        {
+            // Arrange
+            var data = MakeArray();
+            var op = new StringSelector { Key = "a", IsOptional = true };
+
+            // Act
+            var result = op.RunAsSequence(data);
+
+            // Assert
+            Json.Array(result)
+                .DeepEqual("[]".AsJson())
+                .Should().BeTrue();
+        }
+
+        [Fact]
         public void SelectorTestNumber()
         {
             // Arrange

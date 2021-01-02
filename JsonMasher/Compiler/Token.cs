@@ -76,7 +76,9 @@ namespace JsonMasher.Compiler
             [Display(Name=">")]
             GreaterThan,
             [Display(Name=">=")]
-            GreaterThanOrEqual
+            GreaterThanOrEqual,
+            [Display(Name="?")]
+            Question
         }
 
         private enum KeywordType
@@ -167,6 +169,9 @@ namespace JsonMasher.Compiler
 
         private static Token _greaterThanOrEqual = new SimpleToken(SimpleTokenType.GreaterThanOrEqual);
         public static Token GreaterThanOrEqual => _greaterThanOrEqual;
+
+        private static Token _question = new SimpleToken(SimpleTokenType.Question);
+        public static Token Question => _question;
 
         public static Token Number(double value) => new Number(value);
         public static Token Identifier(string id) => new Identifier(id);

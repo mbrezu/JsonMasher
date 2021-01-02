@@ -7,9 +7,15 @@ namespace JsonMasher.Mashers.Primitives
     public class StringSelector : IJsonMasherOperator, IJsonZipper
     {
         public string Key { get; init; }
+        public bool IsOptional { get; init; }
 
         public IEnumerable<Json> Mash(Json json, IMashContext context, IMashStack stack)
-            => MashOne(json, context, stack.Push(this)).AsEnumerable();
+            => json.Type switch {
+                JsonValueType.Object => json.GetElementAt(Key).AsEnumerable(),
+                _ => !IsOptional
+                    ? throw context.Error($"Can't index {json.Type} with a string.", stack.Push(this), json)
+                    : Enumerable.Empty<Json>()
+            };
 
         public ZipStage ZipDown(Json json, IMashContext context, IMashStack stack)
         {
@@ -27,11 +33,5 @@ namespace JsonMasher.Mashers.Primitives
                 throw new InvalidOperationException();
             }
         }
-
-        private Json MashOne(Json json, IMashContext context, IMashStack stack)
-            => json.Type switch {
-                JsonValueType.Object => json.GetElementAt(Key),
-                _ => throw context.Error($"Can't index {json.Type} with a string.", stack, json)
-            };
     }
 }

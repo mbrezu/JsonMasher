@@ -511,14 +511,26 @@ namespace JsonMasher.Compiler
             else if (state.Current is Identifier identifier)
             {
                 state.Advance();
+                var isOptional = false;
+                if (state.Current == Tokens.Question)
+                {
+                    isOptional = true;
+                    state.Advance();
+                }
                 terms.Add(state.RecordPosition(
-                    new StringSelector { Key = identifier.Id }, position));
+                    new StringSelector { Key = identifier.Id, IsOptional = isOptional }, position));
             }
             else if (state.Current is String str)
             {
                 state.Advance();
+                var isOptional = false;
+                if (state.Current == Tokens.Question)
+                {
+                    isOptional = true;
+                    state.Advance();
+                }
                 terms.Add(state.RecordPosition(
-                    new StringSelector { Key = str.Value }, position));
+                    new StringSelector { Key = str.Value, IsOptional = isOptional }, position));
             }
             else
             {
