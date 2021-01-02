@@ -178,8 +178,18 @@ namespace JsonMasher
 
         public override IEnumerable<Json> EnumerateArray() => _values;
 
-        public override Json GetElementAt(int index) => 
-            index >= 0 ? _values[index] : _values[_values.Count + index];
+        public override Json GetElementAt(int index)
+        {
+            index = index >= 0 ? index : _values.Count + index;
+            if (index < 0 || index >= _values.Count)
+            {
+                return Json.Null;
+            }
+            else
+            {
+                return _values[index];
+            }
+        }
 
         public override int GetLength() => _values.Count;
     }
