@@ -8,38 +8,43 @@ namespace JsonMasher.Mashers
 {
     public class MashContext : IMashContext
     {
-
         List<Json> _log = new();
         MashEnvironment _env = new();
         int ticks = 0;
         public int TickLimit { get; init; }
-
         public IEnumerable<Json> Log => _log;
         public SourceInformation SourceInformation { get; init; }
 
         public MashContext()
         {
+            _env = MashEnvironment.DefaultEnvironment;
             PushEnvironmentFrame();
         }
 
         public void LogValue(Json value) => _log.Add(value);
 
-        public void PushEnvironmentFrame() => _env = _env.Push();
+        public void PushEnvironmentFrame() => _env = _env.PushFrame();
 
-        public void PopEnvironmentFrame() => _env = _env.Pop();
+        public void PopEnvironmentFrame() => _env = _env.PopFrame();
 
         public void SetVariable(string name, Json value) => _env.SetVariable(name, value);
 
         public Json GetVariable(string name, IMashStack stack) 
-            => _env.GetVariable(name, stack, this);
+            => _env.GetVariable(name, stack) 
+                ?? throw Error($"Cannot find variable ${name}.", stack);
+
         public void SetCallable(FunctionName name, Callable value) => _env.SetCallable(name, value);
 
         public Callable GetCallable(FunctionName name, IMashStack stack)
-            => _env.GetCallable(name, stack, this);
+            => _env.GetCallable(name, stack)
+                ?? throw Error($"Function {name.Name}/{name.Arity} is not known.", stack);
+
         public void SetCallable(string name, Callable value) => _env.SetCallable(name, value);
 
         public Callable GetCallable(string name, IMashStack stack)
-            => _env.GetCallable(name, stack, this);
+            => _env.GetCallable(name, stack) 
+                ?? throw Error($"Function {name}/0 is not known.", stack);
+
         public Exception Error(string message, IMashStack stack, params Json[] values)
         {
             var programWithLines = SourceInformation != null 
