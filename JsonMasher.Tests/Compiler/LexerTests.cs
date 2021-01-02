@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
@@ -32,6 +33,7 @@ namespace JsonMasher.Tests.Compiler
         private static IEnumerable<TestItem> GetTestData()
             => Enumerable.Empty<TestItem>()
                 .Concat(SimpleTokensTests())
+                .Concat(CommentsTests())
                 .Concat(NumberTests())
                 .Concat(IdentfierTests())
                 .Concat(KeywordTests())
@@ -66,6 +68,15 @@ namespace JsonMasher.Tests.Compiler
                 "> <", TokensParams(Tokens.GreaterThan, Tokens.LessThan));
             yield return new TestItem(
                 "<= >=", TokensParams(Tokens.LessThanOrEqual, Tokens.GreaterThanOrEqual));
+        }
+
+        private static IEnumerable<TestItem> CommentsTests()
+        {
+            yield return new TestItem(
+                "<= # >=", TokensParams(Tokens.LessThanOrEqual));
+            yield return new TestItem(
+                @"<= # comment 
+>=", TokensParams(Tokens.LessThanOrEqual, Tokens.GreaterThanOrEqual));
         }
 
         private static IEnumerable<TestItem> NumberTests()

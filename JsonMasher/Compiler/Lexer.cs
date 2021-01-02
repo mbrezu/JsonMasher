@@ -20,14 +20,34 @@ namespace JsonMasher.Compiler
 
             public bool AtEnd => _index == _program.Length;
 
-            public char Char => _program[_index];
-            public char? NextChar => _index + 1 >= _program.Length ? null : _program[_index + 1];
+            public char Current => _program[_index];
+            public char? Next => _index + 1 >= _program.Length ? null : _program[_index + 1];
 
-            public void SkipSpaces()
+            public void SkipWhiteSpaceAndComments()
             {
-                while (!AtEnd && char.IsWhiteSpace(_program[_index]))
+                while (!AtEnd && (Current == '#' || Char.IsWhiteSpace(Current)))
                 {
-                    _index++;
+                    SkipWhiteSpace();
+                    SkipComments();
+                }
+            }
+
+            private void SkipWhiteSpace()
+            {
+                while (!AtEnd && char.IsWhiteSpace(Current))
+                {
+                    Advance();
+                }
+            }
+
+            private void SkipComments()
+            {
+                if (!AtEnd && Current == '#')
+                {
+                    while (!AtEnd && Current != '\n')
+                    {
+                        Advance();
+                    }
                 }
             }
 
@@ -66,43 +86,43 @@ namespace JsonMasher.Compiler
         public IEnumerable<TokenWithPos> Tokenize(string program)
         {
             var state = new State(program);
-            state.SkipSpaces();
+            state.SkipWhiteSpaceAndComments();
             while (!state.AtEnd)
             {
-                if (state.Char == '.' && state.NextChar == '.')
+                if (state.Current == '.' && state.Next == '.')
                 {
                     yield return state.TokenWithPos(Tokens.DotDot, 2);
                     state.Advance(2);
                 }
-                else if (state.Char == '.' 
-                    && state.NextChar.HasValue 
-                    && Char.IsDigit(state.NextChar.Value))
+                else if (state.Current == '.' 
+                    && state.Next.HasValue 
+                    && Char.IsDigit(state.Next.Value))
                 {
                     yield return Number(state);
                 }
-                else if (state.Char == '=' && state.NextChar == '=')
+                else if (state.Current == '=' && state.Next == '=')
                 {
                     yield return state.TokenWithPos(Tokens.EqualsEquals, 2);
                     state.Advance(2);
                 }
-                else if (state.Char == '|' && state.NextChar == '=')
+                else if (state.Current == '|' && state.Next == '=')
                 {
                     yield return state.TokenWithPos(Tokens.PipeEquals, 2);
                     state.Advance(2);
                 }
-                else if (state.Char == '<' && state.NextChar == '=')
+                else if (state.Current == '<' && state.Next == '=')
                 {
                     yield return state.TokenWithPos(Tokens.LessThanOrEqual, 2);
                     state.Advance(2);
                 }
-                else if (state.Char == '>' && state.NextChar == '=')
+                else if (state.Current == '>' && state.Next == '=')
                 {
                     yield return state.TokenWithPos(Tokens.GreaterThanOrEqual, 2);
                     state.Advance(2);
                 }
                 else 
                 {
-                    switch (state.Char)
+                    switch (state.Current)
                     {
                         case '.':
                             yield return state.TokenWithPos(Tokens.Dot);
@@ -177,21 +197,21 @@ namespace JsonMasher.Compiler
                             break;
                     }
                 }
-                state.SkipSpaces();
+                state.SkipWhiteSpaceAndComments();
             }
         }
 
         private TokenWithPos ComplexToken(State state)
         {
-            if (Char.IsDigit(state.Char))
+            if (Char.IsDigit(state.Current))
             {
                 return Number(state);
             }
-            else if (Char.IsLetter(state.Char) || state.Char == '_' || state.Char == '$')
+            else if (Char.IsLetter(state.Current) || state.Current == '_' || state.Current == '$')
             {
                 return Identifier(state);
             }
-            else if (state.Char == '\"')
+            else if (state.Current == '\"')
             {
                 return String(state);
             }
@@ -205,10 +225,10 @@ namespace JsonMasher.Compiler
         {
             state.SetMark();
             bool seenDot = false;
-            bool inNumber() => (!seenDot && state.Char == '.') || Char.IsDigit(state.Char);
+            bool inNumber() => (!seenDot && state.Current == '.') || Char.IsDigit(state.Current);
             while (!state.AtEnd && inNumber())
             {
-                if (state.Char == '.')
+                if (state.Current == '.')
                 {
                     seenDot = true;
                 }
@@ -226,7 +246,7 @@ namespace JsonMasher.Compiler
         {
             state.SetMark();
             state.Advance();
-            while (!state.AtEnd && (state.Char == '_' || Char.IsLetterOrDigit(state.Char)))
+            while (!state.AtEnd && (state.Current == '_' || Char.IsLetterOrDigit(state.Current)))
             {
                 state.Advance();
             }
@@ -260,7 +280,7 @@ namespace JsonMasher.Compiler
                 {
                     throw state.Error(Messages.Lexer.EoiInsideString);
                 }
-                else if (state.Char == '\"')
+                else if (state.Current == '\"')
                 {
                     var value = state.GetFromMark();
                     state.Advance();
@@ -276,7 +296,7 @@ namespace JsonMasher.Compiler
                             Messages.Lexer.InvalidEscapeSequence, state.Mark - 1, value.Length + 2, ex);
                     }
                 }
-                else if (state.Char == '\\' && state.NextChar != null)
+                else if (state.Current == '\\' && state.Next != null)
                 {
                     state.Advance(2);
                 }
