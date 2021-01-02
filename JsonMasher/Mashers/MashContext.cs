@@ -8,13 +8,9 @@ namespace JsonMasher.Mashers
 {
     public class MashContext : IMashContext
     {
-        record Frame(
-            Dictionary<string, Json> Variables,
-            Dictionary<FunctionName, Callable> Callables,
-            Dictionary<string, Callable> ZeroArityCallables);
 
         List<Json> _log = new();
-        List<Frame> _env = new();
+        MashEnvironment _env = new();
         int ticks = 0;
         public int TickLimit { get; init; }
 
@@ -26,84 +22,24 @@ namespace JsonMasher.Mashers
             PushEnvironmentFrame();
         }
 
-        public void LogValue(Json value)
-            => _log.Add(value);
+        public void LogValue(Json value) => _log.Add(value);
 
-        public void PushEnvironmentFrame()
-            => _env.Add(new Frame(
-                new Dictionary<string, Json>(),
-                new Dictionary<FunctionName, Callable>(),
-                new Dictionary<string, Callable>()));
+        public void PushEnvironmentFrame() => _env = _env.Push();
 
-        public void PopEnvironmentFrame()
-            => _env.RemoveAt(_env.Count - 1);
+        public void PopEnvironmentFrame() => _env = _env.Pop();
 
-        public void SetVariable(string name, Json value)
-            => _env[_env.Count - 1].Variables[name] = value;
+        public void SetVariable(string name, Json value) => _env.SetVariable(name, value);
 
-        public Json GetVariable(string name, IMashStack stack)
-        {
-            for (int i = _env.Count - 1; i > -1; i--)
-            {
-                var frame = _env[i];
-                if (frame.Variables.ContainsKey(name))
-                {
-                    return frame.Variables[name];
-                }
-            }
-            throw Error($"Cannot find variable ${name}.", stack);
-        }
-
-        public void SetCallable(FunctionName name, Callable value)
-        {
-            if (name.Arity == 0)
-            {
-                SetCallable(name.Name, value);
-            }
-            else
-            {
-                _env[_env.Count - 1].Callables[name] = value;
-            }
-        }
+        public Json GetVariable(string name, IMashStack stack) 
+            => _env.GetVariable(name, stack, this);
+        public void SetCallable(FunctionName name, Callable value) => _env.SetCallable(name, value);
 
         public Callable GetCallable(FunctionName name, IMashStack stack)
-        {
-            if (name.Arity == 0)
-            {
-                return GetCallable(name.Name, stack);
-            }
-            else
-            {
-                for (int i = _env.Count - 1; i > -1; i--)
-                {
-                    var frame = _env[i];
-                    if (frame.Callables.ContainsKey(name))
-                    {
-                        return frame.Callables[name];
-                    }
-                }
-                throw Error($"Function {name.Name}/{name.Arity} is not known.", stack);
-            }
-        }
-
-        public void SetCallable(string name, Callable value)
-        {
-            _env[_env.Count - 1].ZeroArityCallables[name] = value;
-        }
+            => _env.GetCallable(name, stack, this);
+        public void SetCallable(string name, Callable value) => _env.SetCallable(name, value);
 
         public Callable GetCallable(string name, IMashStack stack)
-        {
-            for (int i = _env.Count - 1; i > -1; i--)
-            {
-                var frame = _env[i];
-                if (frame.ZeroArityCallables.ContainsKey(name))
-                {
-                    return frame.ZeroArityCallables[name];
-                }
-            }
-            throw Error($"Function {name}/0 is not known.", stack);
-        }
-
+            => _env.GetCallable(name, stack, this);
         public Exception Error(string message, IMashStack stack, params Json[] values)
         {
             var programWithLines = SourceInformation != null 
@@ -126,7 +62,7 @@ namespace JsonMasher.Mashers
             var line = 0;
             var column = 0;
             var topFrame = stack.Top;
-            if (topFrame != null)
+            if (topFrame != null) // TODO: should search the first frame with a position.
             {
                 var position = SourceInformation?.GetProgramPosition(topFrame);
                 if (position != null)
@@ -135,7 +71,8 @@ namespace JsonMasher.Mashers
                     column = programWithLines.GetColumnNumber(position.StartPosition) + 1;
                 }
             }
-            return new JsonMasherException(message, line, column, stackSb.ToString(), null, values);
+            return new JsonMasherException(
+                message, line, column, stackSb.ToString(), null, values);
         }
 
         public void Tick(IMashStack stack)
