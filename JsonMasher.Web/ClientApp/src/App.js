@@ -13,6 +13,16 @@ const examples = [
 ------
 1 2 3 4 5
 `,
+  `selection
+------
+[.a.b, .c]
+------
+{"a": {"b": 200}, "c": "test"}
+{"a": {"b": 400}, "c": "test"}
+{"a": {"b": 600}, "c": "test"}
+{"a": {"b": 800}, "c": "test"}
+{"a": {"b": 1000}, "c": "test"}
+`,
   `construct array
 ------
 [.[] |. + 2]
@@ -121,7 +131,7 @@ const App = (_props) => {
                 </div>
                 <div className="filler" />
                 <div className="fixed">
-                  <input type="checkbox" checked={slurp} onChange={() => setSlurp(!slurp)} /> <label>Wrap input in array</label>
+                  <input type="checkbox" checked={slurp} onChange={() => setSlurp(!slurp)} /> <label>Slurp (wrap input in array)</label>
                   &nbsp;|&nbsp;
                   <button onClick={run}>Run</button>
                 </div>
