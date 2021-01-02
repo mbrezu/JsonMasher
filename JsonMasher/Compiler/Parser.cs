@@ -587,7 +587,14 @@ namespace JsonMasher.Compiler
             {
                 var filter = ParsePipeTerm(state);
                 state.Match(Tokens.CloseSquareParen);
-                return state.RecordPosition(new Selector { Index = filter }, position);
+                var isOptional = false;
+                if (state.Current == Tokens.Question)
+                {
+                    state.Advance();
+                    isOptional = true;
+                }
+                return state.RecordPosition(
+                    new Selector { Index = filter, IsOptional = isOptional }, position);
             }
         }
 

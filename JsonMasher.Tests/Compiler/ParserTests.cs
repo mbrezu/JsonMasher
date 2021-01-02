@@ -81,6 +81,8 @@ namespace JsonMasher.Tests.Compiler
             yield return new TestItem(".[.].a", Compose.AllParams(
                 new Selector { Index = new Identity() },
                 new StringSelector { Key = "a" }));
+            yield return new TestItem(".[.]?", Compose.AllParams(
+                new Selector { Index = new Identity(), IsOptional = true }));
             yield return new TestItem(".[.].a[][]", Compose.AllParams(
                 new Selector { Index = new Identity() },
                 new StringSelector { Key = "a" },

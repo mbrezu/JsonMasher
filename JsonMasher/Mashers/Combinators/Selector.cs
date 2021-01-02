@@ -6,6 +6,7 @@ namespace JsonMasher.Mashers.Combinators
     public class Selector : IJsonMasherOperator, IJsonZipper
     {
         public IJsonMasherOperator Index { get; init; }
+        public bool IsOptional { get; init; }
 
         public IEnumerable<Json> Mash(Json json, IMashContext context, IMashStack stack)
         {
@@ -14,12 +15,22 @@ namespace JsonMasher.Mashers.Combinators
         }
 
         private IEnumerable<Json> MashOne(Json json, IMashContext context, IMashStack stack)
-            => Index.Mash(json, context, stack).Select(index => 
-                (index.Type, json.Type) switch {
+        {
+            foreach (var index in Index.Mash(json, context, stack))
+            {
+                var value = (index.Type, json.Type) switch {
                     (JsonValueType.Number, JsonValueType.Array) => json.GetElementAt((int)(index.GetNumber())),
                     (JsonValueType.String, JsonValueType.Object) => json.GetElementAt(index.GetString()),
-                    _ => throw context.Error($"Can't index {json.Type} with {index.Type}.", stack, json, index)
-                });
+                    _ => !IsOptional 
+                        ? throw context.Error($"Can't index {json.Type} with {index.Type}.", stack, json, index)
+                        : null
+                };
+                if (value != null)
+                {
+                    yield return value;
+                }
+            }
+        }
 
         public ZipStage ZipDown(Json json, IMashContext context, IMashStack stack)
         {

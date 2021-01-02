@@ -238,6 +238,22 @@ namespace JsonMasher.Tests
         }
 
         [Fact]
+        public void OptionalSelector()
+        {
+            // Arrange
+            var data = MakeObject();
+            var op = new Selector { Index = new Literal(1), IsOptional = true };
+
+            // Act
+            var result = op.RunAsSequence(data);
+
+            // Assert
+            Json.Array(result)
+                .DeepEqual("[]".AsJson())
+                .Should().BeTrue();
+        }
+
+        [Fact]
         public void SelectorTestNegativeNumber()
         {
             // Arrange
