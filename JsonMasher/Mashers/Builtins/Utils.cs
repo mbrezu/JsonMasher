@@ -23,6 +23,7 @@ namespace JsonMasher.Mashers.Builtins
                 {
                     foreach (var t2 in mashers[1].Mash(json, context, stack))
                     {
+                        context.Tick(stack);
                         yield return function(t1, t2, context, stack);
                     }
                 }
@@ -45,6 +46,7 @@ namespace JsonMasher.Mashers.Builtins
                 }
                 foreach (var t1 in mashers[0].Mash(json, context, stack))
                 {
+                    context.Tick(stack);
                     yield return function(t1, context, stack);
                 }
             }
