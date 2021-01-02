@@ -42,7 +42,7 @@ namespace JsonMasher.Mashers.Combinators
                         int end = (int)to.GetNumber();
                         if (start < 0 && end > 0)
                         {
-                            end = 0;
+                            end -= json.GetLength();
                         }
                         if (end < 0 && start >= 0)
                         {
