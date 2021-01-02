@@ -511,12 +511,7 @@ namespace JsonMasher.Compiler
             else if (state.Current is Identifier identifier)
             {
                 state.Advance();
-                var isOptional = false;
-                if (state.Current == Tokens.Question)
-                {
-                    isOptional = true;
-                    state.Advance();
-                }
+                var isOptional = CheckIfOptional(state);
                 terms.Add(state.RecordPosition(
                     new StringSelector { Key = identifier.Id, IsOptional = isOptional }, position));
             }
@@ -578,7 +573,16 @@ namespace JsonMasher.Compiler
         {
             var position = state.GetOffsetPosition(offsetPosition ? 1 : 0); // include the dot
             state.Advance();
-            if (state.Current == Tokens.CloseSquareParen)
+            if (state.Current == Tokens.Colon)
+            {
+                state.Advance();
+                var to = ParsePipeTerm(state);
+                state.Match(Tokens.CloseSquareParen);
+                bool isOptional = CheckIfOptional(state);
+                return state.RecordPosition(
+                    new SliceSelector { To = to, IsOptional = isOptional }, position);
+            }
+            else if (state.Current == Tokens.CloseSquareParen)
             {
                 state.Advance();
                 return state.RecordPosition(new Enumerate(), position);
@@ -586,16 +590,36 @@ namespace JsonMasher.Compiler
             else
             {
                 var filter = ParsePipeTerm(state);
-                state.Match(Tokens.CloseSquareParen);
-                var isOptional = false;
-                if (state.Current == Tokens.Question)
+                if (state.Current == Tokens.Colon)
                 {
                     state.Advance();
-                    isOptional = true;
+                    var to = state.Current == Tokens.CloseSquareParen ? null : ParsePipeTerm(state);
+                    state.Match(Tokens.CloseSquareParen);
+                    bool isOptional = CheckIfOptional(state);
+                    return state.RecordPosition(
+                        new SliceSelector { From = filter, To = to, IsOptional = isOptional },
+                        position);
                 }
-                return state.RecordPosition(
-                    new Selector { Index = filter, IsOptional = isOptional }, position);
+                else
+                {
+                    state.Match(Tokens.CloseSquareParen);
+                    bool isOptional = CheckIfOptional(state);
+                    return state.RecordPosition(
+                        new Selector { Index = filter, IsOptional = isOptional }, position);
+                }
             }
+        }
+
+        private bool CheckIfOptional(State state)
+        {
+            var isOptional = false;
+            if (state.Current == Tokens.Question)
+            {
+                state.Advance();
+                isOptional = true;
+            }
+
+            return isOptional;
         }
 
         private List<PropertyDescriptor> ParseProperties(State state)

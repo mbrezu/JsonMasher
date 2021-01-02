@@ -83,6 +83,18 @@ namespace JsonMasher.Tests.Compiler
                 new StringSelector { Key = "a" }));
             yield return new TestItem(".[.]?", Compose.AllParams(
                 new Selector { Index = new Identity(), IsOptional = true }));
+            yield return new TestItem(".[1:2]", Compose.AllParams(
+                new SliceSelector { From = new Literal(1), To = new Literal(2) }));
+            yield return new TestItem(".[1:2]?", Compose.AllParams(
+                new SliceSelector { From = new Literal(1), To = new Literal(2), IsOptional = true }));
+            yield return new TestItem(".[1:]", Compose.AllParams(
+                new SliceSelector { From = new Literal(1) }));
+            yield return new TestItem(".[1:]?", Compose.AllParams(
+                new SliceSelector { From = new Literal(1), IsOptional = true }));
+            yield return new TestItem(".[:2]", Compose.AllParams(
+                new SliceSelector { To = new Literal(2) }));
+            yield return new TestItem(".[:2]?", Compose.AllParams(
+                new SliceSelector { To = new Literal(2), IsOptional = true }));
             yield return new TestItem(".[.].a[][]", Compose.AllParams(
                 new Selector { Index = new Identity() },
                 new StringSelector { Key = "a" },

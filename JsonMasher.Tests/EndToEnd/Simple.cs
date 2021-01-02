@@ -171,6 +171,12 @@ namespace JsonMasher.Tests.EndToEnd
             yield return new TestItem(".a?", "100", "[]");
             yield return new TestItem(".\"a\"?", "100", "[]");
             yield return new TestItem(".[0]?", "100", "[]");
+
+            yield return new TestItem(".[1:]", "[1, 2, 3]", "[[2, 3]]");
+            yield return new TestItem(".[:-1]", "[1, 2, 3]", "[[1, 2]]");
+            yield return new TestItem(".[-2:-1]", "[1, 2, 3]", "[[2]]");
+            yield return new TestItem(".[-2:]", "[1, 2, 3]", "[[2,3]]");
+            yield return new TestItem(".[:2]", "[1, 2, 3]", "[[1,2]]");
         }
 
         private static IEnumerable<TestItem> IfThenElsePrograms()
