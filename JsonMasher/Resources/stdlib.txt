@@ -1,0 +1,3 @@
+def select(x): if x then . else empty end;
+
+def map(x): .[] | x;

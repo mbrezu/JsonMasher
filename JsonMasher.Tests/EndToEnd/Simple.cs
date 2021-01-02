@@ -40,7 +40,8 @@ namespace JsonMasher.Tests.EndToEnd
                 .Concat(AssignmentPrograms())
                 .Concat(IfThenElsePrograms())
                 .Concat(BindingPrograms())
-                .Concat(ProgramsWithFunctions());
+                .Concat(ProgramsWithFunctions())
+                .Concat(StandardLibrary());
 
         private static IEnumerable<TestItem> SimplePrograms()
         {
@@ -235,6 +236,12 @@ def select(x): if x then . else empty end;
 map(select(. < 2))",
                 "[1, 2, 3]",
                 "[1]");
+        }
+
+        private static IEnumerable<TestItem> StandardLibrary()
+        {
+            yield return new TestItem("map(. + 2)", "[1, 2, 3]", "[3, 4, 5]");
+            yield return new TestItem("map(select(. > 5))", "[1, 2, 3]", "[]");
         }
     }
 }

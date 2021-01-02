@@ -8,4 +8,12 @@
     <PackageReference Include="FancyPen" Version="0.0.4" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Remove="Resources/stdlib.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources/stdlib.txt" />
+  </ItemGroup>
+
 </Project>

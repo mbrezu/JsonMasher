@@ -51,9 +51,9 @@ namespace JsonMasher
             return result;
         }
 
-        public static IEnumerable<Json> AsEnumerable(this Json json)
+        public static IEnumerable<T> AsEnumerable<T>(this T value)
         {
-            yield return json;
+            yield return value;
         }
 
         internal static IJsonMasherOperator Fold(

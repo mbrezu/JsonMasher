@@ -10,7 +10,7 @@ namespace JsonMasher.Mashers.Combinators
         public IEnumerable<Json> Mash(Json json, IMashContext context, IMashStack stack)
         {
             context.Tick(stack);
-            return MashOne(json, context, stack.Push(this)).AsEnumerable();
+            return MashOne(json, context, stack.Push(this));
         }
 
         private IEnumerable<Json> MashOne(Json json, IMashContext context, IMashStack stack)

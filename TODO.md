@@ -1,6 +1,5 @@
 # Things to do next
 
-- [ ] design a way to install standard library functions (map, select etc.) as parsed code.
 - [ ] containerization for web version
 - [ ] debugger (extend DebugMashStack)
   - [ ] stepping through

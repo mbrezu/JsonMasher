@@ -1,5 +1,5 @@
+using System;
 using System.Collections.Generic;
-using JsonMasher.Mashers.Builtins;
 using JsonMasher.Mashers.Combinators;
 
 namespace JsonMasher.Mashers
@@ -9,8 +9,6 @@ namespace JsonMasher.Mashers
         Dictionary<string, Json> _variables { get; } = new();
         Dictionary<FunctionName, Callable> _callables { get; } = new();
         Dictionary<string, Callable> _zeroArityCallables { get; } = new();
-        public static MashEnvironment DefaultEnvironment => _defaultEnvironment;
-
         MashEnvironment _previous;
 
         public MashEnvironment PushFrame()
@@ -57,11 +55,25 @@ namespace JsonMasher.Mashers
 
         public void SetCallable(string name, Callable value) => _zeroArityCallables[name] = value;
 
-        public Callable GetCallable(FunctionName name, IMashStack stack)
+        public void SetCallable(string name, List<string> arguments, IJsonMasherOperator body)
         {
-            if (name.Arity == 0)
+            if (arguments == null || arguments.Count == 0)
             {
-                return GetCallableZero(name.Name, stack);
+                SetCallable(name, body);
+            }
+            else
+            {
+                SetCallable(
+                    new FunctionName(name, arguments.Count),
+                    new Function(body, arguments));
+            }
+        }
+
+        public Callable GetCallable(FunctionName name, IMashStack stack)
+        {if (name.Arity == 0)
+            {
+            
+        return GetCallableZero(name.Name, stack);
             }
             else
             {
@@ -71,21 +83,6 @@ namespace JsonMasher.Mashers
 
         public Callable GetCallable(string name, IMashStack stack) 
             => GetCallableZero(name, stack);
-
-        private static MashEnvironment _defaultEnvironment = InitDefaultEnvironment();
-
-        private static MashEnvironment InitDefaultEnvironment()
-        {
-            var environment = new MashEnvironment();
-            environment.SetCallable(new FunctionName("not", 0), Not.Builtin);
-            environment.SetCallable(new FunctionName("empty", 0), Empty.Builtin);
-            environment.SetCallable(new FunctionName("range", 1), Range.Builtin_1);
-            environment.SetCallable(new FunctionName("range", 2), Range.Builtin_2);
-            environment.SetCallable(new FunctionName("range", 3), Range.Builtin_3);
-            environment.SetCallable(new FunctionName("length", 0), Length.Builtin);
-            environment.SetCallable(new FunctionName("limit", 2), Limit.Builtin);
-            return environment;
-        }
 
         private Callable GetCallableZero(string name, IMashStack stack)
         {

@@ -17,7 +17,7 @@ namespace JsonMasher.Mashers
 
         public MashContext()
         {
-            _env = MashEnvironment.DefaultEnvironment;
+            _env = StandardLibrary.DefaultEnvironment;
             PushEnvironmentFrame();
         }
 
@@ -38,6 +38,9 @@ namespace JsonMasher.Mashers
         public Callable GetCallable(FunctionName name, IMashStack stack)
             => _env.GetCallable(name, stack)
                 ?? throw Error($"Function {name.Name}/{name.Arity} is not known.", stack);
+
+        public void SetCallable(string name, List<string> arguments, IJsonMasherOperator body)
+            => _env.SetCallable(name, arguments, body);
 
         public void SetCallable(string name, Callable value) => _env.SetCallable(name, value);
 

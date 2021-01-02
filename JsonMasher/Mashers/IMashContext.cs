@@ -13,6 +13,7 @@ namespace JsonMasher.Mashers
         void SetVariable(string name, Json value);
         Json GetVariable(string name, IMashStack stack);
         void SetCallable(FunctionName name, Callable value);
+        void SetCallable(string name, List<string> arguments, IJsonMasherOperator body);
         Callable GetCallable(FunctionName name, IMashStack stack);
         void SetCallable(string name, Callable value);
         Callable GetCallable(string name, IMashStack stack);
