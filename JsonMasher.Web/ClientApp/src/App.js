@@ -142,9 +142,7 @@ const App = (_props) => {
               <div className="subtitle">
                 <h3>Output:</h3>
               </div>
-              <pre className="fillall">
-                {output}
-              </pre>
+              <textarea className="containerv" readOnly value={output} />
             </div>
             <div className="separatorv" />
           </div>
