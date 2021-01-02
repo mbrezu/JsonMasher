@@ -126,13 +126,13 @@ const App = (_props) => {
                   <button onClick={run}>Run</button>
                 </div>
               </div>
-              <textarea className="containerv" onChange={e => setProgram(e.target.value)} value={program} />
+              <textarea className="fillall" onChange={e => setProgram(e.target.value)} value={program} />
             </div>
             <div className="containerv">
               <div className="subtitle">
                 <h3>Input:</h3>
               </div>
-              <textarea className="containerv" onChange={e => setInput(e.target.value)} value={input} />
+              <textarea className="fillall" onChange={e => setInput(e.target.value)} value={input} />
             </div>
             <div className="separatorv" />
           </div>
@@ -142,7 +142,7 @@ const App = (_props) => {
               <div className="subtitle">
                 <h3>Output:</h3>
               </div>
-              <textarea className="containerv" readOnly value={output} />
+              <textarea className="fillall" readOnly value={output} />
             </div>
             <div className="separatorv" />
           </div>
