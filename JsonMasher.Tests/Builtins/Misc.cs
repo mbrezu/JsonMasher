@@ -15,7 +15,7 @@ namespace JsonMasher.Tests.Builtins
 
         [Theory]
         [MemberData(nameof(TestData))]
-        public void BooleanTestsTheory(IJsonMasherOperator op, string input, string output)
+        public void MiscellaneousTestsTheory(IJsonMasherOperator op, string input, string output)
         {
             // Arrange
 
@@ -35,7 +35,8 @@ namespace JsonMasher.Tests.Builtins
             => Enumerable.Empty<TestItem>()
                 .Concat(RangeTests())
                 .Concat(LengthTests())
-                .Concat(LimitTests());
+                .Concat(LimitTests())
+                .Concat(KeysTests());
 
         private static IEnumerable<TestItem> RangeTests()
         {
@@ -77,6 +78,15 @@ namespace JsonMasher.Tests.Builtins
                 new FunctionCall(Limit.Builtin, new Literal(2), new Enumerate()),
                 "[1, 2, 3]",
                 "[1, 2]");
+        }
+
+
+        private static IEnumerable<TestItem> KeysTests()
+        {
+            yield return new TestItem(
+                new FunctionCall(Keys.Builtin), "{\"a\": 1, \"b\": 2}", "[[\"a\", \"b\"]]");
+            yield return new TestItem(
+                new FunctionCall(Keys.Builtin), "[1, 2, 3, 4, 5]", "[[0, 1, 2, 3, 4]]");
         }
     }
 }

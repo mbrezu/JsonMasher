@@ -9,7 +9,7 @@
   - [ ] more IJsonZipper implementations
   - [ ] assignment (=, not |=) implementation
 - [ ] slice selectors (I thought that .[a:b] would be the same as .[range(a; b)], but apparently that's not true; maybe make `<f>:<g>` syntactic sugar for `range(<f>; <g>)` ?
-- [ ] has(key), keys, map_values
+- [ ] has(key), map_values
 - [ ] del, to_entries, from_entries, error, transpose
 - [ ] min/max/group/sort
 - [ ] .. (recurse)

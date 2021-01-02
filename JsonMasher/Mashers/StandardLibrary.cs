@@ -31,6 +31,7 @@ namespace JsonMasher.Mashers
             environment.SetCallable(new FunctionName("range", 3), Range.Builtin_3);
             environment.SetCallable(new FunctionName("length", 0), Length.Builtin);
             environment.SetCallable(new FunctionName("limit", 2), Limit.Builtin);
+            environment.SetCallable(new FunctionName("keys", 0), Keys.Builtin);
         }
 
         private static void AddCode(MashEnvironment environment)

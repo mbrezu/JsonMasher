@@ -369,6 +369,13 @@ Line 1:     ^^^^^^^^^^^
 Line 1: 1 | .[""a""] |= 1
 Line 1: ^^^^^^^^^^^^^^^
 "));
+            yield return new TestItem(
+                "keys",
+                "100",
+                "Number has no keys.",
+                new PositionInformation(1, 1, @"Line 1: keys
+Line 1: ^^^^
+"));
         }
     }
 }
