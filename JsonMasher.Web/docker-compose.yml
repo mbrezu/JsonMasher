@@ -1,0 +1,9 @@
+version: '3'
+services:
+  backend:
+    restart: always
+    build:
+      context: ..
+      dockerfile: JsonMasher.Web/Dockerfile
+    ports:
+      - 9123:80
