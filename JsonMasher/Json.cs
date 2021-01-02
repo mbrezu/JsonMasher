@@ -216,7 +216,18 @@ namespace JsonMasher
             }
         }
 
-        public override Json GetElementAt(string key) => _values[key];
+        public override Json GetElementAt(string key)
+        {
+            Json result;
+            if (_values.TryGetValue(key, out result))
+            {
+                return result;
+            }
+            else
+            {
+                return Json.Null;
+            }
+        }
 
         public override int GetLength() => _values.Count;
     }

@@ -16,5 +16,4 @@
 - [ ] documentation
 - [ ] nuget packages
 - [ ] jq -n '{a : 1 | 2}' (seems I need to be able to parse pipes inside dicts)
-- [ ] jq -n '{a:1} | .b' (should be null, not exception)
 - [ ] destructuring bind
