@@ -384,6 +384,9 @@ namespace JsonMasher.Tests.Compiler
                 "1 == 2",
                 new FunctionCall(EqualsEquals.Builtin, new Literal(1), new Literal(2)));
             yield return new TestItem(
+                "1 != 2",
+                new FunctionCall(NotEquals.Builtin, new Literal(1), new Literal(2)));
+            yield return new TestItem(
                 "1 < 2",
                 new FunctionCall(Ops.LessThan.Builtin, new Literal(1), new Literal(2)));
             yield return new TestItem(

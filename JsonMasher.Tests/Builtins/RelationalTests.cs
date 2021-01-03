@@ -50,6 +50,14 @@ namespace JsonMasher.Tests.Builtins
                 new FunctionCall(EqualsEquals.Builtin, new Literal(2), new Literal(2)),
                 "null",
                 "[true]");
+            yield return new TestItem(
+                new FunctionCall(NotEquals.Builtin, new Literal(2), new Literal(2)),
+                "null",
+                "[false]");
+            yield return new TestItem(
+                new FunctionCall(NotEquals.Builtin, new Literal(1), new Literal(2)),
+                "null",
+                "[true]");
         }
 
         private static IEnumerable<TestItem> LessThanTests()

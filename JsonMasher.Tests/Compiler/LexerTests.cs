@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
@@ -60,6 +59,8 @@ namespace JsonMasher.Tests.Compiler
                 "+ - *", TokensParams(Tokens.Plus, Tokens.Minus, Tokens.Times));
             yield return new TestItem(
                 "== +", TokensParams(Tokens.EqualsEquals, Tokens.Plus));
+            yield return new TestItem(
+                "!= +", TokensParams(Tokens.NotEquals, Tokens.Plus));
             yield return new TestItem(
                 "|= +", TokensParams(Tokens.PipeEquals, Tokens.Plus));
             yield return new TestItem(

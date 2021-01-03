@@ -202,6 +202,7 @@ namespace JsonMasher.Tests.EndToEnd
             yield return new TestItem("if true,  false then 1 else 2 end", "null", "[1, 2]");
             yield return new TestItem("if . < 3 then 1 else 2 end", "2", "[1]");
             yield return new TestItem("if . == 4 then 1 else 2 end", "2", "[2]");
+            yield return new TestItem("if . != 4 then 1 else 2 end", "2", "[1]");
             yield return new TestItem(
                 "if . == 4 then 1 elif . == 2 then 3 else 2 end", "2", "[3]");
             yield return new TestItem(

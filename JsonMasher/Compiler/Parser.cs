@@ -304,6 +304,7 @@ namespace JsonMasher.Compiler
             var op = state.Current switch
             {
                 Token t when t == Tokens.EqualsEquals => EqualsEquals.Builtin,
+                Token t when t == Tokens.NotEquals => NotEquals.Builtin,
                 Token t when t == Tokens.LessThan => LessThan.Builtin,
                 Token t when t == Tokens.LessThanOrEqual => LessThanOrEqual.Builtin,
                 Token t when t == Tokens.GreaterThan => GreaterThan.Builtin,

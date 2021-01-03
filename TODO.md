@@ -64,7 +64,7 @@
     - [ ] builtins
   - [ ] [Conditionals and Comparisons](https://stedolan.github.io/jq/manual/#ConditionalsandComparisons)
     - [x] if/then/else/elif/end
-    - [ ] !=
+    - [x] !=
     - [ ] alternative operator
     - [ ] try-catch
     - [ ] breaking out of control structures
