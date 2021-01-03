@@ -39,7 +39,10 @@ Longer (but still incomplete) answer: [TODO JQ manual](TODO.md#implementation-st
 
 - a framework to implement most of jq
 - some operators and a simple parser
-- see [TODO JQ manual](TODO.md#implementation-status-of-jq-manual-features) for what is implemented.
+
+- see [TODO JQ manual](TODO.md#implementation-status-of-jq-manual-features),
+[Simple.cs](JsonMasher.Tests/EndToEnd/Simple.cs) and examples in
+[jsonmasher.mbrezu.me](https://jsonmasher.mbrezu.me) for what is implemented.
 
 ## License
 
