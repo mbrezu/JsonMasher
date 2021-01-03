@@ -1,5 +1,6 @@
 # Things to do next
 
+- [ ] jq -n '{a : 1 | 2}' (seems I need to be able to parse pipes inside dicts)
 - [ ] debugger (extend DebugMashStack)
   - [ ] stepping through
   - [ ] setting breakpoints
@@ -9,7 +10,6 @@
   - [ ] assignment (=, not |=) implementation
 - [ ] documentation
 - [ ] nuget packages
-- [ ] jq -n '{a : 1 | 2}' (seems I need to be able to parse pipes inside dicts)
 - [ ] destructuring bind
 
 # Implementation status of JQ manual features

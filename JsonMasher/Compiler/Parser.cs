@@ -227,6 +227,13 @@ namespace JsonMasher.Compiler
             }
         }
 
+        private IJsonMasherOperator ParseFilterNoComma(State state)
+            => ChainIntoArray(
+                state,
+                ParseAlternatives, 
+                token => token == Tokens.Pipe,
+                Compose.All);
+
         private IJsonMasherOperator ParsePipeTerm(State state)
             => ChainIntoArray(
                 state,
@@ -672,7 +679,7 @@ namespace JsonMasher.Compiler
                 };
                 state.Advance();
                 state.Match(Tokens.Colon);
-                var value = ParseBinding(state);
+                var value = ParseFilterNoComma(state);
                 result.Add(new PropertyDescriptor(key, value));
                 if (state.Current == Tokens.Comma)
                 {
