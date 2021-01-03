@@ -606,7 +606,10 @@ namespace JsonMasher.Compiler
             if (state.Current is Identifier identifier)
             {
                 state.Advance();
-                return state.RecordPosition(new StringSelector { Key = identifier.Id }, position);
+                bool isOptional = CheckIfOptional(state);
+                return state.RecordPosition(
+                    new StringSelector { Key = identifier.Id, IsOptional = isOptional },
+                    position);
             }
             else
             {
