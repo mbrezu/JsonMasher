@@ -1,10 +1,13 @@
 # Things to do next
 
+- [ ] implement if/conditionals as in JQ manual (no need to require everything to be booleans, but
+null/false is false and everything else is true)
+- [ ] implement !=
+
 - [ ] debugger (extend DebugMashStack)
   - [ ] stepping through
   - [ ] setting breakpoints
   - [ ] include in web site
-- [ ] switch to System.Collections.Immutable for Json
 - [ ] assignments WIP
   - [ ] more IJsonZipper implementations
   - [ ] assignment (=, not |=) implementation
@@ -63,6 +66,7 @@
     - [ ] builtins
   - [ ] [Conditionals and Comparisons](https://stedolan.github.io/jq/manual/#ConditionalsandComparisons)
     - [x] if/then/else/elif/end
+    - [ ] !=
     - [ ] right now if conditions must be boolean, need to switch to null/false being false, everything else is true
     - [ ] alternative operator
     - [ ] try-catch

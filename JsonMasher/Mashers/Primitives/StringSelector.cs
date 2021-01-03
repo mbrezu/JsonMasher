@@ -23,9 +23,7 @@ namespace JsonMasher.Mashers.Primitives
             if (json.Type == JsonValueType.Object)
             {
                 return new ZipStage(
-                    val => Json.Object(
-                        json.EnumerateObject()
-                            .Concat(new [] { new JsonProperty(Key, val.First())})),
+                    val => json.SetElementAt(Key, val.First()),
                     json.GetElementAt(Key).AsEnumerable());
             }
             else

@@ -52,20 +52,18 @@ namespace JsonMasher.Mashers.Combinators
                 throw context.Error("Not all indices are numbers.", stack, indices.ToArray());
             }
             var intIndices = indices.Select(i => (int)(i.GetNumber())).ToArray();
-            var parts = intIndices.Select(i => json.GetElementAt(i));
             return new ZipStage(
-                values => RecombineArray(json, intIndices, values.ToArray()),
-                parts);
+                values => UpdateArray(json, intIndices, values.ToArray()),
+                intIndices.Select(i => json.GetElementAt(i)));
         }
 
-        private Json RecombineArray(Json json, int[] intIndices, Json[] values)
+        private Json UpdateArray(Json json, int[] intIndices, Json[] values)
         {
-            var jsonValues = json.EnumerateArray().ToArray();
             for (int i = 0; i < intIndices.Length; i++)
             {
-                jsonValues[intIndices[i]] = values[i];
+                json = json.SetElementAt(intIndices[i], values[i]);
             }
-            return Json.Array(jsonValues);
+            return json;
         }
 
         private ZipStage ZipDownObject(
@@ -76,15 +74,18 @@ namespace JsonMasher.Mashers.Combinators
                 throw context.Error("Not all indices are strings.", stack, indices.ToArray());
             }
             var stringIndices = indices.Select(i => i.GetString()).ToArray();
-            var parts = stringIndices.Select(i => json.GetElementAt(i));
             return new ZipStage(
-                values => RecombineObject(json, stringIndices, values.ToArray()),
-                parts);
+                values => UpdateObject(json, stringIndices, values.ToArray()),
+                stringIndices.Select(i => json.GetElementAt(i)));
         }
 
-        private Json RecombineObject(Json json, string[] stringIndices, Json[] values)
-            => Json.Object(
-                json.EnumerateObject()
-                .Concat(stringIndices.Zip(values, (i, v) => new JsonProperty(i, v))));
+        private Json UpdateObject(Json json, string[] stringIndices, Json[] values)
+        {
+            for (int i = 0; i < stringIndices.Length; i++)
+            {
+                json = json.SetElementAt(stringIndices[i], values[i]);
+            }
+            return json;
+        }
     }
 }

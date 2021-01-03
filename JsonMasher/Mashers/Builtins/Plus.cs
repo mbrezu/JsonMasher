@@ -17,8 +17,18 @@ namespace JsonMasher.Mashers.Builtins
                 (JsonValueType.Array, JsonValueType.Array)
                     => Json.Array(t1.EnumerateArray().Concat(t2.EnumerateArray())),
                 (JsonValueType.Object, JsonValueType.Object)
-                    => Json.Object(t1.EnumerateObject().Concat(t2.EnumerateObject())),
+                    => Update(t1 as JsonObject, t2 as JsonObject),
                 _ => throw context.Error($"Can't add {t1.Type} and {t2.Type}.", stack, t1, t2)
             };
+
+        private static Json Update(JsonObject obj1, JsonObject obj2)
+        {
+            Json result = obj1;
+            foreach (var kv in obj2.EnumerateObject())
+            {
+                result = result.SetElementAt(kv.Key, kv.Value);
+            }
+            return result;
+        }
     }
 }

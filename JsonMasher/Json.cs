@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 
 namespace JsonMasher
@@ -37,8 +38,10 @@ namespace JsonMasher
         public virtual string GetString() => throw new NotImplementedException();
 
         public virtual Json GetElementAt(int index) => throw new NotImplementedException();
+        public virtual Json SetElementAt(int index, Json value) => throw new NotImplementedException();
 
         public virtual Json GetElementAt(string key) => throw new NotImplementedException();
+        public virtual Json SetElementAt(string key, Json value) => throw new NotImplementedException();
 
         public virtual int GetLength() => throw new NotImplementedException();
 
@@ -141,6 +144,20 @@ namespace JsonMasher
         }
 
         public static Json Bool(bool value) => value ? Json.True : Json.False;
+
+        public override bool Equals(object obj)
+        {
+            if (obj is Json other)
+            {
+                return DeepEqual(other);
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public override int GetHashCode() => ToString().GetHashCode();
     }
 
     class JsonNumber : Json
@@ -174,12 +191,18 @@ namespace JsonMasher
 
     class JsonArray : Json
     {
-        List<Json> _values;
+        ImmutableList<Json> _values;
 
         public JsonArray(IEnumerable<Json> values)
         {
-            _values = new();
-            _values.AddRange(values);
+            _values = ImmutableList<Json>.Empty;
+            _values = _values.AddRange(values);
+            Type = JsonValueType.Array;
+        }
+
+        private JsonArray(ImmutableList<Json> values)
+        {
+            _values = values;
             Type = JsonValueType.Array;
         }
 
@@ -199,25 +222,31 @@ namespace JsonMasher
         }
 
         public override int GetLength() => _values.Count;
+
+        public override Json SetElementAt(int index, Json value)
+            => new JsonArray(_values.SetItem(index, value));
     }
 
     class JsonObject : Json
     {
-        Dictionary<string, Json> _values;
+        ImmutableDictionary<string, Json> _values;
 
         public JsonObject(IEnumerable<JsonProperty> values)
         {
-            _values = new();
-            foreach (var kv in values)
-            {
-                _values[kv.Key] = kv.Value;
-            }
+            _values = ImmutableDictionary<string, Json>.Empty;
+            _values = _values.SetItems(values.Select(kv => new KeyValuePair<string, Json>(kv.Key, kv.Value)));
             Type = JsonValueType.Object;
+        }
+
+        private JsonObject(ImmutableDictionary<string, Json> values)
+        {
+            Type = JsonValueType.Object;
+            _values = values;
         }
 
         public override IEnumerable<JsonProperty> EnumerateObject()
         {
-            foreach (var kv in _values)
+            foreach (var kv in _values.OrderBy(kv => kv.Key))
             {
                 yield return new JsonProperty(kv.Key, kv.Value);
             }
@@ -237,5 +266,8 @@ namespace JsonMasher
         }
 
         public override int GetLength() => _values.Count;
+
+        public override Json SetElementAt(string key, Json value)
+            => new JsonObject(_values.SetItem(key, value));
     }
 }
