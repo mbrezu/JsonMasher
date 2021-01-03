@@ -23,11 +23,7 @@ namespace JsonMasher
         public JsonValueType Type { get; init; }
 
         internal bool GetBool()
-            => Type switch {
-                JsonValueType.True => true,
-                JsonValueType.False => false,
-                _ => throw new InvalidOperationException()
-            };
+            => Type != JsonValueType.Null && Type != JsonValueType.False;
 
         public virtual IEnumerable<Json> EnumerateArray() => throw new NotImplementedException();
 
@@ -144,20 +140,6 @@ namespace JsonMasher
         }
 
         public static Json Bool(bool value) => value ? Json.True : Json.False;
-
-        public override bool Equals(object obj)
-        {
-            if (obj is Json other)
-            {
-                return DeepEqual(other);
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        public override int GetHashCode() => ToString().GetHashCode();
     }
 
     class JsonNumber : Json

@@ -17,12 +17,6 @@ namespace JsonMasher.Mashers.Combinators
             var condSequence = Cond.Mash(json, context, newStack);
             foreach (var condValue in condSequence)
             {
-                if (condValue.Type != JsonValueType.True && condValue.Type != JsonValueType.False)
-                {
-                    throw context.Error(
-                        $"If condition value must be a boolean, but found {condValue.Type}.",
-                        newStack.Push(Cond), condValue);
-                }
                 var resultSequence = condValue.GetBool()
                     ? Then.Mash(json, context, newStack)
                     : Else.Mash(json, context, newStack);

@@ -159,13 +159,6 @@ Line 1: ^^^^^^^^^^^^^^^
 Line 1: ^^^^^^^^^^^^
 "));
             yield return new TestItem(
-                "200 and [1, 2]",
-                "null",
-                "Can't 'and' Number and Array (need two booleans).",
-                new PositionInformation(1, 1, @"Line 1: 200 and [1, 2]
-Line 1: ^^^^^^^^^^^^^^
-"));
-            yield return new TestItem(
                 "200 / [1, 2]",
                 "null",
                 "Can't divide Number and Array.",
@@ -222,22 +215,6 @@ Line 1: ^^^^^^^^
 Line 1: ^^^^^^^^^^^^
 "));
             yield return new TestItem(
-                "100 | not",
-                "null",
-                "Can't 'not' a Number.",
-                new PositionInformation(1, 7, @"Line 1: 100 | not
-Line 1:       ^^^
-Line 1: 100 | not
-Line 1: ^^^^^^^^^
-"));
-            yield return new TestItem(
-                "1 or [1, 2]",
-                "null",
-                "Can't 'or' Number and Array (need two booleans).",
-                new PositionInformation(1, 1, @"Line 1: 1 or [1, 2]
-Line 1: ^^^^^^^^^^^
-"));
-            yield return new TestItem(
                 "(1 | 2) |= 1",
                 "null",
                 "Not a path expression.",
@@ -263,15 +240,6 @@ Line 1: ^^^^^
 Line 1:                 ^^^^
 Line 1: def a(x; y): .; a(2)
 Line 1: ^^^^^^^^^^^^^^^^^^^^
-"));
-            yield return new TestItem(
-                "if 1 then 2 else 3 end",
-                "null",
-                "If condition value must be a boolean, but found Number.",
-                new PositionInformation(1, 4, @"Line 1: if 1 then 2 else 3 end
-Line 1:    ^
-Line 1: if 1 then 2 else 3 end
-Line 1: ^^^^^^^^^^^^^^^^^^^^^^
 "));
             yield return new TestItem(
                 "10 |= 2",
