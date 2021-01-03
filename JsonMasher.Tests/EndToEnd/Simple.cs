@@ -279,6 +279,8 @@ map(select(. < 2))",
             yield return new TestItem("map(. + 2)", "[1, 2, 3]", "[3, 4, 5]");
             yield return new TestItem("map(select(. > 5))", "[1, 2, 3]", "[]");
             yield return new TestItem("debug", "[1, 2, 3]", "[[1, 2, 3]]", "[[\"DEBUG\", [1, 2, 3]]]");
+            yield return new TestItem("..", "[1, 2, 3]", "[[1, 2, 3], 1, 2, 3]");
+            yield return new TestItem("recurse", "[1, 2, 3]", "[[1, 2, 3], 1, 2, 3]");
         }
     }
 }

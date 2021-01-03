@@ -73,6 +73,22 @@ def select(x): if x then . else empty end;
 .[] | if . <= 2 then debug else . end
 ------
 [1, 2, 3]
+`,
+`recurse
+------
+..
+------
+{ 
+  "a": [1, 2, 3],
+  "b": "test",
+  "c": [
+    1,
+    {
+      "d": 1,
+      "e": [null, true, false]
+    }
+  ]
+}
 `
 ];
 

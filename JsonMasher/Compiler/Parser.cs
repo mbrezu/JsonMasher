@@ -372,6 +372,11 @@ namespace JsonMasher.Compiler
             {
                 return ParseDot(state);
             }
+            else if (state.Current == Tokens.DotDot)
+            {
+                state.Advance();
+                return state.RecordPosition(new FunctionCall(Recurse.Builtin), position);
+            }
             else if (state.Current is Number n)
             {
                 state.Advance();

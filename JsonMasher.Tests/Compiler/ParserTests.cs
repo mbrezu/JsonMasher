@@ -112,6 +112,8 @@ namespace JsonMasher.Tests.Compiler
                 new Enumerate(),
                 new Enumerate(),
                 new Enumerate()));
+
+            yield return new TestItem("..", new FunctionCall(Recurse.Builtin));
         }
 
         private static IEnumerable<TestItem> IfThenElseTests()
