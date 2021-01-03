@@ -187,8 +187,12 @@ namespace JsonMasher.Tests.EndToEnd
             yield return new TestItem(".[0]?", "100", "[]");
 
             yield return new TestItem(".[1:]", "[1, 2, 3]", "[[2, 3]]");
+            yield return new TestItem(".[1:]?", "0", "[]");
+            yield return new TestItem(".[]?", "0", "[]");
             yield return new TestItem(".[:-1]", "[1, 2, 3]", "[[1, 2]]");
+            yield return new TestItem(".[:-1]?", "0", "[]");
             yield return new TestItem(".[-2:-1]", "[1, 2, 3]", "[[2]]");
+            yield return new TestItem(".[-2:-1]?", "0", "[]");
             yield return new TestItem(".[-2:]", "[1, 2, 3]", "[[2,3]]");
             yield return new TestItem(".[:2]", "[1, 2, 3]", "[[1,2]]");
             yield return new TestItem(".[:1,2]", "[1, 2, 3]", "[[1], [1,2]]");

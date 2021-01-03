@@ -5,12 +5,16 @@ namespace JsonMasher.Mashers.Primitives
 {
     public class Enumerate : IJsonMasherOperator, IJsonZipper
     {
+        public bool IsOptional { get; init; }
+
         public IEnumerable<Json> Mash(Json json, IMashContext context, IMashStack stack)
-            => json.Type switch 
+            => json.Type switch
             {
                 JsonValueType.Array => json.EnumerateArray(),
                 JsonValueType.Object => json.EnumerateObject().Select(kv => kv.Value),
-                _ => throw context.Error($"Can't enumerate {json.Type}.", stack.Push(this), json)
+                _ => !IsOptional
+                    ? throw context.Error($"Can't enumerate {json.Type}.", stack.Push(this), json)
+                    : Enumerable.Empty<Json>()
             };
 
         public ZipStage ZipDown(Json json, IMashContext context, IMashStack stack)

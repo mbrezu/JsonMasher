@@ -633,7 +633,8 @@ namespace JsonMasher.Compiler
             else if (state.Current == Tokens.CloseSquareParen)
             {
                 state.Advance();
-                return state.RecordPosition(new Enumerate(), position);
+                bool isOptional = CheckIfOptional(state);
+                return state.RecordPosition(new Enumerate { IsOptional = isOptional }, position);
             }
             else
             {
