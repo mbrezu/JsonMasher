@@ -8,12 +8,85 @@
 - [ ] assignments WIP
   - [ ] more IJsonZipper implementations
   - [ ] assignment (=, not |=) implementation
-- [ ] slice selectors (I thought that .[a:b] would be the same as .[range(a; b)], but apparently that's not true; maybe make `<f>:<g>` syntactic sugar for `range(<f>; <g>)` ?
-- [ ] map_values
-- [ ] del, to_entries, from_entries, error, transpose
-- [ ] min/max/group/sort
-- [ ] .. (recurse)
 - [ ] documentation
 - [ ] nuget packages
 - [ ] jq -n '{a : 1 | 2}' (seems I need to be able to parse pipes inside dicts)
 - [ ] destructuring bind
+
+# Implementation status of JQ manual features
+
+- [ ] jq manual
+  - [x] [Basic Filters](https://stedolan.github.io/jq/manual/#Basicfilters)
+  - [x] [Types and Values](https://stedolan.github.io/jq/manual/#TypesandValues)
+  - [ ] [Builtin operators and functions](https://stedolan.github.io/jq/manual/#Builtinoperatorsandfunctions)
+    - [x] +, -, *, /, length, keys, map, select, empty, range
+    - [x] recurse/0
+    - [ ] %
+    - [ ] utf8bytelength
+    - [ ] keys_unsorted, has, in, map_values
+    - [ ] path, del
+    - [ ] getpath, setpath, delpaths
+    - [ ] to_entries, from_entries, with_entries
+    - [ ] arrays, objects, iterables, booleans, numbers, normals, finites, strings, nulls, values, scalars 
+    - [ ] error, halt, halt_error/0, halt_error/1
+    - [ ] $\_\_loc\_\_
+    - [ ] paths/0, paths/1, leaf_paths
+    - [ ] add
+    - [ ] any/0, any/1, any/2
+    - [ ] all/0, all/1, all/2
+    - [ ] flatten/0, flatten/1
+    - [ ] floor, sqrt
+    - [ ] tonumber, tostring, type
+    - [ ] infinite, nan, isinfinite, isnan, isfinite, isnormal
+    - [ ] sort, sort_by, group_by
+    - [ ] min, max, min_by(path_exp), max_by(path_exp)
+    - [ ] unique, unique_by(path_exp) 
+    - [ ] reverse
+    - [ ] contains, indices, index, rindex, inside
+    - [ ] startswith, endswith
+    - [ ] combinations/0, combinations/1
+    - [ ] ltrimstr, rtrimstr
+    - [ ] explode/implode
+    - [ ] split/join
+    - [ ] ascii_downcase, ascii_upcase
+    - [ ] while, until
+    - [ ] recurse/1, recurse/2, recurse_down
+    - [ ] walk/1
+    - [ ] $ENV, env
+    - [ ] transpose
+    - [ ] bsearch/1
+    - [ ] string interpolation
+    - [ ] tojson, fromjson
+    - [ ] @text, @json, @html, @uri, @csv, @tsv, @sh, @base64, @base64d
+    - [ ] dates
+    - [ ] SQL-Style Operators
+    - [ ] builtins
+  - [ ] [Conditionals and Comparisons](https://stedolan.github.io/jq/manual/#ConditionalsandComparisons)
+    - [x] if/then/else/elif/end
+    - [ ] right now if conditions must be boolean, need to switch to null/false being false, everything else is true
+    - [ ] alternative operator
+    - [ ] try-catch
+    - [ ] breaking out of control structures
+    - [ ] error suppression
+  - [ ] [Regular expressions (PCRE)](https://stedolan.github.io/jq/manual/#RegularexpressionsPCRE)
+  - [ ] [Advanced features](https://stedolan.github.io/jq/manual/#Advancedfeatures)
+    - [ ] Variable / Symbolic Binding Operator
+      - [x] without destructuring
+      - [ ] with destructuring
+    - [ ] Destructuring Alternative Operator: ?//
+    - [x] Defining functions
+    - [ ] reduce
+    - [ ] isempty
+    - [x] limit
+    - [ ] first/1, last/1, nth/2
+    - [ ] first/0, last/0, nth/1
+    - [ ] foreach
+  - [ ] [Math](https://stedolan.github.io/jq/manual/#Math)
+  - [ ] [I/O](https://stedolan.github.io/jq/manual/#IO)
+  - [ ] [Streaming](https://stedolan.github.io/jq/manual/#Streaming)
+  - [ ] [Assignment](https://stedolan.github.io/jq/manual/#Assignment)
+    - [ ] |=
+      - [x] partially implemented
+      - [ ] need to add zipping to all primitives/combinators
+    - [ ] =, op=
+  - [ ] [Modules](https://stedolan.github.io/jq/manual/#Modules)
