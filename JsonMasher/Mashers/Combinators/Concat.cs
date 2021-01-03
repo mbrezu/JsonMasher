@@ -12,8 +12,14 @@ namespace JsonMasher.Mashers.Combinators
         {
             var newStack = stack.Push(this);
             context.Tick(stack);
-            return First.Mash(json, context, newStack)
-                .Concat(Second.Mash(json, context, newStack));
+            foreach (var value in First.Mash(json, context, newStack))
+            {
+                yield return value;
+            }
+            foreach (var value in Second.Mash(json, context, newStack))
+            {
+                yield return value;
+            }
         }
 
         public static IJsonMasherOperator AllParams(params IJsonMasherOperator[] mashers)

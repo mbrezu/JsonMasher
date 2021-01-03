@@ -1,6 +1,5 @@
 # Things to do next
 
-- [ ] jq -n '{a : 1 | 2}' (seems I need to be able to parse pipes inside dicts)
 - [ ] debugger (extend DebugMashStack)
   - [ ] stepping through
   - [ ] setting breakpoints
@@ -66,7 +65,7 @@
     - [x] alternative operator
     - [ ] try-catch
     - [ ] breaking out of control structures
-    - [ ] error suppression
+    - [x] error suppression
   - [ ] [Regular expressions (PCRE)](https://stedolan.github.io/jq/manual/#RegularexpressionsPCRE)
   - [ ] [Advanced features](https://stedolan.github.io/jq/manual/#Advancedfeatures)
     - [ ] Variable / Symbolic Binding Operator

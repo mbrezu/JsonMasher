@@ -506,6 +506,22 @@ namespace JsonMasher.Tests
             result.DeepEqual("2".AsJson()).Should().BeTrue();
         }
 
+        [Fact]
+        public void ErrorSuppression()
+        {
+            // Arrange
+            var data = Json.Number(3);;
+            var op = new ErrorSuppression {
+                Body = new Enumerate()
+            }; 
+
+            // Act
+            var result = op.RunAsSequence(data);
+
+            // Assert
+            result.Count().Should().Be(0);
+        }
+
         private static Json MakeArray()
         {
             return Json.ArrayParams(

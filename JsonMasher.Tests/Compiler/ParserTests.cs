@@ -8,6 +8,7 @@ using JsonMasher.Mashers.Builtins;
 using JsonMasher.Mashers.Primitives;
 using Xunit;
 using Ops = JsonMasher.Mashers.Builtins;
+using System;
 
 namespace JsonMasher.Tests.Compiler
 {
@@ -59,7 +60,8 @@ namespace JsonMasher.Tests.Compiler
                 .Concat(PipeTests())
                 .Concat(EmptyTests())
                 .Concat(FunctionTests())
-                .Concat(AlternativeTests());
+                .Concat(AlternativeTests())
+                .Concat(ErrorSuppresionTests());
 
         private static IEnumerable<TestItem> DotTests()
         {
@@ -583,6 +585,22 @@ namespace JsonMasher.Tests.Compiler
                     Second = new Literal(3)
                 }
             });
+        }
+
+        private static IEnumerable<TestItem> ErrorSuppresionTests()
+        {
+            yield return new TestItem("(1, 2, 3)?", new ErrorSuppression {
+                Body = Concat.AllParams(
+                    new Literal(1),
+                    new Literal(2),
+                    new Literal(3)
+                )
+            });
+            yield return new TestItem("-1?", new FunctionCall(
+                Minus.Builtin_1,
+                new ErrorSuppression {
+                    Body = new Literal(1)
+                }));
         }
     }
 }

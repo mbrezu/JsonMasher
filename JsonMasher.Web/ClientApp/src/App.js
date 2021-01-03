@@ -96,6 +96,11 @@ empty // 1,
 (null, false, empty) // 1,
 (null, false, 2) // 1
 ------
+null`,
+`error suppression
+------
+0 | (1, 2, .[], 3, 4)?
+------
 null`
 ];
 

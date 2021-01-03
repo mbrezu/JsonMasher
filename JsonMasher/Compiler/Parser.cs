@@ -375,9 +375,26 @@ namespace JsonMasher.Compiler
         private IJsonMasherOperator ParseArithmeticHigherExpression(State state)
             => ChainAssocLeft(
                 state,
-                ParseExtendedTerm,
+                ParseErrorSuppression,
                 op => op == Tokens.Times || op == Tokens.Divide,
                 op => op == Tokens.Times ? Times.Builtin : Divide.Builtin);
+
+        private IJsonMasherOperator ParseErrorSuppression(State state)
+        {
+            var position = state.Position;
+            var term = ParseExtendedTerm(state);
+            if (state.Current == Tokens.Question)
+            {
+                state.Advance();
+                return state.RecordPosition(new ErrorSuppression {
+                    Body = term
+                }, position);
+            }
+            else
+            {
+                return term;
+            }
+        }
 
         private IJsonMasherOperator ParseExtendedTerm(State state)
         {
@@ -401,7 +418,7 @@ namespace JsonMasher.Compiler
             {
                 state.Advance();
                 return state.RecordPosition(
-                    new FunctionCall(Minus.Builtin_1, ParseExtendedTerm(state)), position);
+                    new FunctionCall(Minus.Builtin_1, ParseErrorSuppression(state)), position);
             }
             else if (state.Current == Tokens.Keywords.If)
             {
