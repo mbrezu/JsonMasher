@@ -199,6 +199,8 @@ namespace JsonMasher.Tests.EndToEnd
             yield return new TestItem("empty // 2", "null", "[2]");
             yield return new TestItem("(empty, false, null) // 2", "null", "[2]");
             yield return new TestItem("(empty, false, 1) // 2", "null", "[1]");
+
+            yield return new TestItem("def foo: .a.b; {a: {b: {c: 1}}} | foo.c", "null", "[1]");
         }
 
         private static IEnumerable<TestItem> IfThenElsePrograms()
