@@ -58,7 +58,8 @@ namespace JsonMasher.Tests.Compiler
                 .Concat(VariablesTest())
                 .Concat(PipeTests())
                 .Concat(EmptyTests())
-                .Concat(FunctionTests());
+                .Concat(FunctionTests())
+                .Concat(AlternativeTests());
 
         private static IEnumerable<TestItem> DotTests()
         {
@@ -564,6 +565,21 @@ namespace JsonMasher.Tests.Compiler
                         new FunctionName("point", 2),
                         new Literal(1),
                         new Literal(2))));
+        }
+
+        private static IEnumerable<TestItem> AlternativeTests()
+        {
+            yield return new TestItem("1 // 2", new Alternative {
+                First = new Literal(1),
+                Second = new Literal(2)
+            });
+            yield return new TestItem("1 // 2 // 3", new Alternative {
+                First = new Literal(1),
+                Second = new Alternative {
+                    First = new Literal(2),
+                    Second = new Literal(3)
+                }
+            });
         }
     }
 }

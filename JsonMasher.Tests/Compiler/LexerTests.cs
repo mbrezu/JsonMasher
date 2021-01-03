@@ -71,6 +71,8 @@ namespace JsonMasher.Tests.Compiler
                 "<= >=", TokensParams(Tokens.LessThanOrEqual, Tokens.GreaterThanOrEqual));
             yield return new TestItem(
                 "? >=", TokensParams(Tokens.Question, Tokens.GreaterThanOrEqual));
+            yield return new TestItem(
+                "? //", TokensParams(Tokens.Question, Tokens.SlashSlash));
         }
 
         private static IEnumerable<TestItem> CommentsTests()

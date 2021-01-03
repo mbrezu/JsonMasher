@@ -56,8 +56,6 @@ namespace JsonMasher.Compiler
 
             public Token Current => _index < _tokens.Length ? _tokens[_index].Token : null;
 
-            public Token Next => _index >= _tokens.Length - 1 ? null : _tokens[_index + 1].Token;
-
             public State Advance()
             {
                 if (!AtEnd) {
@@ -232,9 +230,28 @@ namespace JsonMasher.Compiler
         private IJsonMasherOperator ParsePipeTerm(State state)
             => ChainIntoArray(
                 state,
-                ParseBinding, 
+                ParseAlternatives, 
                 token => token == Tokens.Comma,
                 Concat.All);
+
+        private IJsonMasherOperator ParseAlternatives(State state)
+        {
+            var position = state.Position;
+            var t1 = ParseBinding(state);
+            if (state.Current == Tokens.SlashSlash)
+            {
+                state.Advance();
+                var t2 = ParseAlternatives(state);
+                return state.RecordPosition(new Alternative {
+                    First = t1,
+                    Second = t2
+                }, position);
+            }
+            else
+            {
+                return t1;
+            }
+        }
 
         private IJsonMasherOperator ParseBinding(State state)
         {

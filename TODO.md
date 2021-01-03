@@ -1,7 +1,5 @@
 # Things to do next
 
-- [ ] implement !=
-
 - [ ] debugger (extend DebugMashStack)
   - [ ] stepping through
   - [ ] setting breakpoints
@@ -65,7 +63,7 @@
   - [ ] [Conditionals and Comparisons](https://stedolan.github.io/jq/manual/#ConditionalsandComparisons)
     - [x] if/then/else/elif/end
     - [x] !=
-    - [ ] alternative operator
+    - [x] alternative operator
     - [ ] try-catch
     - [ ] breaking out of control structures
     - [ ] error suppression

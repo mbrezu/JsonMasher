@@ -89,7 +89,14 @@ def select(x): if x then . else empty end;
     }
   ]
 }
-`
+`,
+`alternatives
+------
+empty // 1,
+(null, false, empty) // 1,
+(null, false, 2) // 1
+------
+null`
 ];
 
 const parsedExamples = 

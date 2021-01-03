@@ -125,6 +125,11 @@ namespace JsonMasher.Compiler
                     yield return state.TokenWithPos(Tokens.GreaterThanOrEqual, 2);
                     state.Advance(2);
                 }
+                else if (state.Current == '/' && state.Next == '/')
+                {
+                    yield return state.TokenWithPos(Tokens.SlashSlash, 2);
+                    state.Advance(2);
+                }
                 else 
                 {
                     switch (state.Current)

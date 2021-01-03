@@ -472,6 +472,40 @@ namespace JsonMasher.Tests
             result.DeepEqual("2".AsJson()).Should().BeTrue();
         }
 
+        [Fact]
+        public void AlternativeFails()
+        {
+            // Arrange
+            var data = MakeArray();
+            var op = new Alternative {
+                First = new Literal(false),
+                Second = new Literal(1),
+            }; 
+
+            // Act
+            var result = op.RunAsScalar(data);
+
+            // Assert
+            result.DeepEqual("1".AsJson()).Should().BeTrue();
+        }
+
+        [Fact]
+        public void AlternativeSucceeds()
+        {
+            // Arrange
+            var data = MakeArray();
+            var op = new Alternative {
+                First = new Literal(2),
+                Second = new Literal(1),
+            }; 
+
+            // Act
+            var result = op.RunAsScalar(data);
+
+            // Assert
+            result.DeepEqual("2".AsJson()).Should().BeTrue();
+        }
+
         private static Json MakeArray()
         {
             return Json.ArrayParams(
