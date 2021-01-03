@@ -77,7 +77,8 @@ const parsedExamples =
 const App = (_props) => {
   const [program, setProgram] = useState(initialContent.program || ".");
   const [input, setInput] = useState(initialContent.input || "1 2 3 4 5");
-  const [output, setOutput] = useState("");
+  const [stdout, setStdOut] = useState("");
+  const [stderr, setStdErr] = useState("");
   const [slurp, setSlurp] = useState(initialContent.slurp || false);
   const run = () => {
     async function runImpl() {
@@ -93,8 +94,9 @@ const App = (_props) => {
           method: "POST",
           body
         });
-      const data = await response.text();
-      setOutput(data);
+      const data = await response.json();
+      setStdOut(data.stdOut);
+      setStdErr(data.stdErr);
     }
     runImpl();
   };
@@ -152,7 +154,11 @@ const App = (_props) => {
               <div className="subtitle">
                 <h3>Output:</h3>
               </div>
-              <textarea className="fillall" readOnly value={output} />
+              <textarea className="fillall" readOnly value={stdout} />
+              <div className="subtitle">
+                <h3>Debugging:</h3>
+              </div>
+              <textarea className="fillall" readOnly value={stderr} />
             </div>
             <div className="separatorv" />
           </div>

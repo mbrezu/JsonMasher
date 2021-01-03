@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using JsonMasher.Compiler;
 using JsonMasher.Mashers;
@@ -20,11 +21,10 @@ namespace JsonMasher.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult<string> Post(ProgramInputDto dto)
+        public ActionResult<MashingResultDto> Post(ProgramInputDto dto)
         {
             try
             {
-                var sb = new StringBuilder();
                 var (filter, sourceInformation) = new Parser().Parse(dto.Program);
                 IMashStack stack = new DebugMashStack();
                 var inputs = dto.Input.AsMultipleJson();
@@ -34,20 +34,37 @@ namespace JsonMasher.Web.Controllers
                 }
                 var (results, context) = new Mashers.JsonMasher().Mash(
                     inputs, filter, stack, sourceInformation, 100000);
-                foreach (var result in results)
-                {
-                    sb.AppendLine(result.ToString());
-                }
-                foreach (var log in context.Log)
-                {
-                    sb.AppendLine(log.ToString());
-                }
-                return sb.ToString();
+                return new MashingResultDto {
+                    StdOut = CollectStdOut(results),
+                    StdErr = CollectStdErr(context)
+                };
             }
             catch (Exception ex)
             {
-                return ex.ToString();
+                return new MashingResultDto {
+                    StdOut = ex.ToString()
+                };
             }
+        }
+
+        private string CollectStdOut(IEnumerable<Json> results)
+        {
+            var sb = new StringBuilder();
+            foreach (var result in results)
+            {
+                sb.AppendLine(result.ToString());
+            }
+            return sb.ToString();
+        }
+
+        private string CollectStdErr(IMashContext context)
+        {
+            var sb = new StringBuilder();
+            foreach (var log in context.Log)
+            {
+                sb.AppendLine(log.ToString());
+            }
+            return sb.ToString();
         }
     }
 }
