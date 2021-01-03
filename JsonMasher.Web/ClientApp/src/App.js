@@ -67,6 +67,12 @@ def select(x): if x then . else empty end;
 .[1:3], .[1:], .[-1:], .[:-1], .[-3:-2]
 ------
 [1, 2, 3, 4, 5]
+`,
+`debug
+------
+.[] | if . <= 2 then debug else . end
+------
+[1, 2, 3]
 `
 ];
 

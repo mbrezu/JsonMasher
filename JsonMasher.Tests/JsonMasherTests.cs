@@ -399,32 +399,6 @@ namespace JsonMasher.Tests
         }
 
         [Fact]
-        public void DebugTest()
-        {
-            // Arrange
-            var data = MakeArray();
-            var op = new Compose {
-                First = new Enumerate(),
-                Second = new Debug()
-            };
-
-            // Act
-            var (result, context) = op.RunAsSequenceWithContext(data);
-            result = result.ToList();
-
-            // Assert
-            Json.Array(result)
-                .DeepEqual(data)
-                .Should().BeTrue();
-            context.Log.Count().Should().Be(3);
-            for (int i = 0; i < 3; i++)
-            {
-                var obj = context.Log.ElementAt(i);
-                obj.DeepEqual(Json.Number(i + 1)).Should().BeTrue();
-            }
-        }
-
-        [Fact]
         public void LetAndGetVariableTest()
         {
             // Arrange

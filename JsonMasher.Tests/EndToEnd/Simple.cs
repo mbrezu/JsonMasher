@@ -9,16 +9,24 @@ namespace JsonMasher.Tests.EndToEnd
 {
     public class Simple
     {
-        private record TestItem(string Program, string InputJson, string ExpectedOutputJson);
+        private record TestItem(
+            string Program,
+            string InputJson,
+            string ExpectedOutputJson,
+            string ExpectedStdErrJson = null);
 
         public static IEnumerable<object[]> TestData
             => GetTestData().Select((System.Func<TestItem, object[]>)(item => (new object[] {
-                item.Program, item.InputJson, item.ExpectedOutputJson })));
+                item.Program,
+                item.InputJson,
+                item.ExpectedOutputJson,
+                item.ExpectedStdErrJson
+            })));
 
         [Theory]
         [MemberData(nameof(TestData))]
         public void ProgramTest(
-            string program, string inputJson, string expectedOutputJson)
+            string program, string inputJson, string expectedOutputJson, string expectedStdErrJson)
         {
             // Arrange
             var parser = new Parser();
@@ -32,6 +40,12 @@ namespace JsonMasher.Tests.EndToEnd
             Json.Array(result.sequence)
                 .DeepEqual(expectedOutputJson.AsJson())
                 .Should().BeTrue();
+            if (expectedStdErrJson != null)
+            {
+                Json.Array(result.context.Log)
+                    .DeepEqual(expectedStdErrJson.AsJson())
+                    .Should().BeTrue();
+            }
         }
 
         private static IEnumerable<TestItem> GetTestData()
@@ -264,6 +278,7 @@ map(select(. < 2))",
         {
             yield return new TestItem("map(. + 2)", "[1, 2, 3]", "[3, 4, 5]");
             yield return new TestItem("map(select(. > 5))", "[1, 2, 3]", "[]");
+            yield return new TestItem("debug", "[1, 2, 3]", "[[1, 2, 3]]", "[[\"DEBUG\", [1, 2, 3]]]");
         }
     }
 }

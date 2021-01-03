@@ -120,19 +120,26 @@ namespace JsonMasher
         
         public static Json ArrayParams(params Json[] args) => Array(args);
 
-        public static Json Array(IEnumerable<Json> args) =>
-            args.Count() switch {
+        public static Json Array(IEnumerable<Json> args)
+        {
+            var argsArray = args.ToArray();
+            return argsArray.Length switch {
                 0 => EmptyArray,
-                _ => new JsonArray(args)
+                _ => new JsonArray(argsArray)
             };
+        }
 
         public static Json ObjectParams(params JsonProperty[] args) => Object(args);
 
-        public static Json Object(IEnumerable<JsonProperty> args) =>
-            args.Count() switch {
+        public static Json Object(IEnumerable<JsonProperty> args)
+        {
+            var argsArray = args.ToArray();
+            return argsArray.Count() switch {
                 0 => EmptyObject,
-                _ => new JsonObject(args)
+                _ => new JsonObject(argsArray)
             };
+        }
+
         public static Json Bool(bool value) => value ? Json.True : Json.False;
     }
 

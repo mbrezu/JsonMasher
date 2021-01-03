@@ -11,32 +11,40 @@ namespace JsonMasher.Tests.Builtins
 {
     public class Misc
     {
-        private record TestItem(IJsonMasherOperator Op, string Input, string Output);
+        private record TestItem(IJsonMasherOperator Op, string Input, string Output, string StdErr = null);
 
         [Theory]
         [MemberData(nameof(TestData))]
-        public void MiscellaneousTestsTheory(IJsonMasherOperator op, string input, string output)
+        public void MiscellaneousTestsTheory(
+            IJsonMasherOperator op, string input, string output, string stdErr)
         {
             // Arrange
 
             // Act
-            var result = op.RunAsSequence(input.AsJson());
+            var (result, context) = op.RunAsSequenceWithContext(input.AsJson());
 
             // Assert
             Json.Array(result)
                 .DeepEqual(output.AsJson())
                 .Should().BeTrue();
+            if (stdErr != null)
+            {
+                Json.Array(context.Log)
+                    .DeepEqual(stdErr.AsJson())
+                    .Should().BeTrue();
+            }
         }
 
         public static IEnumerable<object[]> TestData
-            => GetTestData().Select(item => (new object[] { item.Op, item.Input, item.Output }));
+            => GetTestData().Select(item => (new object[] { item.Op, item.Input, item.Output, item.StdErr }));
 
         private static IEnumerable<TestItem> GetTestData()
             => Enumerable.Empty<TestItem>()
                 .Concat(RangeTests())
                 .Concat(LengthTests())
                 .Concat(LimitTests())
-                .Concat(KeysTests());
+                .Concat(KeysTests())
+                .Concat(DebugTests());
 
         private static IEnumerable<TestItem> RangeTests()
         {
@@ -87,6 +95,15 @@ namespace JsonMasher.Tests.Builtins
                 new FunctionCall(Keys.Builtin), "{\"a\": 1, \"b\": 2}", "[[\"a\", \"b\"]]");
             yield return new TestItem(
                 new FunctionCall(Keys.Builtin), "[1, 2, 3, 4, 5]", "[[0, 1, 2, 3, 4]]");
+        }
+
+        private static IEnumerable<TestItem> DebugTests()
+        {
+            yield return new TestItem(
+                new FunctionCall(Debug.Builtin),
+                "[1, 2, 3]",
+                "[[1, 2, 3]]",
+                "[[\"DEBUG\", [1, 2, 3]]]");
         }
     }
 }
