@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using JsonMasher.Mashers.Builtins;
 
 namespace JsonMasher.Mashers.Combinators
 {
@@ -69,6 +70,8 @@ namespace JsonMasher.Mashers.Combinators
             {
                 IJsonZipper op => op.ZipDown(json, context, stack),
                 Function func => ZipDownFunction(json, func, context, stack),
+                Builtin b when b == Empty.Builtin
+                    => new ZipStage(_ => json, Enumerable.Empty<Json>()),
                 _ => throw context.Error($"Not a path expression.", stack)
             };
 
