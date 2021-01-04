@@ -18,10 +18,10 @@
   - [x] [Types and Values](https://stedolan.github.io/jq/manual/#TypesandValues)
   - [ ] [Builtin operators and functions](https://stedolan.github.io/jq/manual/#Builtinoperatorsandfunctions)
     - [x] +, -, *, /, length, keys, select, empty, range, map
-    - [x] recurse/0, path/1
+    - [x] recurse/0, path/1, map_values/1
     - [ ] %
     - [ ] utf8bytelength
-    - [ ] keys_unsorted, has, in, map_values
+    - [ ] keys_unsorted, has, in
     - [ ] del
     - [ ] getpath, setpath, delpaths
     - [ ] to_entries, from_entries, with_entries

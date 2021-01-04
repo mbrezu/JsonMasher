@@ -1,3 +1,5 @@
 def select(x): if x then . else empty end;
 
 def map(x): [.[] | x];
+
+def map_values(x): .[] |= x;
