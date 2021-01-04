@@ -16,6 +16,8 @@ namespace JsonMasher.Mashers.Builtins
                     => StringTimesNumber(t1.GetString(), (int)t2.GetNumber()),
                 (JsonValueType.Number, JsonValueType.String)
                     => StringTimesNumber(t2.GetString(), (int)t1.GetNumber()),
+                (JsonValueType.Object, JsonValueType.Object)
+                    => MergeDictionariesRecursively(t1, t2),
                 _ => throw context.Error($"Can't multiply {t1.Type} and {t2.Type}.", stack, t1, t2)
             };
 
@@ -30,6 +32,23 @@ namespace JsonMasher.Mashers.Builtins
             {
                 return Json.String(newString);
             }
+        }
+
+        private static Json MergeDictionariesRecursively(Json t1, Json t2)
+        {
+            foreach (var kv2 in t2.EnumerateObject())
+            {
+                var v1 = t1.GetElementAt(kv2.Key);
+                if (v1.Type == JsonValueType.Object && kv2.Value.Type == JsonValueType.Object)
+                {
+                    t1 = t1.SetElementAt(kv2.Key, MergeDictionariesRecursively(v1, kv2.Value));
+                }
+                else
+                {
+                    t1 = t1.SetElementAt(kv2.Key, kv2.Value);
+                }
+            }
+            return t1;
         }
     }
 }
