@@ -1,1 +1,9 @@
 jq -n '1 | .[]?'
+
+jq -n '
+def test: break $test;
+
+label $test | test
+'
+
+jq -n '{a: {b:2, c: 3}} * {a: {d: 4}}'

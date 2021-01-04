@@ -17,11 +17,14 @@
   - [x] [Basic Filters](https://stedolan.github.io/jq/manual/#Basicfilters)
   - [x] [Types and Values](https://stedolan.github.io/jq/manual/#TypesandValues)
   - [ ] [Builtin operators and functions](https://stedolan.github.io/jq/manual/#Builtinoperatorsandfunctions)
-    - [x] +, -, *, /, length, keys, map, select, empty, range
+    - [x] +, -, *, /, length, keys, select, empty, range
+      - [ ] string multiplication by 0
+      - [ ] string division
+      - [ ] object multiplication
     - [x] recurse/0
     - [ ] %
     - [ ] utf8bytelength
-    - [ ] keys_unsorted, has, in, map_values
+    - [ ] keys_unsorted, has, in, map, map_values
     - [ ] path, del
     - [ ] getpath, setpath, delpaths
     - [ ] to_entries, from_entries, with_entries

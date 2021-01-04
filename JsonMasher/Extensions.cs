@@ -68,6 +68,10 @@ namespace JsonMasher
 
         public static string Repeat(this string str, int times)
         {
+            if (times == 0)
+            {
+                return null;
+            }
             var sb = new StringBuilder();
             for (int i = 0; i < times; i++)
             {

@@ -1,3 +1,4 @@
+using System;
 using JsonMasher.Mashers.Combinators;
 
 namespace JsonMasher.Mashers.Builtins
@@ -12,10 +13,23 @@ namespace JsonMasher.Mashers.Builtins
                 (JsonValueType.Number, JsonValueType.Number)
                     => Json.Number(t1.GetNumber() * t2.GetNumber()),
                 (JsonValueType.String, JsonValueType.Number)
-                    => Json.String(t1.GetString().Repeat((int)t2.GetNumber())),
+                    => StringTimesNumber(t1.GetString(), (int)t2.GetNumber()),
                 (JsonValueType.Number, JsonValueType.String)
-                    => Json.String(t2.GetString().Repeat((int)t1.GetNumber())),
+                    => StringTimesNumber(t2.GetString(), (int)t1.GetNumber()),
                 _ => throw context.Error($"Can't multiply {t1.Type} and {t2.Type}.", stack, t1, t2)
             };
+
+        private static Json StringTimesNumber(string str, int times)
+        {
+            var newString = str.Repeat(times);
+            if (newString == null)
+            {
+                return Json.Null;
+            }
+            else
+            {
+                return Json.String(newString);
+            }
+        }
     }
 }
