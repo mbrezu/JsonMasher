@@ -301,29 +301,29 @@ namespace JsonMasher.Tests.EndToEnd
                 "null",
                 "[[1, 2]]");
             yield return new TestItem(
-                "def map(x): .[] | x; map(. + 2)",
+                "def map(x): [.[] | x]; map(. + 2)",
                 "[1, 2, 3]",
-                "[3, 4, 5]");
+                "[[3, 4, 5]]");
             yield return new TestItem(
                 @"
-def map(x): .[] | x;
+def map(x): [.[] | x];
 def select(x): if x then . else empty end;
 map(select(. < 2))",
                 "[1, 2, 3]",
-                "[1]");
+                "[[1]]");
             yield return new TestItem(
                 @"
-def map(x): def result: .[] | x; result;
+def map(x): def result: [.[] | x]; result;
 def select(x): if x then . else empty end;
 map(select(. < 2))",
                 "[1, 2, 3]",
-                "[1]");
+                "[[1]]");
         }
 
         private static IEnumerable<TestItem> StandardLibrary()
         {
-            yield return new TestItem("map(. + 2)", "[1, 2, 3]", "[3, 4, 5]");
-            yield return new TestItem("map(select(. > 5))", "[1, 2, 3]", "[]");
+            yield return new TestItem("map(. + 2)", "[1, 2, 3]", "[[3, 4, 5]]");
+            yield return new TestItem("map(select(. > 5))", "[1, 2, 3]", "[[]]");
             yield return new TestItem("debug", "[1, 2, 3]", "[[1, 2, 3]]", "[[\"DEBUG\", [1, 2, 3]]]");
             yield return new TestItem("..", "[1, 2, 3]", "[[1, 2, 3], 1, 2, 3]");
             yield return new TestItem("recurse", "[1, 2, 3]", "[[1, 2, 3], 1, 2, 3]");

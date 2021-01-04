@@ -55,7 +55,7 @@ null
 `,
 `function definition
 ------
-def map(x): .[] | x;
+def map(x): [.[] | x];
 def select(x): if x then . else empty end;
 
 [map(select(. > 2))]

@@ -10,7 +10,7 @@ namespace JsonMasher.Benchmarks
         public LexerBenchmark()
         {
             _program += ". == test def null true false\n";
-            _program += "def map(x): .[] | x;";
+            _program += "def map(x): [.[] | x;]";
             _program += "def select(x): if x then . else empty end;";
             _lexer = new();
         }
