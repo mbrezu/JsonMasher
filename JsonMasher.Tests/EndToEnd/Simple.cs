@@ -53,6 +53,7 @@ namespace JsonMasher.Tests.EndToEnd
                 .Concat(SimplePrograms())
                 // TODO: uncomment once assignment works again.
                 // .Concat(AssignmentPrograms())
+                .Concat(PathTests())
                 .Concat(IfThenElsePrograms())
                 .Concat(BindingPrograms())
                 .Concat(ProgramsWithFunctions())
@@ -293,6 +294,73 @@ namespace JsonMasher.Tests.EndToEnd
                 "(.[] | select(. > 3)) |= . + 2",
                 "[1, 2, 3]",
                 "[[1, 2, 3]]");
+        }
+
+        private static IEnumerable<TestItem> PathTests()
+        {
+            yield return new TestItem("path(.)", "[1, 2, 3]", "[[]]");
+            yield return new TestItem("path(.a)", "null", "[[\"a\"]]");
+            yield return new TestItem("path(.\"a\")", "null", "[[\"a\"]]");
+            yield return new TestItem("path(.a.b)", "null", "[[\"a\", \"b\"]]");
+            yield return new TestItem("path(.a.b.c)", "null", "[[\"a\", \"b\", \"c\"]]");
+            yield return new TestItem("path(.[]?)", "null", "[]");
+            yield return new TestItem("path(.[])", "[1, 2, 3]", "[[0], [1], [2]]");
+            yield return new TestItem("path(.[])", "{\"a\":1,\"b\":2}", "[[\"a\"], [\"b\"]]");
+            yield return new TestItem("path(.[][]?)", "{\"a\":[1, 2],\"b\":2}", "[[\"a\", 0], [\"a\", 1]]");
+            yield return new TestItem("path(.[0])", "null", "[[0]]");
+            yield return new TestItem("path(.[0, 1, 2])", "null", "[[0], [1], [2]]");
+            yield return new TestItem(
+                "path(.[0, 1, 2][3, 4])",
+                "null",
+                "[[0, 3], [0, 4], [1, 3], [1, 4], [2, 3], [2, 4]]");
+            yield return new TestItem(
+                "def a_then_b: .a.b; path(a_then_b.c)",
+                "null",
+                "[[\"a\", \"b\", \"c\"]]");
+            yield return new TestItem(
+                "def a_then_b(a): a.b; path(a_then_b(.a).c)",
+                "null",
+                "[[\"a\", \"b\", \"c\"]]");
+            yield return new TestItem(
+                "path(if 1 then .a else .b end)",
+                "null",
+                "[[\"a\"]]");
+            yield return new TestItem(
+                "path(if true, false then .a else .b end)",
+                "null",
+                "[[\"a\"], [\"b\"]]");
+            yield return new TestItem(
+                "path(empty)",
+                "null",
+                "[]");
+            yield return new TestItem(
+                "path(.[] | select(. < 3))",
+                "[1, 2, 3, 4]",
+                "[[0], [1]]");
+            yield return new TestItem(
+                "path(.a, .b)",
+                "null",
+                "[[\"a\"], [\"b\"]]");
+            yield return new TestItem(
+                "path(.a, .b | .[0])",
+                "null",
+                "[[\"a\", 0], [\"b\", 0]]");
+            yield return new TestItem(
+                "path(.[10:15])",
+                "null",
+                "[[{\"start\": 10, \"end\": 15}]]");
+            yield return new TestItem(
+                "path(..)",
+                "null",
+                "[[]]");
+            yield return new TestItem(
+                "path(..)",
+                "[1, 2, 3]",
+                "[[], [0], [1], [2]]");
+            yield return new TestItem(
+                "path(..)",
+                "{\"a\":1,\"b\":2}",
+                "[[], [\"a\"], [\"b\"]]");
         }
 
         private static IEnumerable<TestItem> BindingPrograms()

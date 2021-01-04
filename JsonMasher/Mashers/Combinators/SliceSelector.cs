@@ -1,12 +1,28 @@
+using System;
 using System.Collections.Generic;
 
 namespace JsonMasher.Mashers.Combinators
 {
-    public class SliceSelector : IJsonMasherOperator
+    public class SliceSelector : IJsonMasherOperator, IPathGenerator
     {
         public IJsonMasherOperator From { get; init; }
         public IJsonMasherOperator To { get; init; }
         public bool IsOptional { get; init; }
+
+        public IEnumerable<PathAndValue> GeneratePaths(
+            Path pathSoFar, Json json, IMashContext context, IMashStack stack)
+        {
+            var newStack = stack.Push(this);
+
+            foreach (var fromTo in GetFromsAndTos(json, context, newStack))
+            {
+                context.Tick(newStack);
+                yield return new PathAndValue(
+                    pathSoFar.Extend(new SlicePathPart(fromTo.Item1, fromTo.Item2)),
+                    json == Json.Null ? json : GetSlice(json, fromTo));
+            }
+        }
+
         public IEnumerable<Json> Mash(Json json, IMashContext context, IMashStack stack)
         {
             var newStack = stack.Push(this);
@@ -24,36 +40,51 @@ namespace JsonMasher.Mashers.Combinators
             }
             if (!skip)
             {
-                foreach (var from in Froms(json, context, newStack))
+                foreach (var fromTo in GetFromsAndTos(json, context, newStack))
+                {
+                    context.Tick(newStack);
+                    yield return GetSlice(json, fromTo);
+                }
+            }
+        }
+
+        private static Json GetSlice(Json json, Tuple<int, int> fromTo)
+        {
+            var slice = new List<Json>();
+            for (int i = (int)fromTo.Item1; i < fromTo.Item2; i++)
+            {
+                slice.Add(json.GetElementAt(i));
+            }
+            return Json.Array(slice);
+        }
+
+        private IEnumerable<Tuple<int, int>> GetFromsAndTos(
+            Json json, IMashContext context, IMashStack stack)
+        {
+            foreach (var from in Froms(json, context, stack))
+            {
+                if (from.Type != JsonValueType.Number)
+                {
+                    context.Error($"Index must be a number, not {from.Type}.", stack, from);
+                }
+                foreach (var to in Tos(json, context, stack))
                 {
                     if (from.Type != JsonValueType.Number)
                     {
-                        context.Error($"Index must be a number, not {from.Type}.", newStack, from);
+                        context.Error($"Index must be a number, not {from.Type}.", stack, from);
                     }
-                    foreach (var to in Tos(json, context, newStack))
+                    context.Tick(stack);
+                    int start = (int)from.GetNumber();
+                    int end = (int)to.GetNumber();
+                    if (start < 0 && end > 0)
                     {
-                        if (from.Type != JsonValueType.Number)
-                        {
-                            context.Error($"Index must be a number, not {from.Type}.", newStack, from);
-                        }
-                        context.Tick(newStack);
-                        var slice = new List<Json>();
-                        int start = (int)from.GetNumber();
-                        int end = (int)to.GetNumber();
-                        if (start < 0 && end > 0)
-                        {
-                            end -= json.GetLength();
-                        }
-                        if (end < 0 && start >= 0)
-                        {
-                            start -= json.GetLength();
-                        }
-                        for (int i = (int)start; i < end; i++)
-                        {
-                            slice.Add(json.GetElementAt(i));
-                        }
-                        yield return Json.Array(slice);
+                        end -= json.GetLength();
                     }
+                    if (end < 0 && start >= 0)
+                    {
+                        start -= json.GetLength();
+                    }
+                    yield return Tuple.Create(start, end);
                 }
             }
         }

@@ -94,15 +94,24 @@ namespace JsonMasher
             return true;
         }
 
-        public static Json Undefined => new Json { Type = JsonValueType.Undefined };
-        public static Json Null => new Json { Type = JsonValueType.Null };
-        public static Json True => new Json { Type = JsonValueType.True };
-        public static Json False => new Json { Type = JsonValueType.False };
-        private static Json Zero => new JsonNumber(0);
-        private static Json One => new JsonNumber(1);
-        private static Json EmptyString => new JsonString("");
-        private static Json EmptyArray => new JsonArray(Enumerable.Empty<Json>());
-        private static Json EmptyObject => new JsonObject(Enumerable.Empty<JsonProperty>());
+        private static Json _undefined = new Json { Type = JsonValueType.Undefined };
+        public static Json Undefined => _undefined;
+        private static Json _null = new Json { Type = JsonValueType.Null };
+        public static Json Null => _null;
+        private static Json _true = new Json { Type = JsonValueType.True };
+        public static Json True => _true;
+        private static Json _false = new Json { Type = JsonValueType.False };
+        public static Json False => _false;
+        private static Json _zero = new JsonNumber(0);
+        private static Json Zero => _zero;
+        private static Json _one = new JsonNumber(1);
+        private static Json One => _one;
+        private static Json _emptyString = new JsonString("");
+        private static Json EmptyString => _emptyString;
+        private static Json _emptyArray = new JsonArray(Enumerable.Empty<Json>());
+        private static Json EmptyArray => _emptyArray;
+        private static Json _emptyObject = new JsonObject(Enumerable.Empty<JsonProperty>());
+        private static Json EmptyObject => _emptyObject;
 
         public static Json Number(double value) =>
             value switch {

@@ -20,10 +20,7 @@ namespace JsonMasher.Mashers.Builtins
             };
 
         private static IEnumerable<Json> ObjectKeys(Json json)
-            => json.EnumerateObject()
-                .Select(p => p.Key)
-                .OrderBy(k => k)
-                .Select(k => Json.String(k));
+            => json.EnumerateObject().Select(kv => Json.String(kv.Key));
 
         private static IEnumerable<Json> ArrayKeys(Json json)
             => Enumerable.Range(0, json.GetLength()).Select(n => Json.Number(n));
