@@ -23,11 +23,15 @@ namespace JsonMasher.Mashers.Combinators
                             pathSoFar.Extend(new StringPathPart(strIndex)),
                             json);
                     }
-                    else
+                    else if (json.Type == JsonValueType.Object)
                     {
                         yield return new PathAndValue(
                             pathSoFar.Extend(new StringPathPart(strIndex)),
                             json.GetElementAt(strIndex));
+                    }
+                    else
+                    {
+                        throw context.Error($"Can't index a {json.Type} with a {indexValue.Type} key.", newStack, json, indexValue);
                     }
                 }
                 else if (indexValue.Type == JsonValueType.Number)
@@ -39,11 +43,15 @@ namespace JsonMasher.Mashers.Combinators
                             pathSoFar.Extend(new IntPathPart(intIndex)),
                             json);
                     }
-                    else
+                    else if (json.Type == JsonValueType.Array)
                     {
                         yield return new PathAndValue(
                             pathSoFar.Extend(new IntPathPart(intIndex)),
                             json.GetElementAt(intIndex));
+                    }
+                    else
+                    {
+                        throw context.Error($"Can't index a {json.Type} with a {indexValue.Type} key.", newStack, json, indexValue);
                     }
                 }
                 else

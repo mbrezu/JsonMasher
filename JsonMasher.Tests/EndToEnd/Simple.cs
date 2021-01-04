@@ -51,8 +51,7 @@ namespace JsonMasher.Tests.EndToEnd
         private static IEnumerable<TestItem> GetTestData()
             => Enumerable.Empty<TestItem>()
                 .Concat(SimplePrograms())
-                // TODO: uncomment once assignment works again.
-                // .Concat(AssignmentPrograms())
+                .Concat(AssignmentPrograms())
                 .Concat(PathTests())
                 .Concat(IfThenElsePrograms())
                 .Concat(BindingPrograms())
@@ -291,9 +290,9 @@ namespace JsonMasher.Tests.EndToEnd
                 "[1, 2, 3]",
                 "[[1, 2, 3]]");
             yield return new TestItem(
-                "(.[] | select(. > 3)) |= . + 2",
+                "(.[] | select(. < 3)) |= . + 2",
                 "[1, 2, 3]",
-                "[[1, 2, 3]]");
+                "[[3, 4, 3]]");
         }
 
         private static IEnumerable<TestItem> PathTests()

@@ -35,6 +35,9 @@ namespace JsonMasher.Mashers
             _ => throw new InvalidOperationException()
         }));
 
+        public Path WithoutFirstPart
+            => _parts.Count == 1 ? Path.Empty : new Path(_parts.RemoveAt(0));
+
         private static Path _empty = new Path();
         public static Path Empty = _empty;
     }

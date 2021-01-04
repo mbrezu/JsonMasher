@@ -29,7 +29,7 @@ namespace JsonMasher.Mashers.Primitives
                 JsonValueType.Array => ArrayGeneratePaths(pathSoFar, json, context, stack),
                 JsonValueType.Object => ObjectGeneratePaths(pathSoFar, json, context, stack),
                 _ => !IsOptional
-                    ? throw context.Error("Not a path expression.", stack.Push(this))
+                    ? throw context.Error($"Can't enumerate {json.Type}.", stack.Push(this))
                     : Enumerable.Empty<PathAndValue>()
             };
 
