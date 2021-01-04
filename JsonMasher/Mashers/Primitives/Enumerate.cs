@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace JsonMasher.Mashers.Primitives
 {
-    public class Enumerate : IJsonMasherOperator, IJsonZipper
+    public class Enumerate : IJsonMasherOperator
     {
         public bool IsOptional { get; init; }
 
@@ -16,25 +16,6 @@ namespace JsonMasher.Mashers.Primitives
                     ? throw context.Error($"Can't enumerate {json.Type}.", stack.Push(this), json)
                     : Enumerable.Empty<Json>()
             };
-
-        public ZipStage ZipDown(Json json, IMashContext context, IMashStack stack)
-            => json.Type switch 
-            {
-                JsonValueType.Array => new ZipStage(
-                    parts => Json.Array(parts),
-                    Mash(json, context, stack)),
-                JsonValueType.Object => ZipDownObject(json),
-                _ => throw context.Error($"Can't enumerate {json.Type}.", stack.Push(this), json)
-            };
-
-        private ZipStage ZipDownObject(Json json)
-        {
-            var properties = json.EnumerateObject();
-            return new ZipStage(
-                newValues => Json.Object(properties.Zip(newValues, (prop, val) => new JsonProperty(prop.Key, val))),
-                properties.Select(kv => kv.Value)
-            );
-        }
 
         // All these are the same for testing/FluentAssertions purposes,
         // but different for SourceInformation purposes, so the singletons were removed.

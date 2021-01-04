@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace JsonMasher.Mashers.Combinators
 {
@@ -13,7 +11,7 @@ namespace JsonMasher.Mashers.Combinators
         public IEnumerable<Json> Mash(Json json, IMashContext context, IMashStack stack)
         {
             var newStack = stack.Push(this);
-            context.Tick(stack);
+            context.Tick(newStack);
             var condSequence = Cond.Mash(json, context, newStack);
             foreach (var condValue in condSequence)
             {

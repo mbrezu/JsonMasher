@@ -10,4 +10,10 @@ jq -n '{a: {b:2, c: 3}} * {a: {d: 4}}'
 
 jq -n '"a b c" / " "'
 
-jq -n '[1, 2, 3] | empty |= . + 2'
+jq -n '[1, 2, 3] | (.[] | if . < 2, . < 3 then . else empty end) |= . + 2'
+
+jq -n '[1, 2, 3] | path(.[] | if . < 2, . < 3 then . else empty end)'
+
+jq -n 'if 1, 2 then 3 else 4 end'
+
+jq -n '[1, 2, 3] | .[1:] |= [3, 4]'

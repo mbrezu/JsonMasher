@@ -12,7 +12,7 @@ namespace JsonMasher.Mashers.Combinators
         int Arity)
     : FunctionDescriptor, Callable;
 
-    public class FunctionCall : IJsonMasherOperator, IJsonZipper
+    public class FunctionCall : IJsonMasherOperator
     {
         public FunctionDescriptor Descriptor { get; private set; }
         public List<IJsonMasherOperator> Arguments { get; private set; }
@@ -41,19 +41,6 @@ namespace JsonMasher.Mashers.Combinators
             return result;
         }
 
-        public ZipStage ZipDown(Json json, IMashContext context, IMashStack stack)
-        {
-            var newStack = stack.Push(this);
-            if (Descriptor is FunctionName name)
-            {
-                return ZipDownFunctionName(name, json, context, newStack);
-            }
-            else
-            {
-                throw context.Error($"Not a path expression.", newStack);
-            }
-        }
-
         private IEnumerable<Json> CallFunctionName(
             FunctionName name, Json json, IMashContext context, IMashStack stack)
             => context.GetCallable(name, stack) switch
@@ -63,41 +50,6 @@ namespace JsonMasher.Mashers.Combinators
                 Builtin builtin => RunBuiltin(builtin, json, context, stack),
                 _ => throw new InvalidOperationException()
             };
-
-        private ZipStage ZipDownFunctionName(
-            FunctionName name, Json json, IMashContext context, IMashStack stack)
-            => context.GetCallable(name, stack) switch
-            {
-                IJsonZipper op => op.ZipDown(json, context, stack),
-                Function func => ZipDownFunction(json, func, context, stack),
-                Builtin b when b == Empty.Builtin
-                    => new ZipStage(_ => json, Enumerable.Empty<Json>()),
-                _ => throw context.Error($"Not a path expression.", stack)
-            };
-
-        private ZipStage ZipDownFunction(
-            Json json, Function func, IMashContext context, IMashStack stack)
-        {
-            if (func.Op is IJsonZipper zipper)
-            {
-                if (Arguments.Count != func.Arguments.Count)
-                {
-                    throw new InvalidOperationException();
-                }
-                context.PushEnvironmentFrame();
-                for (int i = 0; i < Arguments.Count; i++)
-                {
-                    context.SetCallable(func.Arguments[i], Arguments[i]);
-                }
-                var result = zipper.ZipDown(json, context, stack);
-                context.PopEnvironmentFrame();
-                return result;
-            }
-            else
-            {
-                throw context.Error($"Not a path expression.", stack);
-            }
-        }
 
         private IEnumerable<Json> RunBuiltin(
             Builtin builtin, Json json, IMashContext context, IMashStack stack)

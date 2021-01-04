@@ -1,20 +1,13 @@
 using System.Collections.Generic;
-using System.Linq;
 
 namespace JsonMasher.Mashers.Primitives
 {
-    public class Identity : IJsonMasherOperator, IJsonZipper
+    public class Identity : IJsonMasherOperator
     {
         public IEnumerable<Json> Mash(Json json, IMashContext context, IMashStack stack)
         {
             context.Tick(stack);
             return json.AsEnumerable();
-        }
-
-        public ZipStage ZipDown(Json json, IMashContext context, IMashStack stack)
-        {
-            context.Tick(stack);
-            return new ZipStage(parts => parts.First(), Mash(json, context, stack));
         }
 
         // All these are the same for testing/FluentAssertions purposes,

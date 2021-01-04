@@ -1,6 +1,4 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace JsonMasher.Mashers.Combinators
 {
@@ -13,16 +11,7 @@ namespace JsonMasher.Mashers.Combinators
         {
             var newStack = stack.Push(this);
             context.Tick(stack);
-            if (PathExpression is IJsonZipper zipper)
-            {
-                var zipStage = zipper.ZipDown(json, context, newStack);
-                var results = zipStage.Parts.Select(p => Masher.Mash(p, context, newStack).First());
-                yield return zipStage.ZipUp(results);
-            }
-            else
-            {
-                throw context.Error($"Not a path expression.", newStack.Push(PathExpression));
-            }
+            yield return json;
         }
     }
 }
