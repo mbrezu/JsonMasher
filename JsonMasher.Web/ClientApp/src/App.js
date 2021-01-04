@@ -92,6 +92,9 @@ def select(x): if x then . else empty end;
 `,
 `alternatives
 ------
+# '//' returns the first part (without null and false),
+# or the second part if the first is all null and false values
+
 empty // 1,
 (null, false, empty) // 1,
 (null, false, 2) // 1
@@ -100,6 +103,28 @@ null`,
 `error suppression
 ------
 0 | (1, 2, .[], 3, 4)?
+------
+null`,
+`try/catch
+------
+# catch will replace the error with the value of its block,
+# applied to the error message
+
+0 | try (1, 2, .[], 3, 4) catch . * 2
+------
+null`,
+`string division
+------
+# string division is string splitting
+
+"a b c" / " "
+------
+null`,
+`dictionary multiplication
+------
+# dictionary multiplication is recursive merge of dictionaries
+
+{ a: { b: { f: 4, g: 3 } }, c: { d: 3 }, e: 4 } * { a: { b: { f: 5 } }, e: 8 }
 ------
 null`
 ];
