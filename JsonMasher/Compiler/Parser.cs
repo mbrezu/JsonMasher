@@ -386,8 +386,8 @@ namespace JsonMasher.Compiler
             if (state.Current == Tokens.Question)
             {
                 state.Advance();
-                return state.RecordPosition(new ErrorSuppression {
-                    Body = term
+                return state.RecordPosition(new TryCatch {
+                    TryBody = term
                 }, position);
             }
             else

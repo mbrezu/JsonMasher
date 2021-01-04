@@ -589,8 +589,8 @@ namespace JsonMasher.Tests.Compiler
 
         private static IEnumerable<TestItem> TryCatchTests()
         {
-            yield return new TestItem("(1, 2, 3)?", new ErrorSuppression {
-                Body = Concat.AllParams(
+            yield return new TestItem("(1, 2, 3)?", new TryCatch {
+                TryBody = Concat.AllParams(
                     new Literal(1),
                     new Literal(2),
                     new Literal(3)
@@ -598,8 +598,8 @@ namespace JsonMasher.Tests.Compiler
             });
             yield return new TestItem("-1?", new FunctionCall(
                 Minus.Builtin_1,
-                new ErrorSuppression {
-                    Body = new Literal(1)
+                new TryCatch {
+                    TryBody = new Literal(1)
                 }));
             yield return new TestItem("try 1", new TryCatch {
                 TryBody = new Literal(1)

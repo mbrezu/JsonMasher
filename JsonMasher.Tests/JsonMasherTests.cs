@@ -507,22 +507,6 @@ namespace JsonMasher.Tests
         }
 
         [Fact]
-        public void ErrorSuppression()
-        {
-            // Arrange
-            var data = Json.Number(3);;
-            var op = new ErrorSuppression {
-                Body = new Enumerate()
-            }; 
-
-            // Act
-            var result = op.RunAsSequence(data);
-
-            // Assert
-            result.Count().Should().Be(0);
-        }
-
-        [Fact]
         public void TryCatch()
         {
             // Arrange
