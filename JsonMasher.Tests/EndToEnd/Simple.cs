@@ -276,6 +276,14 @@ namespace JsonMasher.Tests.EndToEnd
                 "(.[0] |= . + 2 | .[0]), .[0]",
                 "[1, 2]",
                 "[3, 1]");
+            yield return new TestItem(
+                "def a_then_b: .a.b; a_then_b.c |= . + 3",
+                "{\"a\":{\"b\":{\"c\": 4}}}",
+                "[{\"a\":{\"b\":{\"c\": 7}}}]");
+            yield return new TestItem(
+                "def f_then_b(f): .[f].b; f_then_b(\"a\").c |= . + 3",
+                "{\"a\":{\"b\":{\"c\": 4}}}",
+                "[{\"a\":{\"b\":{\"c\": 7}}}]");
         }
 
         private static IEnumerable<TestItem> BindingPrograms()
