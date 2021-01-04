@@ -293,6 +293,10 @@ namespace JsonMasher.Tests.EndToEnd
                 "(.[] | select(. < 3)) |= . + 2",
                 "[1, 2, 3]",
                 "[[3, 4, 3]]");
+            yield return new TestItem(
+                ".[1:] |= [7] + .",
+                "[1, 2, 3]",
+                "[[1, 7, 2, 3]]");
         }
 
         private static IEnumerable<TestItem> PathTests()
@@ -348,6 +352,10 @@ namespace JsonMasher.Tests.EndToEnd
                 "path(.[10:15])",
                 "null",
                 "[[{\"start\": 10, \"end\": 15}]]");
+            yield return new TestItem(
+                "path(.[10:])",
+                "null",
+                "[]");
             yield return new TestItem(
                 "path(..)",
                 "null",

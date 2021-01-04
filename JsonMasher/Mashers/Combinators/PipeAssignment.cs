@@ -37,10 +37,22 @@ namespace JsonMasher.Mashers.Combinators
                     StringPathPart sp => json.SetElementAt(
                         sp.Value,
                         Update(json.GetElementAt(sp.Value), path.WithoutFirstPart, context, stack)),
-                    SlicePathPart slicePart => throw new NotImplementedException(),
+                    SlicePathPart slicePart => UpdateRange(
+                        json, slicePart.Start, slicePart.End, path.WithoutFirstPart, context, stack),
                     _ => throw new InvalidOperationException()
                 };
             }
+        }
+
+        private Json UpdateRange(
+            Json json, int start, int end, Path path, IMashContext context, IMashStack stack)
+        {
+            var slice = SliceSelector.GetSlice(json, Tuple.Create(start, end));
+            slice = Update(slice, path, context, stack);
+            return Json.Array(
+                json.EnumerateArray().Take(start)
+                    .Concat(slice.EnumerateArray())
+                    .Concat(json.EnumerateArray().Skip(end)));
         }
     }
 }

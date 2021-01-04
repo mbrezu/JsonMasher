@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace JsonMasher.Mashers.Combinators
 {
@@ -48,7 +49,7 @@ namespace JsonMasher.Mashers.Combinators
             }
         }
 
-        private static Json GetSlice(Json json, Tuple<int, int> fromTo)
+        public static Json GetSlice(Json json, Tuple<int, int> fromTo)
         {
             var slice = new List<Json>();
             for (int i = (int)fromTo.Item1; i < fromTo.Item2; i++)
@@ -96,7 +97,19 @@ namespace JsonMasher.Mashers.Combinators
 
         private IEnumerable<Json> Tos(Json json, IMashContext context, IMashStack stack)
             => To == null
-                ? Json.Number(json.GetLength()).AsEnumerable()
+                ? ExtractLength(json)
                 : To.Mash(json, context, stack);
+
+        private static IEnumerable<Json> ExtractLength(Json json)
+        {
+            if (json.Type == JsonValueType.Array)
+            {
+                return Json.Number(json.GetLength()).AsEnumerable();
+            }
+            else
+            {
+                return Enumerable.Empty<Json>();
+            }
+        }
     }
 }
