@@ -522,6 +522,40 @@ namespace JsonMasher.Tests
             result.Count().Should().Be(0);
         }
 
+        [Fact]
+        public void TryCatch()
+        {
+            // Arrange
+            var data = Json.Number(3);
+            var op = new TryCatch {
+                TryBody = new Enumerate(),
+                CatchBody = new FunctionCall(
+                    Times.Builtin,
+                    new Identity(),
+                    new Literal(2))
+            };
+
+            // Act
+            var result = op.RunAsScalar(data);
+
+            // Assert
+            result.GetString().Should().Be("Can't enumerate Number.Can't enumerate Number.");
+        }
+
+        [Fact]
+        public void TryCatchWithoutTry()
+        {
+            // Arrange
+            var data = Json.Number(3);
+            var op = new TryCatch { TryBody = new Enumerate() };
+
+            // Act
+            var result = op.RunAsSequence(data);
+
+            // Assert
+            result.Count().Should().Be(0);
+        }
+
         private static Json MakeArray()
         {
             return Json.ArrayParams(

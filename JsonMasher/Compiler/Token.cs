@@ -95,7 +95,9 @@ namespace JsonMasher.Compiler
             Then,
             Else,
             End,
-            Elif
+            Elif,
+            Try,
+            Catch
         }
 
         private record SimpleToken(SimpleTokenType Type): Token
@@ -207,6 +209,10 @@ namespace JsonMasher.Compiler
             public static Token End => _end;
             private static Token _elif = new Keyword(KeywordType.Elif);
             public static Token Elif => _elif;
+            private static Token _try = new Keyword(KeywordType.Try);
+            public static Token Try => _try;
+            private static Token _catch = new Keyword(KeywordType.Catch);
+            public static Token Catch => _catch;
         }
     }
 }

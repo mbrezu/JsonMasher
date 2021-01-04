@@ -125,6 +125,8 @@ namespace JsonMasher.Tests.Compiler
             yield return new TestItem(" else ", TokensParams(Tokens.Keywords.Else));
             yield return new TestItem(" end ", TokensParams(Tokens.Keywords.End));
             yield return new TestItem(" elif ", TokensParams(Tokens.Keywords.Elif));
+            yield return new TestItem(" try ", TokensParams(Tokens.Keywords.Try));
+            yield return new TestItem(" catch ", TokensParams(Tokens.Keywords.Catch));
         }
 
         private static IEnumerable<TestItem> StringTests()

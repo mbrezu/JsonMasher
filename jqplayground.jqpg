@@ -9,3 +9,5 @@ label $test | test
 jq -n '{a: {b:2, c: 3}} * {a: {d: 4}}'
 
 jq -n '"a b c" / " "'
+
+jq -n '0 | try def x: 1; x catch def y: 2; .'

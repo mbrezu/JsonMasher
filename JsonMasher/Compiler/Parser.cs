@@ -425,6 +425,10 @@ namespace JsonMasher.Compiler
                 state.Advance();
                 return ParseIf(state);
             }
+            else if (state.Current == Tokens.Keywords.Try)
+            {
+                return ParseTry(state);
+            }
             else if (state.Current == Tokens.Dot)
             {
                 return ParseDot(state);
@@ -495,6 +499,28 @@ namespace JsonMasher.Compiler
             else
             {
                 throw state.Error(Messages.Parser.UnknownConstruct);
+            }
+        }
+
+        private IJsonMasherOperator ParseTry(State state)
+        {
+            var position = state.Position;
+            state.Advance();
+            var tryBody = ParseDefinitionOrFilter(state);
+            if (state.Current == Tokens.Keywords.Catch)
+            {
+                state.Advance();
+                var catchBody = ParseDefinitionOrFilter(state);
+                return state.RecordPosition(new TryCatch {
+                    TryBody = tryBody,
+                    CatchBody = catchBody
+                }, position);
+            }
+            else
+            {
+                return state.RecordPosition(new TryCatch {
+                    TryBody = tryBody
+                }, position);
             }
         }
 

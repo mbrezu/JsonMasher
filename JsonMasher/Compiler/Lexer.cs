@@ -275,6 +275,8 @@ namespace JsonMasher.Compiler
                 "else" => Tokens.Keywords.Else,
                 "end" => Tokens.Keywords.End,
                 "elif" => Tokens.Keywords.Elif,
+                "try" => Tokens.Keywords.Try,
+                "catch" => Tokens.Keywords.Catch,
                 _ => MakeIdentifier(id)
             };
             return state.TokenWithPos(token, id.Length, state.Mark);

@@ -219,6 +219,19 @@ namespace JsonMasher.Tests.EndToEnd
                 "[{ \"a\": { \"b\": 2, \"d\": 3 }, \"c\": 4 }]");
 
             yield return new TestItem("\"a b c\" / \" \"", "null", "[[\"a\", \"b\", \"c\"]]");
+
+            yield return new TestItem(
+                "0 | try (1, 2, .[], 3, 4)",
+                "null",
+                "[1, 2]");
+            yield return new TestItem(
+                "0 | try (1, 2, .[], 3, 4) catch .",
+                "null",
+                "[1, 2, \"Can't enumerate Number.\"]");
+            yield return new TestItem(
+                "0 | try (1, 2, .[], 3, 4) catch . * 2",
+                "null",
+                "[1, 2, \"Can't enumerate Number.Can't enumerate Number.\"]");
         }
 
         private static IEnumerable<TestItem> IfThenElsePrograms()

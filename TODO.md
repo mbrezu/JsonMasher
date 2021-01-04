@@ -63,7 +63,7 @@
     - [x] if/then/else/elif/end
     - [x] !=
     - [x] alternative operator
-    - [ ] try-catch
+    - [x] try-catch
     - [ ] breaking out of control structures
     - [x] error suppression
   - [ ] [Regular expressions (PCRE)](https://stedolan.github.io/jq/manual/#RegularexpressionsPCRE)
