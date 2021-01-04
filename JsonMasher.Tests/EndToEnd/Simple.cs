@@ -217,6 +217,8 @@ namespace JsonMasher.Tests.EndToEnd
                 "{\"a\": { \"b\": 1 }, \"c\": 2 } * .",
                 "{\"a\": { \"b\": 2, \"d\": 3 }, \"c\": 4 }",
                 "[{ \"a\": { \"b\": 2, \"d\": 3 }, \"c\": 4 }]");
+
+            yield return new TestItem("\"a b c\" / \" \"", "null", "[[\"a\", \"b\", \"c\"]]");
         }
 
         private static IEnumerable<TestItem> IfThenElsePrograms()

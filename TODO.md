@@ -18,9 +18,6 @@
   - [x] [Types and Values](https://stedolan.github.io/jq/manual/#TypesandValues)
   - [ ] [Builtin operators and functions](https://stedolan.github.io/jq/manual/#Builtinoperatorsandfunctions)
     - [x] +, -, *, /, length, keys, select, empty, range
-      - [ ] string multiplication by 0
-      - [ ] string division
-      - [ ] object multiplication
     - [x] recurse/0
     - [ ] %
     - [ ] utf8bytelength
