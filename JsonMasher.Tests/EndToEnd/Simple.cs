@@ -414,6 +414,8 @@ map(select(. < 2))",
             yield return new TestItem("map_values(. + 1)", "[1, 2, 3]", "[[2, 3, 4]]");
             yield return new TestItem(
                 "{a:1, b:2} | map_values(. + 1)", "null", "[{ \"a\": 2, \"b\": 3}]");
+            yield return new TestItem(
+                "{a:1, b:2} | keys_unsorted", "null", "[[\"a\", \"b\"]]");
         }
     }
 }
