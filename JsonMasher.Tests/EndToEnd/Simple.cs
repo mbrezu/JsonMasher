@@ -254,6 +254,10 @@ namespace JsonMasher.Tests.EndToEnd
                 "[[1, 2], [3, 4]]",
                 "[[[3, 4], [5, 6]]]");
             yield return new TestItem(
+                ".[][] = .[1][0] + 2",
+                "[[1, 2], [3, 4]]",
+                "[[[5, 5], [5, 5]]]");
+            yield return new TestItem(
                 ".[][][] |= . + 2",
                 "[[[1, 2], [3, 4]]]",
                 "[[[[3, 4], [5, 6]]]]");
@@ -261,6 +265,10 @@ namespace JsonMasher.Tests.EndToEnd
                 ".[0] |= . + 2",
                 "[1, 2, 3, 4]",
                 "[[3, 2, 3, 4]]");
+            yield return new TestItem(
+                ".[0] = .[1] + 2",
+                "[1, 2, 3]",
+                "[[4, 2, 3]]");
             yield return new TestItem(
                 ".[].a.b |= . + 2",
                 @"[{ ""a"": { ""b"": 1}, ""c"": 2 }, { ""a"": { ""b"": 3}, ""c"": 4 }]",

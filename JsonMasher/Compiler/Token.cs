@@ -82,7 +82,9 @@ namespace JsonMasher.Compiler
             [Display(Name="!=")]
             NotEquals,
             [Display(Name="//")]
-            SlashSlash
+            SlashSlash,
+            [Display(Name="=")]
+            Equals
         }
 
         private enum KeywordType
@@ -184,6 +186,9 @@ namespace JsonMasher.Compiler
 
         private static Token _slashSlash = new SimpleToken(SimpleTokenType.SlashSlash);
         public static Token SlashSlash => _slashSlash;
+
+        private static Token _equals = new SimpleToken(SimpleTokenType.Equals);
+        public static Token Equals => _equals;
 
         public static Token Number(double value) => new Number(value);
         public static Token Identifier(string id) => new Identifier(id);

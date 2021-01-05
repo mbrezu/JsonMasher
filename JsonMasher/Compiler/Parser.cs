@@ -307,12 +307,23 @@ namespace JsonMasher.Compiler
         {
             var position = state.Position;
             var t1 = ParseRelationalExpression(state);
-            if (state.Current == Tokens.PipeEquals) {
+            if (state.Current == Tokens.PipeEquals)
+            {
                 state.Advance();
                 var t2 = ParseRelationalExpression(state);
-                return state.RecordPosition(new PipeAssignment {
+                return state.RecordPosition(new Assignment {
                     PathExpression = t1,
                     Masher = t2
+                }, position);
+            }
+            else if (state.Current == Tokens.Equals)
+            {
+                state.Advance();
+                var t2 = ParseRelationalExpression(state);
+                return state.RecordPosition(new Assignment {
+                    PathExpression = t1,
+                    Masher = t2,
+                    UseWholeValue = true
                 }, position);
             }
             else

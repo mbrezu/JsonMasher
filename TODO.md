@@ -84,9 +84,6 @@
   - [ ] [I/O](https://stedolan.github.io/jq/manual/#IO)
   - [ ] [Streaming](https://stedolan.github.io/jq/manual/#Streaming)
   - [ ] [Assignment](https://stedolan.github.io/jq/manual/#Assignment)
-    - [ ] |=
-      - [ ] still to implement
-        - [ ] Alternative
-      - [ ] need to add zipping to all primitives/combinators
+    - [x] |=
     - [ ] =, op=
   - [ ] [Modules](https://stedolan.github.io/jq/manual/#Modules)

@@ -432,7 +432,7 @@ namespace JsonMasher.Tests.Compiler
 
         private static IEnumerable<TestItem> AssignmentTests()
         {
-            yield return new TestItem(". |= . + 2", new PipeAssignment {
+            yield return new TestItem(". |= . + 2", new Assignment {
                 PathExpression = new Identity(),
                 Masher = new FunctionCall(
                     Plus.Builtin,
@@ -440,20 +440,28 @@ namespace JsonMasher.Tests.Compiler
                     new Literal(2))
             });
             yield return new TestItem(". |= . + 2 | . |= . + 2", Compose.AllParams(
-                new PipeAssignment {
+                new Assignment {
                     PathExpression = new Identity(),
                     Masher = new FunctionCall(
                         Plus.Builtin,
                         new Identity(),
                         new Literal(2))
                 },
-                new PipeAssignment {
+                new Assignment {
                     PathExpression = new Identity(),
                     Masher = new FunctionCall(
                         Plus.Builtin,
                         new Identity(),
                         new Literal(2))
                 }));
+            yield return new TestItem(". = . + 2", new Assignment {
+                PathExpression = new Identity(),
+                Masher = new FunctionCall(
+                    Plus.Builtin,
+                    new Identity(),
+                    new Literal(2)),
+                UseWholeValue = true
+            });
         }
 
         private static IEnumerable<TestItem> VariablesTest()

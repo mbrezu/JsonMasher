@@ -13,7 +13,7 @@ namespace JsonMasher.Tests
         {
             // Arrange
             var data = Json.Number(2);
-            var op = new PipeAssignment {
+            var op = new Assignment {
                 PathExpression = new Identity(),
                 Masher = new FunctionCall(
                     Plus.Builtin, new Identity(), new Literal(2))
@@ -33,7 +33,7 @@ namespace JsonMasher.Tests
         {
             // Arrange
             var data = "[1, 2]".AsJson();
-            var op = new PipeAssignment {
+            var op = new Assignment {
                 PathExpression = new Enumerate(),
                 Masher = new FunctionCall(
                     Plus.Builtin, new Identity(), new Literal(2))
@@ -53,7 +53,7 @@ namespace JsonMasher.Tests
         {
             // Arrange
             var data = "[[1, 2], [3, 4]]".AsJson();
-            var op = new PipeAssignment {
+            var op = new Assignment {
                 PathExpression = Compose.AllParams(
                     new Enumerate(),
                     new Enumerate()),
@@ -75,7 +75,7 @@ namespace JsonMasher.Tests
         {
             // Arrange
             var data = "{ \"a\": 1, \"b\": 2 }".AsJson();
-            var op = new PipeAssignment {
+            var op = new Assignment {
                 PathExpression = new Enumerate(),
                 Masher = new FunctionCall(
                     Plus.Builtin, new Identity(), new Literal(2))
@@ -95,7 +95,7 @@ namespace JsonMasher.Tests
         {
             // Arrange
             var data = "{ \"a\": 1, \"b\": 2 }".AsJson();
-            var op = new PipeAssignment {
+            var op = new Assignment {
                 PathExpression = new StringSelector { Key = "a"},
                 Masher = new FunctionCall(
                     Plus.Builtin, new Identity(), new Literal(2))
@@ -115,7 +115,7 @@ namespace JsonMasher.Tests
         {
             // Arrange
             var data = "{ \"a\": { \"c\": 1 }, \"b\": 2 }".AsJson();
-            var op = new PipeAssignment {
+            var op = new Assignment {
                 PathExpression = Compose.AllParams(
                     new StringSelector { Key = "a" },
                     new StringSelector { Key = "c" }),
@@ -137,7 +137,7 @@ namespace JsonMasher.Tests
         {
             // Arrange
             var data = "[[1, 2], [3, 4]]".AsJson();
-            var op = new PipeAssignment {
+            var op = new Assignment {
                 PathExpression = Compose.AllParams(
                     new Enumerate(),
                     new Selector { Index = new Literal(0) }),
@@ -159,7 +159,7 @@ namespace JsonMasher.Tests
         {
             // Arrange
             var data = "[{ \"a\": 1, \"b\": 2 }, { \"a\": 3, \"b\": 4 }]".AsJson();
-            var op = new PipeAssignment {
+            var op = new Assignment {
                 PathExpression = Compose.AllParams(
                     new Enumerate(),
                     new Selector { Index = new Literal { Value = Json.String("b") } }),
