@@ -35,6 +35,7 @@ namespace JsonMasher.Mashers
             environment.SetCallable(new FunctionName("debug", 0), Debug.Builtin);
             environment.SetCallable(new FunctionName("recurse", 0), Recurse.Builtin);
             environment.SetCallable(new FunctionName("path", 1), PathFunction.Builtin);
+            environment.SetCallable(new FunctionName("sort", 0), Sort.Builtin);
         }
 
         private static void AddCode(MashEnvironment environment)

@@ -45,7 +45,8 @@ namespace JsonMasher.Tests.Builtins
                 .Concat(LimitTests())
                 .Concat(KeysTests())
                 .Concat(DebugTests())
-                .Concat(RecurseTests());
+                .Concat(RecurseTests())
+                .Concat(SortTests());
 
         private static IEnumerable<TestItem> RangeTests()
         {
@@ -123,6 +124,28 @@ namespace JsonMasher.Tests.Builtins
                 new FunctionCall(Recurse.Builtin),
                 "{\"a\": 1, \"b\": [1, 2]}", 
                 "[{\"a\": 1, \"b\": [1, 2]}, 1, [1, 2], 1, 2]");
+        }
+
+        private static IEnumerable<TestItem> SortTests()
+        {
+            yield return new TestItem(
+                new FunctionCall(Sort.Builtin),
+                "[3, [], \"4\", {}, true, false, null]",
+                "[[null, false, true, 3, \"4\", [], {}]]");
+            yield return new TestItem(
+                new FunctionCall(Sort.Builtin), "[3, 4, 1, 2]", "[[1, 2, 3, 4]]");
+            yield return new TestItem(
+                new FunctionCall(Sort.Builtin),
+                "[\"4\", \"12\"]",
+                "[[\"12\", \"4\"]]");
+            yield return new TestItem(
+                new FunctionCall(Sort.Builtin),
+                "[[3, 1, 2], [3, 0, 5], [3, 0]]",
+                "[[[3, 0], [3, 0, 5], [3, 1, 2]]]");
+            yield return new TestItem(
+                new FunctionCall(Sort.Builtin),
+                "[{\"a\": 2}, {\"a\": 0, \"b\": 0}, {\"a\": 1}]",
+                "[[{\"a\": 1}, {\"a\": 2}, {\"a\": 0, \"b\": 0}]]");
         }
     }
 }
