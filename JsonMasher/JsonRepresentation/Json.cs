@@ -1,109 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Linq;
 
 namespace JsonMasher.JsonRepresentation
 {
     public record JsonProperty(string Key, Json Value);
-    // Order is important, as it is the primary sort key
-    // (see https://stedolan.github.io/jq/manual/#Builtinoperatorsandfunctions,
-    // search for 'sort, sort_by').
-    public enum JsonValueType : byte
-    {
-        Undefined,
-        Null,
-        False,
-        True,
-        Number,
-        String,
-        Array,
-        Object,
-    }
-
-    public class JsonComparer : Comparer<Json>
-    {
-        public override int Compare(Json x, Json y)
-        {
-            if (x.Type < y.Type)
-            {
-                return -1;
-            }
-            else if (x.Type > y.Type)
-            {
-                return 1;
-            }
-            else
-            {
-                return x.Type switch
-                {
-                    JsonValueType.True
-                        or JsonValueType.False
-                        or JsonValueType.Null
-                        or JsonValueType.Undefined => 0,
-                    JsonValueType.Number => x.GetNumber().CompareTo(y.GetNumber()),
-                    JsonValueType.String => x.GetString().CompareTo(y.GetString()),
-                    JsonValueType.Array => CompareArrays(x, y),
-                    JsonValueType.Object => CompareObjects(x, y),
-                    _ => throw new NotImplementedException()
-                };
-            }
-        }
-
-        private int CompareArrays(Json x, Json y)
-        {
-            int i = 0;
-            while (true)
-            {
-                bool xAtEnd = i == x.GetLength();
-                bool yAtEnd = i == y.GetLength();
-                if (xAtEnd && yAtEnd)
-                {
-                    return 0;
-                }
-                if (xAtEnd && !yAtEnd)
-                {
-                    return -1;
-                }
-                if (!xAtEnd && yAtEnd)
-                {
-                    return 1;
-                }
-                var elementCompare = Compare(x.GetElementAt(i), y.GetElementAt(i));
-                if (elementCompare != 0)
-                {
-                    return elementCompare;
-                }
-                i++;
-            }
-        }
-
-        private int CompareObjects(Json x, Json y)
-        {
-            var xkv = x.EnumerateObject();
-            var xk = xkv.Select(kv => Json.String(kv.Key));
-
-            var ykv = y.EnumerateObject();
-            var yk = ykv.Select(kv => Json.String(kv.Key));
-
-            int keysCompare = Compare(Json.Array(xk), Json.Array(yk));
-            if (keysCompare != 0)
-            {
-                return keysCompare;
-            }
-
-            var xv = xkv.Select(kv => kv.Value);
-            var yv = ykv.Select(kv => kv.Value);
-            return Compare(Json.Array(xv), Json.Array(yv));
-        }
-
-        private JsonComparer()
-        {
-        }
-
-        private static JsonComparer _instance = new JsonComparer();
-        public static JsonComparer Instance = _instance;
-    }
 
     public class Json
     {
@@ -148,18 +49,61 @@ namespace JsonMasher.JsonRepresentation
             {
                 var key = path.Parts.First();
                 var restOfPath = path.WithoutFirstPart;
-                return key switch {
-                    IntPathPart ip => SetElementAt(
-                        ip.Value, 
-                        GetElementAt(ip.Value).TransformLeaf(restOfPath, transformer, onError)),
-                    StringPathPart sp => SetElementAt(
-                        sp.Value,
-                        GetElementAt(sp.Value).TransformLeaf(restOfPath, transformer, onError)),
-                    SlicePathPart slicePart => 
-                        SetSliceAt(slicePart.Start, slicePart.End, 
-                            GetSliceAt(slicePart.Start, slicePart.End).TransformLeaf(restOfPath, transformer, onError)),
-                    _ => throw onError(this, key)
-                };
+                if (key is IntPathPart ip)
+                {
+                    var element = GetElementAt(ip.Value);
+                    var transformed = element.TransformLeaf(restOfPath, transformer, onError);
+                    if (transformed == element)
+                    {
+                        return this;
+                    }
+                    else if (transformed == null)
+                    {
+                        return DelElementAt(ip.Value);
+                    }
+                    else
+                    {
+                        return SetElementAt(ip.Value, transformed);
+                    }
+                }
+                else if (key is StringPathPart sp)
+                {
+                    var element = GetElementAt(sp.Value);
+                    var transformed = element.TransformLeaf(restOfPath, transformer, onError);
+                    if (transformed == element)
+                    {
+                        return this;
+                    }
+                    else if (transformed == null)
+                    {
+                        return DelElementAt(sp.Value);
+                    }
+                    else
+                    {
+                        return SetElementAt(sp.Value, transformed);
+                    }
+                }
+                else if (key is SlicePathPart slicePart)
+                {
+                    var element = GetSliceAt(slicePart.Start, slicePart.End);
+                    var transformed = element.TransformLeaf(restOfPath, transformer, onError);
+                    if (transformed == element)
+                    {
+                        return this;
+                    }
+                    else if (transformed == null)
+                    {
+                        return DelSliceAt(slicePart.Start, slicePart.End);
+                    }
+                    else
+                    {
+                        return SetSliceAt(slicePart.Start, slicePart.End, transformed);
+                    }
+                }
+                else
+                {
+                    throw onError(this, key);
+                }
             }
         }
 
@@ -276,156 +220,5 @@ namespace JsonMasher.JsonRepresentation
         }
 
         public static Json Bool(bool value) => value ? True : False;
-    }
-
-    class JsonNumber : Json
-    {
-        double _value;
-
-        public JsonNumber(double value)
-        {
-            _value = value;
-            Type = JsonValueType.Number;
-        }
-
-        public override double GetNumber()
-            => _value;
-    }
-
-    class JsonString : Json
-    {
-        string _value;
-
-        public JsonString(string value)
-        {
-            _value = value;
-            Type = JsonValueType.String;
-        }
-
-        public override string GetString() => _value;
-
-        public override int GetLength() => _value.Length;
-    }
-
-    class JsonArray : Json
-    {
-        ImmutableList<Json> _values;
-
-        public JsonArray(IEnumerable<Json> values)
-        {
-            _values = ImmutableList<Json>.Empty;
-            _values = _values.AddRange(values);
-            Type = JsonValueType.Array;
-        }
-
-        private JsonArray(ImmutableList<Json> values)
-        {
-            _values = values;
-            Type = JsonValueType.Array;
-        }
-
-        public override IEnumerable<Json> EnumerateArray() => _values;
-
-        public override Json GetElementAt(int index)
-        {
-            index = AdjustIndex(index);
-            if (index < 0 || index >= _values.Count)
-            {
-                return Null;
-            }
-            else
-            {
-                return _values[index];
-            }
-        }
-
-        public override bool ContainsKey(int index)
-        {
-            index = AdjustIndex(index);
-            return index >= 0 && index < _values.Count;
-        }
-
-        public override int GetLength() => _values.Count;
-
-        public override Json SetElementAt(int index, Json value)
-        {
-            index = AdjustIndex(index);
-            return new JsonArray(_values.SetItem(index, value));
-        }
-
-        public override Json DelElementAt(int index)
-        {
-            index = AdjustIndex(index);
-            return new JsonArray(_values.RemoveAt(index));
-        }
-
-        private int AdjustIndex(int index) => index >= 0 ? index : _values.Count + index;
-
-        public override Json GetSliceAt(int start, int end)
-        {
-            var slice = new List<Json>();
-            for (int i = start; i < end; i++)
-            {
-                slice.Add(GetElementAt(i));
-            }
-            return Json.Array(slice);
-        }
-
-        public override Json SetSliceAt(int start, int end, Json value)
-            => Json.Array(
-                EnumerateArray().Take(start)
-                    .Concat(value.EnumerateArray())
-                    .Concat(EnumerateArray().Skip(end)));
-
-        public override Json DelSliceAt(int start, int end)
-            => Json.Array(EnumerateArray().Take(start).Concat(EnumerateArray().Skip(end)));
-    }
-
-    class JsonObject : Json
-    {
-        ImmutableDictionary<string, Json> _values;
-
-        public JsonObject(IEnumerable<JsonProperty> values)
-        {
-            _values = ImmutableDictionary<string, Json>.Empty;
-            _values = _values.SetItems(values.Select(kv => new KeyValuePair<string, Json>(kv.Key, kv.Value)));
-            Type = JsonValueType.Object;
-        }
-
-        private JsonObject(ImmutableDictionary<string, Json> values)
-        {
-            Type = JsonValueType.Object;
-            _values = values;
-        }
-
-        public override IEnumerable<JsonProperty> EnumerateObject()
-        {
-            foreach (var kv in _values.OrderBy(kv => kv.Key))
-            {
-                yield return new JsonProperty(kv.Key, kv.Value);
-            }
-        }
-
-        public override Json GetElementAt(string key)
-        {
-            Json result;
-            if (_values.TryGetValue(key, out result))
-            {
-                return result;
-            }
-            else
-            {
-                return Null;
-            }
-        }
-
-        public override bool ContainsKey(string key) => _values.ContainsKey(key);
-
-        public override int GetLength() => _values.Count;
-
-        public override Json SetElementAt(string key, Json value)
-            => new JsonObject(_values.SetItem(key, value));
-
-        public override Json DelElementAt(string index) => new JsonObject(_values.Remove(index));
     }
 }
