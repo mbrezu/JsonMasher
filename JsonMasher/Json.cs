@@ -121,9 +121,11 @@ namespace JsonMasher
 
         public virtual Json GetElementAt(int index) => throw new NotImplementedException();
         public virtual Json SetElementAt(int index, Json value) => throw new NotImplementedException();
+        public virtual Json DelElementAt(int index) => throw new NotImplementedException();
 
         public virtual Json GetElementAt(string key) => throw new NotImplementedException();
         public virtual Json SetElementAt(string key, Json value) => throw new NotImplementedException();
+        public virtual Json DelElementAt(string key) => throw new NotImplementedException();
 
         public virtual bool ContainsKey(int index) => throw new NotImplementedException();
         public virtual bool ContainsKey(string key) => throw new NotImplementedException();
@@ -290,7 +292,7 @@ namespace JsonMasher
 
         public override Json GetElementAt(int index)
         {
-            index = index >= 0 ? index : _values.Count + index;
+            index = AdjustIndex(index);
             if (index < 0 || index >= _values.Count)
             {
                 return Json.Null;
@@ -303,14 +305,25 @@ namespace JsonMasher
 
         public override bool ContainsKey(int index)
         {
-            index = index >= 0 ? index : _values.Count + index;
+            index = AdjustIndex(index);
             return index >= 0 && index < _values.Count;
         }
 
         public override int GetLength() => _values.Count;
 
         public override Json SetElementAt(int index, Json value)
-            => new JsonArray(_values.SetItem(index, value));
+        {
+            index = AdjustIndex(index);
+            return new JsonArray(_values.SetItem(index, value));
+        }
+
+        public override Json DelElementAt(int index)
+        {
+            index = AdjustIndex(index);
+            return new JsonArray(_values.RemoveAt(index));
+        }
+
+        private int AdjustIndex(int index) => index >= 0 ? index : _values.Count + index;
     }
 
     class JsonObject : Json
@@ -357,5 +370,7 @@ namespace JsonMasher
 
         public override Json SetElementAt(string key, Json value)
             => new JsonObject(_values.SetItem(key, value));
+
+        public override Json DelElementAt(string index) => new JsonObject(_values.Remove(index));
     }
 }

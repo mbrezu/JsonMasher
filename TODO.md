@@ -22,8 +22,8 @@
     - [x] sort, sort_by
     - [x] %
     - [x] has, in
+    - [x] del
     - [ ] utf8bytelength
-    - [ ] del
     - [ ] getpath, setpath, delpaths
     - [ ] to_entries, from_entries, with_entries
     - [ ] arrays, objects, iterables, booleans, numbers, normals, finites, strings, nulls, values, scalars 

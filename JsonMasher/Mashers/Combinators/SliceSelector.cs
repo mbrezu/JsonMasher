@@ -77,13 +77,13 @@ namespace JsonMasher.Mashers.Combinators
                     context.Tick(stack);
                     int start = (int)from.GetNumber();
                     int end = (int)to.GetNumber();
-                    if (start < 0 && end > 0)
+                    if (start < 0)
                     {
-                        end -= json.GetLength();
+                        start += json.GetLength();
                     }
-                    if (end < 0 && start >= 0)
+                    if (end < 0)
                     {
-                        start -= json.GetLength();
+                        end += json.GetLength();
                     }
                     yield return Tuple.Create(start, end);
                 }

@@ -412,6 +412,10 @@ namespace JsonMasher.Tests.EndToEnd
                 "path(.[2] // .[1])",
                 "null",
                 "[[1]]");
+            yield return new TestItem(
+                "[{a:1, b:2}, {a:3, b:4}, {a:5, b:6}] | path(.[-2:][].a)",
+                "null",
+                "[[{\"end\": 3, \"start\": 1}, 0, \"a\"], [{\"end\": 3, \"start\": 1}, 1, \"a\"]]");
         }
 
         private static IEnumerable<TestItem> BindingPrograms()
@@ -465,6 +469,22 @@ map(select(. < 2))",
                 "[{ a: 1, b: 2}, {a: -1, b: 3}, {a: -2, b: 5}] | sort_by(.a)",
                 "null",
                 "[[{\"a\": -2, \"b\": 5}, {\"a\": -1, \"b\": 3}, { \"a\": 1, \"b\": 2}]]");
+            yield return new TestItem(
+                "{ a: 1, b: [1, 2, 3] } | del(.b[1])",
+                "null",
+                "[{ \"a\": 1, \"b\": [1, 3]}]");
+            yield return new TestItem(
+                "{ a: 1, b: [1, 2, 3] } | del(.b[1,2])",
+                "null",
+                "[{ \"a\": 1, \"b\": [1]}]");
+            yield return new TestItem(
+                "{ a: 1, b: [1, 2, 3] } | del(.b[-2:])",
+                "null",
+                "[{ \"a\": 1, \"b\": [1]}]");
+            yield return new TestItem(
+                "[{a:1, b:2}, {a:3, b:4}, {a:5, b:6}] | del(.[-2:][].a)",
+                "null",
+                "[[{\"a\":1,\"b\": 2},{\"b\": 4},{\"b\": 6}]]");
         }
     }
 }
