@@ -4,7 +4,7 @@ using JsonMasher.Mashers.Combinators;
 
 namespace JsonMasher.Mashers.Builtins
 {
-    public class PathFunction
+    public class Path
     {
         private static Builtin _builtin = new Builtin(Function, 1);
 
@@ -23,7 +23,7 @@ namespace JsonMasher.Mashers.Builtins
         {
             if (masher is IPathGenerator generator)
             {
-                foreach (var pathAndValue in generator.GeneratePaths(Path.Empty, json, context, stack))
+                foreach (var pathAndValue in generator.GeneratePaths(JsonPath.Empty, json, context, stack))
                 {
                     yield return pathAndValue;
                 }

@@ -9,7 +9,7 @@ namespace JsonMasher.Mashers.Combinators
         public IJsonMasherOperator Body { get; init; }
 
         public IEnumerable<PathAndValue> GeneratePaths(
-            Path pathSoFar, Json json, IMashContext context, IMashStack stack)
+            JsonPath pathSoFar, Json json, IMashContext context, IMashStack stack)
         {
             context.PushEnvironmentFrame();
             var newStack = stack.Push(this);

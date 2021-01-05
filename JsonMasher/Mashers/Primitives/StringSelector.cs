@@ -18,7 +18,7 @@ namespace JsonMasher.Mashers.Primitives
             };
 
         public IEnumerable<PathAndValue> GeneratePaths(
-            Path pathSoFar, Json json, IMashContext context, IMashStack stack)
+            JsonPath pathSoFar, Json json, IMashContext context, IMashStack stack)
         {
             yield return new PathAndValue(
                 pathSoFar.Extend(new StringPathPart(Key)),

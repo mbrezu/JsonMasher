@@ -8,7 +8,7 @@ namespace JsonMasher.Mashers.Combinators
         public bool IsOptional { get; init; }
 
         public IEnumerable<PathAndValue> GeneratePaths(
-            Path pathSoFar, Json json, IMashContext context, IMashStack stack)
+            JsonPath pathSoFar, Json json, IMashContext context, IMashStack stack)
         {
             var newStack = stack.Push(this);
             context.Tick(newStack);

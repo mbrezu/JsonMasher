@@ -23,7 +23,7 @@ namespace JsonMasher.Mashers.Primitives
         public override int GetHashCode() => 1;
 
         public IEnumerable<PathAndValue> GeneratePaths(
-            Path pathSoFar, Json json, IMashContext context, IMashStack stack)
+            JsonPath pathSoFar, Json json, IMashContext context, IMashStack stack)
             => json.Type switch
             {
                 JsonValueType.Array => ArrayGeneratePaths(pathSoFar, json, context, stack),
@@ -34,7 +34,7 @@ namespace JsonMasher.Mashers.Primitives
             };
 
         private IEnumerable<PathAndValue> ArrayGeneratePaths(
-            Path pathSoFar, Json json, IMashContext context, IMashStack stack)
+            JsonPath pathSoFar, Json json, IMashContext context, IMashStack stack)
         {
             for (int i = 0; i < json.GetLength(); i++)
             {
@@ -44,7 +44,7 @@ namespace JsonMasher.Mashers.Primitives
         }
 
         private IEnumerable<PathAndValue> ObjectGeneratePaths(
-            Path pathSoFar, Json json, IMashContext context, IMashStack stack)
+            JsonPath pathSoFar, Json json, IMashContext context, IMashStack stack)
         {
             foreach (var kv in json.EnumerateObject())
             {

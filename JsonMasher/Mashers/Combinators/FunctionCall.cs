@@ -84,7 +84,7 @@ namespace JsonMasher.Mashers.Combinators
         }
 
         public IEnumerable<PathAndValue> GeneratePaths(
-            Path pathSoFar, Json json, IMashContext context, IMashStack stack)
+            JsonPath pathSoFar, Json json, IMashContext context, IMashStack stack)
         {
             var newStack = stack.Push(this);
             context.Tick(stack);
@@ -99,7 +99,7 @@ namespace JsonMasher.Mashers.Combinators
         }
 
         private IEnumerable<PathAndValue> GeneratePathsFunctionName(
-            Path pathSoFar, FunctionName name, Json json, IMashContext context, IMashStack stack)
+            JsonPath pathSoFar, FunctionName name, Json json, IMashContext context, IMashStack stack)
             => context.GetCallable(name, stack) switch
             {
                 IPathGenerator pg => pg.GeneratePaths(pathSoFar, json, context, stack),
@@ -109,7 +109,7 @@ namespace JsonMasher.Mashers.Combinators
             };
 
         private IEnumerable<PathAndValue> GeneratePathsFunction(
-            Path pathSoFar, Json json, Function func, IMashContext context, IMashStack stack)
+            JsonPath pathSoFar, Json json, Function func, IMashContext context, IMashStack stack)
         {
             if (Arguments.Count != func.Arguments.Count)
             {

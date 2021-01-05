@@ -56,7 +56,7 @@ namespace JsonMasher.Mashers.Builtins
 
         public static Builtin Builtin => _builtin;
 
-        public static IEnumerable<PathAndValue> GeneratePaths(Path pathSoFar, Json json)
+        public static IEnumerable<PathAndValue> GeneratePaths(JsonPath pathSoFar, Json json)
             => json.Type switch
             {
                 JsonValueType.Array => GeneratePathsArray(pathSoFar, json),
@@ -64,7 +64,7 @@ namespace JsonMasher.Mashers.Builtins
                 _ => new PathAndValue(pathSoFar, json).AsEnumerable()
             };
 
-        private static IEnumerable<PathAndValue> GeneratePathsArray(Path pathSoFar, Json json)
+        private static IEnumerable<PathAndValue> GeneratePathsArray(JsonPath pathSoFar, Json json)
         {
             yield return new PathAndValue(pathSoFar, json);
             for (int i = 0; i < json.GetLength(); i++)
@@ -78,7 +78,7 @@ namespace JsonMasher.Mashers.Builtins
             }
         }
 
-        private static IEnumerable<PathAndValue> GeneratePathsObject(Path pathSoFar, Json json)
+        private static IEnumerable<PathAndValue> GeneratePathsObject(JsonPath pathSoFar, Json json)
         {
             yield return new PathAndValue(pathSoFar, json);
             foreach (var kv in json.EnumerateObject())

@@ -15,7 +15,7 @@ namespace JsonMasher.Mashers.Combinators
         {
             var newStack = stack.Push(this);
             context.Tick(stack);
-            var pathsAndValues = PathFunction.GeneratePaths(PathExpression, json, context, newStack);
+            var pathsAndValues = Path.GeneratePaths(PathExpression, json, context, newStack);
             var wholeValue = json;
             foreach (var pathAndValue in pathsAndValues)
             {
@@ -25,9 +25,9 @@ namespace JsonMasher.Mashers.Combinators
         }
 
         private Json Update(
-            Json wholeValue, Json json, Path path, IMashContext context, IMashStack stack)
+            Json wholeValue, Json json, JsonPath path, IMashContext context, IMashStack stack)
         {
-            if (path == Path.Empty)
+            if (path == JsonPath.Empty)
             {
                 return Masher.Mash(UseWholeValue ? wholeValue : json, context, stack).First();
             }
@@ -49,7 +49,7 @@ namespace JsonMasher.Mashers.Combinators
         }
 
         private Json UpdateRange(
-            Json wholeValue, Json json, int start, int end, Path path, IMashContext context, IMashStack stack)
+            Json wholeValue, Json json, int start, int end, JsonPath path, IMashContext context, IMashStack stack)
         {
             var slice = SliceSelector.GetSlice(UseWholeValue ? wholeValue : json, Tuple.Create(start, end));
             slice = Update(wholeValue, slice, path, context, stack);

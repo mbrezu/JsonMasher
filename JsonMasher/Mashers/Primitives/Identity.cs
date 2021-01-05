@@ -16,7 +16,7 @@ namespace JsonMasher.Mashers.Primitives
         public override int GetHashCode() => 1;
 
         public IEnumerable<PathAndValue> GeneratePaths(
-            Path pathSoFar, Json json, IMashContext context, IMashStack stack)
+            JsonPath pathSoFar, Json json, IMashContext context, IMashStack stack)
         {
             yield return new PathAndValue(pathSoFar, json);
         }

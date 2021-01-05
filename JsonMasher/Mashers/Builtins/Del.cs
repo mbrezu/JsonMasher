@@ -15,7 +15,7 @@ namespace JsonMasher.Mashers.Builtins
             if (mashers[0] is IPathGenerator pathGenerator)
             {
                 var paths = pathGenerator
-                    .GeneratePaths(Path.Empty, json, context, stack)
+                    .GeneratePaths(JsonPath.Empty, json, context, stack)
                     .Select(pv => new { Key = pv.Path.ToJsonArray(), Path = pv.Path })
                     .OrderByDescending(x => x.Key, JsonComparer.Instance)
                     .Select(x => x.Path);
@@ -31,9 +31,9 @@ namespace JsonMasher.Mashers.Builtins
             }
         }
 
-        private static Json DeletePath(Json json, Path path, IMashContext context, IMashStack stack)
+        private static Json DeletePath(Json json, JsonPath path, IMashContext context, IMashStack stack)
         {
-            if (path == Path.Empty)
+            if (path == JsonPath.Empty)
             {
                 return Json.Null;
             }
@@ -80,7 +80,7 @@ namespace JsonMasher.Mashers.Builtins
         }
 
         private static Exception IndexingError(
-            Json json, Path path, IMashContext context, IMashStack stack)
+            Json json, JsonPath path, IMashContext context, IMashStack stack)
         {
             var key = path.ToJsonArray().EnumerateArray().First();
             throw context.Error(

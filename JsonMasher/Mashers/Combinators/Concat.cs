@@ -28,7 +28,7 @@ namespace JsonMasher.Mashers.Combinators
             => mashers.Fold((m1, m2) => new Concat { First = m1, Second = m2 });
 
         public IEnumerable<PathAndValue> GeneratePaths(
-            Path pathSoFar, Json json, IMashContext context, IMashStack stack)
+            JsonPath pathSoFar, Json json, IMashContext context, IMashStack stack)
         {
             var newStack = stack.Push(this);
             context.Tick(newStack);
