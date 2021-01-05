@@ -129,21 +129,21 @@ namespace JsonMasher.Tests.Builtins
         private static IEnumerable<TestItem> SortTests()
         {
             yield return new TestItem(
-                new FunctionCall(Sort.Builtin),
+                new FunctionCall(Sort.Builtin_0),
                 "[3, [], \"4\", {}, true, false, null]",
                 "[[null, false, true, 3, \"4\", [], {}]]");
             yield return new TestItem(
-                new FunctionCall(Sort.Builtin), "[3, 4, 1, 2]", "[[1, 2, 3, 4]]");
+                new FunctionCall(Sort.Builtin_0), "[3, 4, 1, 2]", "[[1, 2, 3, 4]]");
             yield return new TestItem(
-                new FunctionCall(Sort.Builtin),
+                new FunctionCall(Sort.Builtin_0),
                 "[\"4\", \"12\"]",
                 "[[\"12\", \"4\"]]");
             yield return new TestItem(
-                new FunctionCall(Sort.Builtin),
+                new FunctionCall(Sort.Builtin_0),
                 "[[3, 1, 2], [3, 0, 5], [3, 0]]",
                 "[[[3, 0], [3, 0, 5], [3, 1, 2]]]");
             yield return new TestItem(
-                new FunctionCall(Sort.Builtin),
+                new FunctionCall(Sort.Builtin_0),
                 "[{\"a\": 2}, {\"a\": 0, \"b\": 0}, {\"a\": 1}]",
                 "[[{\"a\": 1}, {\"a\": 2}, {\"a\": 0, \"b\": 0}]]");
         }

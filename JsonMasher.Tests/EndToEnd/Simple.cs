@@ -417,6 +417,10 @@ map(select(. < 2))",
             yield return new TestItem(
                 "{a:1, b:2} | keys_unsorted", "null", "[[\"a\", \"b\"]]");
             yield return new TestItem("[1, 2, 0, true] | sort", "null", "[[true, 0, 1, 2]]");
+            yield return new TestItem(
+                "[{ a: 1, b: 2}, {a: -1, b: 3}, {a: -2, b: 5}] | sort_by(.a)",
+                "null",
+                "[[{\"a\": -2, \"b\": 5}, {\"a\": -1, \"b\": 3}, { \"a\": 1, \"b\": 2}]]");
         }
     }
 }

@@ -19,6 +19,7 @@
   - [ ] [Builtin operators and functions](https://stedolan.github.io/jq/manual/#Builtinoperatorsandfunctions)
     - [x] +, -, *, /, length, keys, select, empty, range, map
     - [x] recurse/0, path/1, map_values/1, keys_unsorted/0
+    - [x] sort, sort_by
     - [ ] %
     - [ ] utf8bytelength
     - [ ] has, in
@@ -36,7 +37,7 @@
     - [ ] floor, sqrt
     - [ ] tonumber, tostring, type
     - [ ] infinite, nan, isinfinite, isnan, isfinite, isnormal
-    - [ ] sort, sort_by, group_by
+    - [ ] group_by
     - [ ] min, max, min_by(path_exp), max_by(path_exp)
     - [ ] unique, unique_by(path_exp) 
     - [ ] reverse
