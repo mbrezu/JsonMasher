@@ -330,6 +330,10 @@ namespace JsonMasher.Tests.EndToEnd
                 "(.[5] // .[1]) |= 5",
                 "[1, 2, 3]",
                 "[[1, 5, 3]]");
+            yield return new TestItem(
+                "[1, 2, 3] | .[0, 1] = (100, 200)",
+                "null",
+                "[[100, 100, 3], [200, 200, 3]]");
         }
 
         private static IEnumerable<TestItem> PathTests()

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using JsonMasher.JsonRepresentation;
@@ -16,23 +17,36 @@ namespace JsonMasher.Mashers.Combinators
             var newStack = stack.Push(this);
             context.Tick(stack);
             var pathsAndValues = Path.GeneratePaths(PathExpression, json, context, newStack);
-            var wholeValue = json;
-            foreach (var pathAndValue in pathsAndValues)
-            {
-                json = Update(wholeValue, json, pathAndValue.Path, context, newStack);
-            }
-            yield return json;
-        }
-
-        private Json Update(
-            Json wholeValue, Json json, JsonPath path, IMashContext context, IMashStack stack)
-            => json.TransformByPath(
-                path,
-                leafJson => Masher.Mash(UseWholeValue ? wholeValue : leafJson, context, stack).First(),
-                (json, pathPart) => context.Error(
-                    $"Can't index {json.Type} with {pathPart.ToString()}.",
-                    stack,
+            Exception onError(Json json, JsonPathPart jsonPathPart)
+                => context.Error(
+                    $"Can't index {json.Type} with {jsonPathPart.ToString()}.",
+                    newStack,
                     json,
-                    pathPart.ToJson()));
+                    jsonPathPart.ToJson());
+            if (UseWholeValue)
+            {
+                foreach (var value in Masher.Mash(json, context, stack))
+                {
+                    var newJson = json;
+                    foreach (var pathAndValue in pathsAndValues)
+                    {
+                        newJson = newJson.TransformByPath(
+                            pathAndValue.Path, leafJson => value, onError);
+                    }
+                    yield return newJson;
+                }
+            }
+            else
+            {
+                foreach (var pathAndValue in pathsAndValues)
+                {
+                    json = json.TransformByPath(
+                        pathAndValue.Path,
+                        leafJson => Masher.Mash(leafJson, context, newStack).First(),
+                        onError);
+                }
+                yield return json;
+            }
+        }
     }
 }
