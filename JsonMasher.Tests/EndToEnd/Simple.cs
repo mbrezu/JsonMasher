@@ -297,6 +297,14 @@ namespace JsonMasher.Tests.EndToEnd
                 ".[1:] |= [7] + .",
                 "[1, 2, 3]",
                 "[[1, 7, 2, 3]]");
+            yield return new TestItem(
+                "(1 as $test | .[2]) |= 5",
+                "[1, 2, 3]",
+                "[[1, 2, 5]]");
+            yield return new TestItem(
+                "((1, 2) as $test | .[$test]) |= 5",
+                "[1, 2, 3]",
+                "[[1, 5, 5]]");
         }
 
         private static IEnumerable<TestItem> PathTests()
@@ -368,6 +376,10 @@ namespace JsonMasher.Tests.EndToEnd
                 "path(..)",
                 "{\"a\":1,\"b\":2}",
                 "[[], [\"a\"], [\"b\"]]");
+            yield return new TestItem(
+                "path((1, 2, 3) as $test | .[$test])",
+                "null",
+                "[[1], [2], [3]]");
         }
 
         private static IEnumerable<TestItem> BindingPrograms()
