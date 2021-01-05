@@ -3,10 +3,38 @@ using System.Linq;
 
 namespace JsonMasher.Mashers.Combinators
 {
-    public class Alternative : IJsonMasherOperator
+    public class Alternative : IJsonMasherOperator, IPathGenerator
     {
         public IJsonMasherOperator First { get; init; }
         public IJsonMasherOperator Second { get; init; }
+
+        public IEnumerable<PathAndValue> GeneratePaths(Path pathSoFar, Json json, IMashContext context, IMashStack stack)
+        {
+            var newStack = stack.Push(this);
+            context.Tick(newStack);
+            if (First is IPathGenerator firstPathGenerator)
+            {
+                IEnumerable<PathAndValue> paths = json == Json.Null
+                    ? Enumerable.Empty<PathAndValue>()
+                    : firstPathGenerator.GeneratePaths(pathSoFar, json, context, stack).ToList();
+                if (paths.Any())
+                {
+                    return paths;
+                }
+                else if (Second is IPathGenerator secondPathGenerator)
+                {
+                    return secondPathGenerator.GeneratePaths(pathSoFar, json, context, stack);
+                }
+                else
+                {
+                    throw context.Error("Not a path expression.", newStack.Push(Second));
+                }
+            }
+            else
+            {
+                throw context.Error("Not a path expression.", newStack.Push(First));
+            }
+        }
 
         public IEnumerable<Json> Mash(Json json, IMashContext context, IMashStack stack)
         {

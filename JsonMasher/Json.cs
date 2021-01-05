@@ -125,6 +125,9 @@ namespace JsonMasher
         public virtual Json GetElementAt(string key) => throw new NotImplementedException();
         public virtual Json SetElementAt(string key, Json value) => throw new NotImplementedException();
 
+        public virtual bool ContainsKey(int index) => throw new NotImplementedException();
+        public virtual bool ContainsKey(string key) => throw new NotImplementedException();
+
         public virtual int GetLength() => throw new NotImplementedException();
 
         public override string ToString() => JsonPrinter.AsString(this);
@@ -298,6 +301,12 @@ namespace JsonMasher
             }
         }
 
+        public override bool ContainsKey(int index)
+        {
+            index = index >= 0 ? index : _values.Count + index;
+            return index >= 0 && index < _values.Count;
+        }
+
         public override int GetLength() => _values.Count;
 
         public override Json SetElementAt(int index, Json value)
@@ -341,6 +350,8 @@ namespace JsonMasher
                 return Json.Null;
             }
         }
+
+        public override bool ContainsKey(string key) => _values.ContainsKey(key);
 
         public override int GetLength() => _values.Count;
 

@@ -25,9 +25,12 @@ namespace JsonMasher.Mashers.Combinators
                     }
                     else if (json.Type == JsonValueType.Object)
                     {
-                        yield return new PathAndValue(
-                            pathSoFar.Extend(new StringPathPart(strIndex)),
-                            json.GetElementAt(strIndex));
+                        if (json.ContainsKey(strIndex))
+                        {
+                            yield return new PathAndValue(
+                                pathSoFar.Extend(new StringPathPart(strIndex)),
+                                json.GetElementAt(strIndex));
+                        }
                     }
                     else
                     {
@@ -45,9 +48,12 @@ namespace JsonMasher.Mashers.Combinators
                     }
                     else if (json.Type == JsonValueType.Array)
                     {
-                        yield return new PathAndValue(
-                            pathSoFar.Extend(new IntPathPart(intIndex)),
-                            json.GetElementAt(intIndex));
+                        if (json.ContainsKey(intIndex))
+                        {
+                            yield return new PathAndValue(
+                                pathSoFar.Extend(new IntPathPart(intIndex)),
+                                json.GetElementAt(intIndex));
+                        }
                     }
                     else
                     {
