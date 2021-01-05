@@ -37,6 +37,8 @@ namespace JsonMasher.Mashers
             environment.SetCallable(new FunctionName("path", 1), PathFunction.Builtin);
             environment.SetCallable(new FunctionName("sort", 0), Sort.Builtin_0);
             environment.SetCallable(new FunctionName("sort_by", 1), Sort.Builtin_1);
+            environment.SetCallable(new FunctionName("has", 1), Has.Builtin);
+            environment.SetCallable(new FunctionName("in", 1), In.Builtin);
         }
 
         private static void AddCode(MashEnvironment environment)

@@ -21,8 +21,8 @@
     - [x] recurse/0, path/1, map_values/1, keys_unsorted/0
     - [x] sort, sort_by
     - [x] %
+    - [x] has, in
     - [ ] utf8bytelength
-    - [ ] has, in
     - [ ] del
     - [ ] getpath, setpath, delpaths
     - [ ] to_entries, from_entries, with_entries

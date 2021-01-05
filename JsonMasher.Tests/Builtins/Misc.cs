@@ -47,7 +47,8 @@ namespace JsonMasher.Tests.Builtins
                 .Concat(DebugTests())
                 .Concat(RecurseTests())
                 .Concat(SortTests())
-                .Concat(ModuloTests());
+                .Concat(ModuloTests())
+                .Concat(HasInTests());
 
         private static IEnumerable<TestItem> RangeTests()
         {
@@ -155,6 +156,18 @@ namespace JsonMasher.Tests.Builtins
                 new FunctionCall(Modulo.Builtin, new Literal(7), new Literal(2)),
                 "null",
                 "[1]");
+        }
+
+        private static IEnumerable<TestItem> HasInTests()
+        {
+            yield return new TestItem(
+                new FunctionCall(Has.Builtin, new Literal(2)),
+                "[1, 2, 3]",
+                "[true]");
+            yield return new TestItem(
+                new FunctionCall(In.Builtin, new Literal { Value = "[1, 2, 3]".AsJson() }),
+                "2",
+                "[true]");
         }
     }
 }

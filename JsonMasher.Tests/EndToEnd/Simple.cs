@@ -234,6 +234,17 @@ namespace JsonMasher.Tests.EndToEnd
                 "null",
                 "[1, 2, \"Can't enumerate Number.Can't enumerate Number.\"]");
             yield return new TestItem("7 % 2", "null" , "[1]");
+
+            yield return new TestItem("has(0,1,7)", "[1, 2, 3]" , "[true, true, false]");
+            yield return new TestItem(
+                "has(\"a\", \"b\", \"c\")",
+                "{\"a\":1,\"b\":2}",
+                "[true, true, false]");
+            yield return new TestItem(".[] | in([1, 2, 3])", "[1, 7]" , "[true, false]");
+            yield return new TestItem(
+                ".[] | in({a:1,b:2})",
+                "[\"a\", \"c\"]",
+                "[true, false]");
         }
 
         private static IEnumerable<TestItem> IfThenElsePrograms()
