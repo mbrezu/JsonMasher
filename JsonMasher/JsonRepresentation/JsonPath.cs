@@ -1,23 +1,29 @@
-using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 
 namespace JsonMasher.JsonRepresentation
 {
-    public interface JsonPathPart { };
+    public interface JsonPathPart { 
+        Json ToJson();
+    };
     public record StringPathPart(string Value) : JsonPathPart
     {
         public override string ToString() => $"string \"{Value}\"";
+        public Json ToJson() => Json.String(Value);
     }
 
     public record IntPathPart(int Value) : JsonPathPart
     {
         public override string ToString() => $"int {Value}";
+        public Json ToJson() => Json.Number(Value);
     }
     public record SlicePathPart(int Start, int End) : JsonPathPart
     {
         public override string ToString() => $"slice {Start}:{End}";
+        public Json ToJson() => Json.ObjectParams(
+                new JsonProperty("start", Json.Number(Start)),
+                new JsonProperty("end", Json.Number(End)));
     }
 
     public class JsonPath
@@ -26,31 +32,35 @@ namespace JsonMasher.JsonRepresentation
 
         public IEnumerable<JsonPathPart> Parts => _parts;
 
-        public JsonPath(IEnumerable<JsonPathPart> parts) => _parts = FromParts(parts);
-
-        public JsonPath(params JsonPathPart[] parts) => _parts = FromParts(parts);
-
         private JsonPath(ImmutableList<JsonPathPart> parts) => _parts = parts;
 
-        private static ImmutableList<JsonPathPart> FromParts(IEnumerable<JsonPathPart> parts)
-            => ImmutableList<JsonPathPart>.Empty.AddRange(parts);
-
-        public JsonPath Extend(JsonPathPart part) => new JsonPath(_parts.Add(part));
-
-        public Json ToJsonArray() => Json.Array(_parts.Select(p => p switch
+        public static JsonPath FromParts(IEnumerable<JsonPathPart> parts)
         {
-            StringPathPart sp => Json.String(sp.Value),
-            IntPathPart ip => Json.Number(ip.Value),
-            SlicePathPart slicePathPart => Json.ObjectParams(
-                new JsonProperty("start", Json.Number(slicePathPart.Start)),
-                new JsonProperty("end", Json.Number(slicePathPart.End))),
-            _ => throw new InvalidOperationException()
-        }));
+            if (parts.Any())
+            {
+                if (parts is ImmutableList<JsonPathPart> il)
+                {
+                    return new JsonPath(il);
+                }
+                else
+                {
+                    return new JsonPath(ImmutableList<JsonPathPart>.Empty.AddRange(parts));
+                }
+            }
+            else
+            {
+                return Empty;
+            }
+        }
+
+        public JsonPath Extend(JsonPathPart part) => FromParts(_parts.Add(part));
+
+        public Json ToJsonArray() => Json.Array(_parts.Select(p => p.ToJson()));
 
         public JsonPath WithoutFirstPart
-            => _parts.Count == 1 ? Empty : new JsonPath(_parts.RemoveAt(0));
+            => _parts.Count == 1 ? Empty : FromParts(_parts.RemoveAt(0));
 
-        private static JsonPath _empty = new JsonPath();
+        private static JsonPath _empty = new JsonPath(ImmutableList<JsonPathPart>.Empty);
         public static JsonPath Empty = _empty;
     }
 

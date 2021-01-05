@@ -15,10 +15,11 @@ namespace JsonMasher.Compiler
 
         public JsonMasherException(
             string message,
-            Exception innerException = null)
+            Exception innerException = null,
+            params Json[] values)
             : base(message, innerException)
         {
-            Values = Enumerable.Empty<Json>();
+            Values = values;
         }
 
         public JsonMasherException(

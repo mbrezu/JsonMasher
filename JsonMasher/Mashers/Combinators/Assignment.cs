@@ -26,13 +26,13 @@ namespace JsonMasher.Mashers.Combinators
 
         private Json Update(
             Json wholeValue, Json json, JsonPath path, IMashContext context, IMashStack stack)
-            => json.TransformLeaf(
+            => json.TransformByPath(
                 path,
                 leafJson => Masher.Mash(UseWholeValue ? wholeValue : leafJson, context, stack).First(),
                 (json, pathPart) => context.Error(
                     $"Can't index {json.Type} with {pathPart.ToString()}.",
                     stack,
                     json,
-                    new JsonPath(pathPart).ToJsonArray()));
+                    pathPart.ToJson()));
     }
 }

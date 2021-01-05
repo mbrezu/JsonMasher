@@ -23,6 +23,9 @@ namespace JsonMasher.JsonRepresentation
 
         public virtual Json GetElementAt(int index) => throw new NotImplementedException();
         public virtual Json SetElementAt(int index, Json value) => throw new NotImplementedException();
+
+        public virtual JsonPathPart GetPathPart() => throw new NotImplementedException();
+
         public virtual Json DelElementAt(int index) => throw new NotImplementedException();
 
         public virtual Json GetSliceAt(int start, int end) => throw new NotImplementedException();
@@ -38,7 +41,7 @@ namespace JsonMasher.JsonRepresentation
 
         public virtual int GetLength() => throw new NotImplementedException();
 
-        public virtual Json TransformLeaf(
+        public virtual Json TransformByPath(
             JsonPath path, Func<Json, Json> transformer, Func<Json, JsonPathPart, Exception> onError)
         {
             if (path == JsonPath.Empty)
@@ -52,7 +55,7 @@ namespace JsonMasher.JsonRepresentation
                 if (key is IntPathPart ip)
                 {
                     var element = GetElementAt(ip.Value);
-                    var transformed = element.TransformLeaf(restOfPath, transformer, onError);
+                    var transformed = element.TransformByPath(restOfPath, transformer, onError);
                     if (transformed == element)
                     {
                         return this;
@@ -69,7 +72,7 @@ namespace JsonMasher.JsonRepresentation
                 else if (key is StringPathPart sp)
                 {
                     var element = GetElementAt(sp.Value);
-                    var transformed = element.TransformLeaf(restOfPath, transformer, onError);
+                    var transformed = element.TransformByPath(restOfPath, transformer, onError);
                     if (transformed == element)
                     {
                         return this;
@@ -86,7 +89,7 @@ namespace JsonMasher.JsonRepresentation
                 else if (key is SlicePathPart slicePart)
                 {
                     var element = GetSliceAt(slicePart.Start, slicePart.End);
-                    var transformed = element.TransformLeaf(restOfPath, transformer, onError);
+                    var transformed = element.TransformByPath(restOfPath, transformer, onError);
                     if (transformed == element)
                     {
                         return this;

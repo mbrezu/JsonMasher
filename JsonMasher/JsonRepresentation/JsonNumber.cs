@@ -12,5 +12,7 @@ namespace JsonMasher.JsonRepresentation
 
         public override double GetNumber()
             => _value;
+
+        public override JsonPathPart GetPathPart() => new IntPathPart((int)_value);
     }
 }

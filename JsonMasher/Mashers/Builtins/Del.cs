@@ -32,14 +32,14 @@ namespace JsonMasher.Mashers.Builtins
         }
 
         private static Json DeletePath(Json json, JsonPath path, IMashContext context, IMashStack stack)
-            => json.TransformLeaf(
+            => json.TransformByPath(
                 path,
                 leafJson => null,
                 (json, pathPart) => context.Error(
                     $"Can't index {json.Type} with {pathPart.ToString()}.",
                     stack,
                     json,
-                    new JsonPath(pathPart).ToJsonArray()));
+                    pathPart.ToJson()));
 
         public static Builtin Builtin => _builtin;
     }

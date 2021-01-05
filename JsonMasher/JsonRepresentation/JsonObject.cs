@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using JsonMasher.Compiler;
 
 namespace JsonMasher.JsonRepresentation
 {
@@ -50,5 +51,28 @@ namespace JsonMasher.JsonRepresentation
             => new JsonObject(_values.SetItem(key, value));
 
         public override Json DelElementAt(string index) => new JsonObject(_values.Remove(index));
+
+        public override JsonPathPart GetPathPart()
+        {
+            var start = GetElementAt("start");
+            if (start == null)
+            {
+                throw new JsonMasherException("Can't find a 'start' key.", null, this);
+            }
+            if (start.Type != JsonValueType.Number)
+            {
+                throw new JsonMasherException("Value for 'start' is not a number.", null, this);
+            }
+            var end = GetElementAt("end");
+            if (end == null)
+            {
+                throw new JsonMasherException("Can't find a 'end' key.", null, this);
+            }
+            if (end.Type != JsonValueType.Number)
+            {
+                throw new JsonMasherException("Value for 'end' is not a number.", null, this);
+            }
+            return new SlicePathPart((int)start.GetNumber(), (int)end.GetNumber());
+        }
     }
 }

@@ -486,6 +486,10 @@ map(select(. < 2))",
                 "[{a:1, b:2}, {a:3, b:4}, {a:5, b:6}] | del(.[-2:][].a)",
                 "null",
                 "[[{\"a\":1,\"b\": 2},{\"b\": 4},{\"b\": 6}]]");
+
+            yield return new TestItem("[[1, 2], 3] | getpath([0, 1])", "null", "[2]");
+            yield return new TestItem("[[1, 2], 3] | getpath([])", "null", "[[[1, 2], 3]]");
+            yield return new TestItem("[[1, 2], 3] | [getpath(path(..))] == [..]", "null", "[true]");
         }
     }
 }
