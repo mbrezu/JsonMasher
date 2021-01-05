@@ -51,7 +51,7 @@ namespace JsonMasher.Tests.Compiler
                 .Concat(ArrayConstructionTests())
                 .Concat(ObjectConstructionTests())
                 .Concat(PlusMinusTests())
-                .Concat(TimesDivisionTests())
+                .Concat(TimesDivisionModuloTests())
                 .Concat(ParenTests())
                 .Concat(RelationalTests())
                 .Concat(CommaTests())
@@ -334,7 +334,7 @@ namespace JsonMasher.Tests.Compiler
                 new FunctionCall(Minus.Builtin_1, new Identity()));
         }
 
-        private static IEnumerable<TestItem> TimesDivisionTests()
+        private static IEnumerable<TestItem> TimesDivisionModuloTests()
         {
             yield return new TestItem(
                 "1 + 2 * 2", 
@@ -353,6 +353,15 @@ namespace JsonMasher.Tests.Compiler
                     new FunctionCall(
                         Divide.Builtin,
                         new Literal(2),
+                        new Literal(2))));
+            yield return new TestItem(
+                "1 + 7 % 2", 
+                new FunctionCall(
+                    Plus.Builtin,
+                    new Literal(1),
+                    new FunctionCall(
+                        Modulo.Builtin,
+                        new Literal(7),
                         new Literal(2))));
         }
 

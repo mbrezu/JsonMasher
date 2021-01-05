@@ -210,6 +210,10 @@ namespace JsonMasher.Compiler
                             yield return state.TokenWithPos(Tokens.Equals);
                             state.Advance();
                             break;
+                        case '%':
+                            yield return state.TokenWithPos(Tokens.Modulo);
+                            state.Advance();
+                            break;
                         default:
                             yield return ComplexToken(state);
                             break;

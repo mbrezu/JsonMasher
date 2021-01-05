@@ -233,6 +233,7 @@ namespace JsonMasher.Tests.EndToEnd
                 "0 | try (1, 2, .[], 3, 4) catch . * 2",
                 "null",
                 "[1, 2, \"Can't enumerate Number.Can't enumerate Number.\"]");
+            yield return new TestItem("7 % 2", "null" , "[1]");
         }
 
         private static IEnumerable<TestItem> IfThenElsePrograms()

@@ -46,7 +46,8 @@ namespace JsonMasher.Tests.Builtins
                 .Concat(KeysTests())
                 .Concat(DebugTests())
                 .Concat(RecurseTests())
-                .Concat(SortTests());
+                .Concat(SortTests())
+                .Concat(ModuloTests());
 
         private static IEnumerable<TestItem> RangeTests()
         {
@@ -146,6 +147,14 @@ namespace JsonMasher.Tests.Builtins
                 new FunctionCall(Sort.Builtin_0),
                 "[{\"a\": 2}, {\"a\": 0, \"b\": 0}, {\"a\": 1}]",
                 "[[{\"a\": 1}, {\"a\": 2}, {\"a\": 0, \"b\": 0}]]");
+        }
+
+        private static IEnumerable<TestItem> ModuloTests()
+        {
+            yield return new TestItem(
+                new FunctionCall(Modulo.Builtin, new Literal(7), new Literal(2)),
+                "null",
+                "[1]");
         }
     }
 }

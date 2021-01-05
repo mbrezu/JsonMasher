@@ -387,8 +387,10 @@ namespace JsonMasher.Compiler
             => ChainAssocLeft(
                 state,
                 ParseErrorSuppression,
-                op => op == Tokens.Times || op == Tokens.Divide,
-                op => op == Tokens.Times ? Times.Builtin : Divide.Builtin);
+                op => op == Tokens.Times || op == Tokens.Divide || op == Tokens.Modulo,
+                op => op == Tokens.Times 
+                    ? Times.Builtin 
+                    : (op == Tokens.Divide ? Divide.Builtin : Modulo.Builtin));
 
         private IJsonMasherOperator ParseErrorSuppression(State state)
         {

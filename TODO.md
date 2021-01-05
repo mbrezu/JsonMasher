@@ -20,7 +20,7 @@
     - [x] +, -, *, /, length, keys, select, empty, range, map
     - [x] recurse/0, path/1, map_values/1, keys_unsorted/0
     - [x] sort, sort_by
-    - [ ] %
+    - [x] %
     - [ ] utf8bytelength
     - [ ] has, in
     - [ ] del
@@ -85,5 +85,6 @@
   - [ ] [Streaming](https://stedolan.github.io/jq/manual/#Streaming)
   - [ ] [Assignment](https://stedolan.github.io/jq/manual/#Assignment)
     - [x] |=
-    - [ ] =, op=
+    - [x] =
+    - [ ] op=
   - [ ] [Modules](https://stedolan.github.io/jq/manual/#Modules)
