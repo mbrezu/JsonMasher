@@ -6,9 +6,20 @@ using System.Linq;
 namespace JsonMasher.JsonRepresentation
 {
     public interface JsonPathPart { };
-    public record StringPathPart(string Value) : JsonPathPart;
-    public record IntPathPart(int Value) : JsonPathPart;
-    public record SlicePathPart(int Start, int End) : JsonPathPart;
+    public record StringPathPart(string Value) : JsonPathPart
+    {
+        public override string ToString() => $"string \"{Value}\"";
+    }
+
+    public record IntPathPart(int Value) : JsonPathPart
+    {
+        public override string ToString() => $"int {Value}";
+    }
+    public record SlicePathPart(int Start, int End) : JsonPathPart
+    {
+        public override string ToString() => $"slice {Start}:{End}";
+    }
+
     public class JsonPath
     {
         ImmutableList<JsonPathPart> _parts;

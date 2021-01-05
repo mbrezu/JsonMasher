@@ -124,6 +124,10 @@ namespace JsonMasher.JsonRepresentation
         public virtual Json SetElementAt(int index, Json value) => throw new NotImplementedException();
         public virtual Json DelElementAt(int index) => throw new NotImplementedException();
 
+        public virtual Json GetSliceAt(int start, int end) => throw new NotImplementedException();
+        public virtual Json SetSliceAt(int start, int end, Json value) => throw new NotImplementedException();
+        public virtual Json DelSliceAt(int start, int end) => throw new NotImplementedException();
+
         public virtual Json GetElementAt(string key) => throw new NotImplementedException();
         public virtual Json SetElementAt(string key, Json value) => throw new NotImplementedException();
         public virtual Json DelElementAt(string key) => throw new NotImplementedException();
@@ -132,6 +136,32 @@ namespace JsonMasher.JsonRepresentation
         public virtual bool ContainsKey(string key) => throw new NotImplementedException();
 
         public virtual int GetLength() => throw new NotImplementedException();
+
+        public virtual Json TransformLeaf(
+            JsonPath path, Func<Json, Json> transformer, Func<Json, JsonPathPart, Exception> onError)
+        {
+            if (path == JsonPath.Empty)
+            {
+                return transformer(this);
+            }
+            else
+            {
+                var key = path.Parts.First();
+                var restOfPath = path.WithoutFirstPart;
+                return key switch {
+                    IntPathPart ip => SetElementAt(
+                        ip.Value, 
+                        GetElementAt(ip.Value).TransformLeaf(restOfPath, transformer, onError)),
+                    StringPathPart sp => SetElementAt(
+                        sp.Value,
+                        GetElementAt(sp.Value).TransformLeaf(restOfPath, transformer, onError)),
+                    SlicePathPart slicePart => 
+                        SetSliceAt(slicePart.Start, slicePart.End, 
+                            GetSliceAt(slicePart.Start, slicePart.End).TransformLeaf(restOfPath, transformer, onError)),
+                    _ => throw onError(this, key)
+                };
+            }
+        }
 
         public override string ToString() => JsonPrinter.AsString(this);
 
@@ -330,6 +360,25 @@ namespace JsonMasher.JsonRepresentation
         }
 
         private int AdjustIndex(int index) => index >= 0 ? index : _values.Count + index;
+
+        public override Json GetSliceAt(int start, int end)
+        {
+            var slice = new List<Json>();
+            for (int i = start; i < end; i++)
+            {
+                slice.Add(GetElementAt(i));
+            }
+            return Json.Array(slice);
+        }
+
+        public override Json SetSliceAt(int start, int end, Json value)
+            => Json.Array(
+                EnumerateArray().Take(start)
+                    .Concat(value.EnumerateArray())
+                    .Concat(EnumerateArray().Skip(end)));
+
+        public override Json DelSliceAt(int start, int end)
+            => Json.Array(EnumerateArray().Take(start).Concat(EnumerateArray().Skip(end)));
     }
 
     class JsonObject : Json

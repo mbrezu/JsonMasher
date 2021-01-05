@@ -21,7 +21,7 @@ namespace JsonMasher.Mashers.Combinators
                 context.Tick(newStack);
                 yield return new PathAndValue(
                     pathSoFar.Extend(new SlicePathPart(fromTo.Item1, fromTo.Item2)),
-                    json == Json.Null ? json : GetSlice(json, fromTo));
+                    json == Json.Null ? json : json.GetSliceAt(fromTo.Item1, fromTo.Item2));
             }
         }
 
@@ -45,19 +45,9 @@ namespace JsonMasher.Mashers.Combinators
                 foreach (var fromTo in GetFromsAndTos(json, context, newStack))
                 {
                     context.Tick(newStack);
-                    yield return GetSlice(json, fromTo);
+                    yield return json.GetSliceAt(fromTo.Item1, fromTo.Item2);
                 }
             }
-        }
-
-        public static Json GetSlice(Json json, Tuple<int, int> fromTo)
-        {
-            var slice = new List<Json>();
-            for (int i = (int)fromTo.Item1; i < fromTo.Item2; i++)
-            {
-                slice.Add(json.GetElementAt(i));
-            }
-            return Json.Array(slice);
         }
 
         private IEnumerable<Tuple<int, int>> GetFromsAndTos(

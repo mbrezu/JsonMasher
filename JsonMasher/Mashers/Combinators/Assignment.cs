@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using JsonMasher.JsonRepresentation;
@@ -27,37 +26,13 @@ namespace JsonMasher.Mashers.Combinators
 
         private Json Update(
             Json wholeValue, Json json, JsonPath path, IMashContext context, IMashStack stack)
-        {
-            if (path == JsonPath.Empty)
-            {
-                return Masher.Mash(UseWholeValue ? wholeValue : json, context, stack).First();
-            }
-            else
-            {
-                var pathPart = path.Parts.First();
-                return pathPart switch {
-                    IntPathPart ip => json.SetElementAt(
-                        ip.Value, 
-                        Update(wholeValue, json.GetElementAt(ip.Value), path.WithoutFirstPart, context, stack)),
-                    StringPathPart sp => json.SetElementAt(
-                        sp.Value,
-                        Update(wholeValue, json.GetElementAt(sp.Value), path.WithoutFirstPart, context, stack)),
-                    SlicePathPart slicePart => UpdateRange(
-                        wholeValue, json, slicePart.Start, slicePart.End, path.WithoutFirstPart, context, stack),
-                    _ => throw new InvalidOperationException()
-                };
-            }
-        }
-
-        private Json UpdateRange(
-            Json wholeValue, Json json, int start, int end, JsonPath path, IMashContext context, IMashStack stack)
-        {
-            var slice = SliceSelector.GetSlice(UseWholeValue ? wholeValue : json, Tuple.Create(start, end));
-            slice = Update(wholeValue, slice, path, context, stack);
-            return Json.Array(
-                json.EnumerateArray().Take(start)
-                    .Concat(slice.EnumerateArray())
-                    .Concat(json.EnumerateArray().Skip(end)));
-        }
+            => json.TransformLeaf(
+                path,
+                leafJson => Masher.Mash(UseWholeValue ? wholeValue : leafJson, context, stack).First(),
+                (json, pathPart) => context.Error(
+                    $"Can't index {json.Type} with {pathPart.ToString()}.",
+                    stack,
+                    json,
+                    new JsonPath(pathPart).ToJsonArray()));
     }
 }

@@ -42,7 +42,7 @@ namespace JsonMasher.Mashers.Builtins
             {
                 return (json.Type, path.Parts.First()) switch {
                     (JsonValueType.Array, IntPathPart ip) => json.DelElementAt(ip.Value),
-                    (JsonValueType.Array, SlicePathPart spp) => DeleteSlice(json, spp.Start, spp.End),
+                    (JsonValueType.Array, SlicePathPart spp) => json.DelSliceAt(spp.Start, spp.End),
                     (JsonValueType.Object, StringPathPart sp) => json.DelElementAt(sp.Value),
                     _ => throw IndexingError(json, path, context, stack)
                 };
@@ -54,7 +54,7 @@ namespace JsonMasher.Mashers.Builtins
                 var component = (json.Type, key) switch {
                     (JsonValueType.Array, IntPathPart ip) => json.GetElementAt(ip.Value),
                     (JsonValueType.Array, SlicePathPart spp)
-                        => SliceSelector.GetSlice(json, Tuple.Create(spp.Start, spp.End)),
+                        => json.GetSliceAt(spp.Start, spp.End),
                     (JsonValueType.Object, StringPathPart sp) => json.GetElementAt(sp.Value),
                     _ => throw IndexingError(json, path, context, stack)
                 };
@@ -62,22 +62,11 @@ namespace JsonMasher.Mashers.Builtins
                 return (json.Type, key) switch {
                     (JsonValueType.Array, IntPathPart ip) => json.SetElementAt(ip.Value, updatedComponent),
                     (JsonValueType.Array, SlicePathPart spp)
-                        => Json.Array(json.EnumerateArray().Take(spp.Start)
-                            .Concat(updatedComponent.EnumerateArray())
-                            .Concat(json.EnumerateArray().Skip(spp.End))),
+                        => json.SetSliceAt(spp.Start, spp.End, updatedComponent),
                     (JsonValueType.Object, StringPathPart sp) => json.SetElementAt(sp.Value, updatedComponent),
                     _ => throw IndexingError(json, path, context, stack)
                 };
             }
-        }
-
-        private static Json DeleteSlice(Json json, int start, int end)
-        {
-            for (int i = end - 1; i >= start; i--)
-            {
-                json = json.DelElementAt(i);
-            }
-            return json;
         }
 
         private static Exception IndexingError(
