@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using JsonMasher.Compiler;
+using JsonMasher.JsonRepresentation;
 using JsonMasher.Mashers;
 using JsonMasher.Web.Model;
 using Microsoft.AspNetCore.Mvc;

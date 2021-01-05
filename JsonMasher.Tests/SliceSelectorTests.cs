@@ -1,4 +1,5 @@
 using FluentAssertions;
+using JsonMasher.JsonRepresentation;
 using JsonMasher.Mashers.Combinators;
 using JsonMasher.Mashers.Primitives;
 using Xunit;

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 
-namespace JsonMasher
+namespace JsonMasher.JsonRepresentation
 {
     public record JsonProperty(string Key, Json Value);
     // Order is important, as it is the primary sort key
@@ -35,10 +35,11 @@ namespace JsonMasher
             }
             else
             {
-                return x.Type switch {
-                    JsonValueType.True 
-                        or JsonValueType.False 
-                        or JsonValueType.Null 
+                return x.Type switch
+                {
+                    JsonValueType.True
+                        or JsonValueType.False
+                        or JsonValueType.Null
                         or JsonValueType.Undefined => 0,
                     JsonValueType.Number => x.GetNumber().CompareTo(y.GetNumber()),
                     JsonValueType.String => x.GetString().CompareTo(y.GetString()),
@@ -99,7 +100,7 @@ namespace JsonMasher
         private JsonComparer()
         {
         }
-        
+
         private static JsonComparer _instance = new JsonComparer();
         public static JsonComparer Instance = _instance;
     }
@@ -140,7 +141,8 @@ namespace JsonMasher
             {
                 return false;
             }
-            return Type switch {
+            return Type switch
+            {
                 JsonValueType.Undefined => true,
                 JsonValueType.Null => true,
                 JsonValueType.True => true,
@@ -159,7 +161,7 @@ namespace JsonMasher
             {
                 return false;
             }
-            for (int i = 0; i < GetLength(); i++) 
+            for (int i = 0; i < GetLength(); i++)
             {
                 if (!GetElementAt(i).DeepEqual(other.GetElementAt(i)))
                 {
@@ -205,24 +207,27 @@ namespace JsonMasher
         private static Json EmptyObject => _emptyObject;
 
         public static Json Number(double value) =>
-            value switch {
+            value switch
+            {
                 0 => Zero,
                 1 => One,
                 _ => new JsonNumber(value)
             };
-        
+
         public static Json String(string str) =>
-            str switch {
+            str switch
+            {
                 "" => EmptyString,
                 _ => new JsonString(str)
             };
-        
+
         public static Json ArrayParams(params Json[] args) => Array(args);
 
         public static Json Array(IEnumerable<Json> args)
         {
             var argsArray = args.ToArray();
-            return argsArray.Length switch {
+            return argsArray.Length switch
+            {
                 0 => EmptyArray,
                 _ => new JsonArray(argsArray)
             };
@@ -233,13 +238,14 @@ namespace JsonMasher
         public static Json Object(IEnumerable<JsonProperty> args)
         {
             var argsArray = args.ToArray();
-            return argsArray.Count() switch {
+            return argsArray.Count() switch
+            {
                 0 => EmptyObject,
                 _ => new JsonObject(argsArray)
             };
         }
 
-        public static Json Bool(bool value) => value ? Json.True : Json.False;
+        public static Json Bool(bool value) => value ? True : False;
     }
 
     class JsonNumber : Json
@@ -295,7 +301,7 @@ namespace JsonMasher
             index = AdjustIndex(index);
             if (index < 0 || index >= _values.Count)
             {
-                return Json.Null;
+                return Null;
             }
             else
             {
@@ -360,7 +366,7 @@ namespace JsonMasher
             }
             else
             {
-                return Json.Null;
+                return Null;
             }
         }
 

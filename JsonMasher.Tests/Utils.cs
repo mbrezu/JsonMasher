@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using JsonMasher.JsonRepresentation;
 using JsonMasher.Mashers;
 
 namespace JsonMasher.Tests

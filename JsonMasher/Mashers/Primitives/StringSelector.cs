@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using JsonMasher.JsonRepresentation;
 
 namespace JsonMasher.Mashers.Primitives
 {

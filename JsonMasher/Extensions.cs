@@ -5,8 +5,10 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.Json;
+using JsonMasher.JsonRepresentation;
 using JsonMasher.Mashers;
 using JsonMasher.Mashers.Primitives;
+using JsonProperty = JsonMasher.JsonRepresentation.JsonProperty;
 
 namespace JsonMasher
 {

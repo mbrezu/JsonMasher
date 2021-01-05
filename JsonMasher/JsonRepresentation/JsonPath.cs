@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 
-namespace JsonMasher
+namespace JsonMasher.JsonRepresentation
 {
-    public interface JsonPathPart {};
-    public record StringPathPart(string Value): JsonPathPart;
-    public record IntPathPart(int Value): JsonPathPart;
-    public record SlicePathPart(int Start, int End): JsonPathPart;
+    public interface JsonPathPart { };
+    public record StringPathPart(string Value) : JsonPathPart;
+    public record IntPathPart(int Value) : JsonPathPart;
+    public record SlicePathPart(int Start, int End) : JsonPathPart;
     public class JsonPath
     {
         ImmutableList<JsonPathPart> _parts;
@@ -23,10 +23,11 @@ namespace JsonMasher
 
         private static ImmutableList<JsonPathPart> FromParts(IEnumerable<JsonPathPart> parts)
             => ImmutableList<JsonPathPart>.Empty.AddRange(parts);
-        
+
         public JsonPath Extend(JsonPathPart part) => new JsonPath(_parts.Add(part));
 
-        public Json ToJsonArray() => Json.Array(_parts.Select(p => p switch {
+        public Json ToJsonArray() => Json.Array(_parts.Select(p => p switch
+        {
             StringPathPart sp => Json.String(sp.Value),
             IntPathPart ip => Json.Number(ip.Value),
             SlicePathPart slicePathPart => Json.ObjectParams(
@@ -36,7 +37,7 @@ namespace JsonMasher
         }));
 
         public JsonPath WithoutFirstPart
-            => _parts.Count == 1 ? JsonPath.Empty : new JsonPath(_parts.RemoveAt(0));
+            => _parts.Count == 1 ? Empty : new JsonPath(_parts.RemoveAt(0));
 
         private static JsonPath _empty = new JsonPath();
         public static JsonPath Empty = _empty;

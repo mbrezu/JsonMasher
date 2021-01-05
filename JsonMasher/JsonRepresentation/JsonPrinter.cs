@@ -3,7 +3,7 @@ using System.Linq;
 using System.Web;
 using FancyPen;
 
-namespace JsonMasher
+namespace JsonMasher.JsonRepresentation
 {
     public static class JsonPrinter
     {

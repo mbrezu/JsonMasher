@@ -9,6 +9,7 @@ using JsonMasher.Mashers.Primitives;
 using Xunit;
 using Ops = JsonMasher.Mashers.Builtins;
 using System;
+using JsonMasher.JsonRepresentation;
 
 namespace JsonMasher.Tests.Compiler
 {

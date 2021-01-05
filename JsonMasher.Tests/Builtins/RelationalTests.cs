@@ -7,6 +7,7 @@ using JsonMasher.Mashers.Builtins;
 using JsonMasher.Mashers.Primitives;
 using Xunit;
 using Ops = JsonMasher.Mashers.Builtins;
+using JsonMasher.JsonRepresentation;
 
 namespace JsonMasher.Tests.Builtins
 {

@@ -5,6 +5,7 @@ using JsonMasher.Mashers;
 using JsonMasher.Mashers.Combinators;
 using JsonMasher.Mashers.Builtins;
 using JsonMasher.Mashers.Primitives;
+using JsonMasher.JsonRepresentation;
 
 namespace JsonMasher.Compiler
 {

@@ -2,7 +2,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using FluentAssertions;
+using JsonMasher.JsonRepresentation;
 using Xunit;
+using JsonProperty = JsonMasher.JsonRepresentation.JsonProperty;
 
 namespace JsonMasher.Tests
 {

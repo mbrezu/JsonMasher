@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 using JsonMasher.Compiler;
+using JsonMasher.JsonRepresentation;
 using JsonMasher.Mashers;
 
 namespace JsonMasher.Cli

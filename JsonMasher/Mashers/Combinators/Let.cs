@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using JsonMasher.JsonRepresentation;
 
 namespace JsonMasher.Mashers.Combinators
 {

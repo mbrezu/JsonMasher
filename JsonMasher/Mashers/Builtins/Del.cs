@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using JsonMasher.Mashers.Combinators;
 using System.Linq;
 using System;
+using JsonMasher.JsonRepresentation;
 
 namespace JsonMasher.Mashers.Builtins
 {

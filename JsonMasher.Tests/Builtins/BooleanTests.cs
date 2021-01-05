@@ -6,6 +6,7 @@ using JsonMasher.Mashers.Combinators;
 using JsonMasher.Mashers.Builtins;
 using JsonMasher.Mashers.Primitives;
 using Xunit;
+using JsonMasher.JsonRepresentation;
 
 namespace JsonMasher.Tests.Builtins
 {
