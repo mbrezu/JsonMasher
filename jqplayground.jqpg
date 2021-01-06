@@ -16,4 +16,4 @@ jq -n '[1, 2, 3] | .[2:8]'
 
 jq -n 'path(.[10:])'
 
-jq -n '[1, 2, 3] | reduce .[] as $item (0; . + $item, 2)'
+jq -n '[1, 2, 3] | foreach .[] as $item (0; . + $item; 1|2)'

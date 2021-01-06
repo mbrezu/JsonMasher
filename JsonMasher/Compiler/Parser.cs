@@ -445,7 +445,11 @@ namespace JsonMasher.Compiler
             }
             else if (state.Current == Tokens.Keywords.Reduce)
             {
-                return ParseReduce(state);
+                return ParseReduceForeach(state, false);
+            }
+            else if (state.Current == Tokens.Keywords.Foreach)
+            {
+                return ParseReduceForeach(state, true);
             }
             else if (state.Current == Tokens.Dot)
             {
@@ -542,7 +546,7 @@ namespace JsonMasher.Compiler
             }
         }
 
-        private IJsonMasherOperator ParseReduce(State state)
+        private IJsonMasherOperator ParseReduceForeach(State state, bool isForeach)
         {
             var position = state.Position;
             state.Advance();
@@ -555,12 +559,23 @@ namespace JsonMasher.Compiler
                 var initial = ParseAlternatives(state);
                 state.Match(Tokens.Semicolon);
                 var update = ParsePipeTerm(state);
+                IJsonMasherOperator extract = null;
+                if (isForeach)
+                {
+                    if (state.Current == Tokens.Semicolon)
+                    {
+                        state.Advance();
+                        extract = ParseFilter(state);
+                    }
+                }
                 state.Match(Tokens.CloseParen);
-                return state.RecordPosition(new Reduce {
+                return state.RecordPosition(new ReduceForeach {
                     Name = identifier.Id,
                     Inputs = inputs,
                     Initial = initial,
-                    Update = update
+                    Update = update,
+                    IsForeach = isForeach,
+                    Extract = extract
                 }, position);
             }
             else

@@ -631,12 +631,29 @@ namespace JsonMasher.Tests.Compiler
 
         private static IEnumerable<TestItem> ReduceForeachTests()
         {
-            yield return new TestItem("reduce .[] as $item (0; . + $item)", new Reduce {
+            yield return new TestItem("reduce .[] as $item (0; . + $item)", new ReduceForeach {
                 Name = "item",
                 Inputs = new Enumerate(),
                 Initial = new Literal(0),
                 Update = new FunctionCall(
                     Plus.Builtin, new Identity(), new GetVariable { Name = "item" })
+            });
+            yield return new TestItem("foreach .[] as $item (0; . + $item)", new ReduceForeach {
+                Name = "item",
+                Inputs = new Enumerate(),
+                Initial = new Literal(0),
+                Update = new FunctionCall(
+                    Plus.Builtin, new Identity(), new GetVariable { Name = "item" }),
+                IsForeach = true
+            });
+            yield return new TestItem("foreach .[] as $item (0; . + $item; . * .)", new ReduceForeach {
+                Name = "item",
+                Inputs = new Enumerate(),
+                Initial = new Literal(0),
+                Update = new FunctionCall(
+                    Plus.Builtin, new Identity(), new GetVariable { Name = "item" }),
+                IsForeach = true,
+                Extract = new FunctionCall(Times.Builtin, new Identity(), new Identity())
             });
         }
     }

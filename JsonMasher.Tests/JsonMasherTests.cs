@@ -546,7 +546,7 @@ namespace JsonMasher.Tests
         {
             // Arrange
             var data = "[1, 2, 3]".AsJson();
-            var op = new Reduce {
+            var op = new ReduceForeach {
                 Name = "item",
                 Inputs = new Enumerate(),
                 Initial = new Literal(0),

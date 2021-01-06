@@ -491,6 +491,14 @@ map(select(. < 2))",
         {
             yield return new TestItem(
                 "reduce .[] as $item (0; . + $item)", "[1, 2, 3]", "[6]");
+            yield return new TestItem(
+                "foreach .[] as $item (0; . + $item)", "[1, 2, 3]", "[1, 3, 6]");
+            yield return new TestItem(
+                "foreach .[] as $item (0; . + $item; . * .)", "[1, 2, 3]", "[1, 9, 36]");
+            yield return new TestItem(
+                "foreach .[] as $item (0; . + $item; range(.))",
+                "[1, 2, 3]",
+                "[0, 0, 1, 2, 0, 1, 2, 3, 4, 5]");
         }
 
         private static IEnumerable<TestItem> StandardLibrary()
