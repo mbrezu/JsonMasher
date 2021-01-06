@@ -47,7 +47,12 @@ namespace JsonMasher.JsonRepresentation
         public override Json SetElementAt(int index, Json value)
         {
             index = AdjustIndex(index);
-            return new JsonArray(_values.SetItem(index, value));
+            var values = _values;
+            for (int i = values.Count; i <= index; i++)
+            {
+                values = values.Add(Json.Null);
+            }
+            return new JsonArray(values.SetItem(index, value));
         }
 
         public override Json DelElementAt(int index)
@@ -61,6 +66,10 @@ namespace JsonMasher.JsonRepresentation
         public override Json GetSliceAt(int start, int end)
         {
             var slice = new List<Json>();
+            if (end > _values.Count)
+            {
+                end = _values.Count;
+            }
             for (int i = start; i < end; i++)
             {
                 slice.Add(GetElementAt(i));

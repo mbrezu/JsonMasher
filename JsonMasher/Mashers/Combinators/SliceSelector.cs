@@ -99,7 +99,7 @@ namespace JsonMasher.Mashers.Combinators
             }
             else
             {
-                return Enumerable.Empty<Json>();
+                return Json.Number(0).AsEnumerable();
             }
         }
     }

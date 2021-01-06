@@ -18,7 +18,7 @@ namespace JsonMasher.Mashers.Combinators
                 IEnumerable<PathAndValue> paths = json == Json.Null
                     ? Enumerable.Empty<PathAndValue>()
                     : firstPathGenerator.GeneratePaths(pathSoFar, json, context, stack).ToList();
-                if (paths.Any())
+                if (paths.Select(p => p.Value).Where(p => p.GetBool()).Any())
                 {
                     return paths;
                 }

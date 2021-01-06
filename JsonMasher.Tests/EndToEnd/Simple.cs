@@ -201,6 +201,7 @@ namespace JsonMasher.Tests.EndToEnd
             yield return new TestItem(".[1,2:2,3]", "[1, 2, 3, 4]", "[[2], [2, 3], [], [3]]");
             yield return new TestItem(".[1,2:]", "[1, 2, 3, 4]", "[[2, 3, 4], [3, 4]]");
             yield return new TestItem(".[-2:1]", "[1, 2, 3, 4, 5]", "[[]]");
+            yield return new TestItem(".[2:8]", "[1, 2, 3]", "[[3]]");
 
             yield return new TestItem("empty // 2", "null", "[2]");
             yield return new TestItem("(empty, false, null) // 2", "null", "[2]");
@@ -334,6 +335,34 @@ namespace JsonMasher.Tests.EndToEnd
                 "[1, 2, 3] | .[0, 1] = (100, 200)",
                 "null",
                 "[[100, 100, 3], [200, 200, 3]]");
+            yield return new TestItem(
+                "{} | .[\"a\"] = 1",
+                "null",
+                "[{\"a\": 1}]");
+            yield return new TestItem(
+                "{} | .a.b = 1",
+                "null",
+                "[{\"a\": {\"b\": 1}}]");
+            yield return new TestItem(
+                "{a: {c: 2}} | .a.b = 1",
+                "null",
+                "[{\"a\": {\"b\": 1, \"c\": 2}}]");
+            yield return new TestItem(
+                "{} | .a[5] = 1",
+                "null",
+                "[{\"a\": [null, null, null, null, null, 1]}]");
+            yield return new TestItem(
+                "{a: [0, 1]} | .a[5] = 1",
+                "null",
+                "[{\"a\": [0, 1, null, null, null, 1]}]");
+            yield return new TestItem(
+                "{a: [0]} | .a[100:] = [1]",
+                "null",
+                "[{\"a\": [0, 1]}]");
+            yield return new TestItem(
+                "{} | .a[100:] = [1]",
+                "null",
+                "[{\"a\": [1]}]");
         }
 
         private static IEnumerable<TestItem> PathTests()
@@ -392,7 +421,7 @@ namespace JsonMasher.Tests.EndToEnd
             yield return new TestItem(
                 "path(.[10:])",
                 "null",
-                "[]");
+                "[[{\"end\": 0, \"start\": 10}]]");
             yield return new TestItem(
                 "path(..)",
                 "null",

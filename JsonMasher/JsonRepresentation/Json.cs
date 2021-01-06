@@ -54,59 +54,104 @@ namespace JsonMasher.JsonRepresentation
                 var restOfPath = path.WithoutFirstPart;
                 if (key is IntPathPart ip)
                 {
-                    var element = GetElementAt(ip.Value);
-                    var transformed = element.TransformByPath(restOfPath, transformer, onError);
-                    if (transformed == element)
+                    var json = this;
+                    if (json == Json.Null)
                     {
-                        return this;
+                        json = Json.Array(Enumerable.Repeat(Json.Null, ip.Value + 1));
                     }
-                    else if (transformed == null)
-                    {
-                        return DelElementAt(ip.Value);
-                    }
-                    else
-                    {
-                        return SetElementAt(ip.Value, transformed);
-                    }
+                    return TransformArrayElement(json, transformer, onError, restOfPath, ip);
                 }
                 else if (key is StringPathPart sp)
                 {
-                    var element = GetElementAt(sp.Value);
-                    var transformed = element.TransformByPath(restOfPath, transformer, onError);
-                    if (transformed == element)
+                    var json = this;
+                    if (json == Json.Null)
                     {
-                        return this;
+                        json = Json.ObjectParams(new JsonProperty(sp.Value, Json.Null));
                     }
-                    else if (transformed == null)
-                    {
-                        return DelElementAt(sp.Value);
-                    }
-                    else
-                    {
-                        return SetElementAt(sp.Value, transformed);
-                    }
+                    return TransformObjectKey(json, transformer, onError, restOfPath, sp);
                 }
                 else if (key is SlicePathPart slicePart)
                 {
-                    var element = GetSliceAt(slicePart.Start, slicePart.End);
-                    var transformed = element.TransformByPath(restOfPath, transformer, onError);
-                    if (transformed == element)
+                    var json = this;
+                    if (json == Json.Null)
                     {
-                        return this;
+                        json = Json.ArrayParams();
                     }
-                    else if (transformed == null)
-                    {
-                        return DelSliceAt(slicePart.Start, slicePart.End);
-                    }
-                    else
-                    {
-                        return SetSliceAt(slicePart.Start, slicePart.End, transformed);
-                    }
+                    return TransformArraySlice(json, transformer, onError, restOfPath, slicePart);
                 }
                 else
                 {
                     throw onError(this, key);
                 }
+            }
+        }
+
+        private static Json TransformArrayElement(
+            Json json,
+            Func<Json, Json> transformer,
+            Func<Json, JsonPathPart, Exception> onError,
+            JsonPath restOfPath,
+            IntPathPart ip)
+        {
+            var element = json.GetElementAt(ip.Value);
+            var transformed = element.TransformByPath(restOfPath, transformer, onError);
+            if (transformed == element)
+            {
+                return json;
+            }
+            else if (transformed == null)
+            {
+                return json.DelElementAt(ip.Value);
+            }
+            else
+            {
+                return json.SetElementAt(ip.Value, transformed);
+            }
+        }
+
+        private static Json TransformObjectKey(
+            Json json,
+            Func<Json, Json> transformer,
+            Func<Json, JsonPathPart, Exception> onError,
+            JsonPath restOfPath,
+            StringPathPart sp)
+        {
+            var element = json.GetElementAt(sp.Value);
+            var transformed = element.TransformByPath(restOfPath, transformer, onError);
+            if (transformed == element)
+            {
+                return json;
+            }
+            else if (transformed == null)
+            {
+                return json.DelElementAt(sp.Value);
+            }
+            else
+            {
+                return json.SetElementAt(sp.Value, transformed);
+            }
+        }
+
+        private static Json TransformArraySlice(
+            Json json,
+            Func<Json, Json> transformer,
+            Func<Json, JsonPathPart, Exception> onError,
+            JsonPath restOfPath,
+            SlicePathPart slicePart)
+        {
+            var element = json.GetSliceAt(slicePart.Start, slicePart.End);
+            var transformed = element.TransformByPath(restOfPath, transformer, onError);
+            if (transformed == element)
+            {
+                return json;
+            }
+            else if (transformed == null)
+            {
+                return json.DelSliceAt(slicePart.Start, slicePart.End);
+            }
+            else
+            {
+                return json.SetSliceAt(slicePart.Start, slicePart.End, transformed);
             }
         }
 
