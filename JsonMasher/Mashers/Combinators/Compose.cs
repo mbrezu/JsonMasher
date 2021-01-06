@@ -11,7 +11,7 @@ namespace JsonMasher.Mashers.Combinators
         public IEnumerable<Json> Mash(Json json, IMashContext context, IMashStack stack)
         {
             var newStack = stack.Push(this);
-            context.Tick(stack);
+            context.Tick(newStack);
             foreach (var temp in First.Mash(json, context, newStack))
             {
                 foreach (var result in Second.Mash(temp, context, newStack))
@@ -31,7 +31,7 @@ namespace JsonMasher.Mashers.Combinators
             JsonPath pathSoFar, Json json, IMashContext context, IMashStack stack)
         {
             var newStack = stack.Push(this);
-            context.Tick(stack);
+            context.Tick(newStack);
             if (First is IPathGenerator pg1)
             {
                 if (Second is IPathGenerator pg2)

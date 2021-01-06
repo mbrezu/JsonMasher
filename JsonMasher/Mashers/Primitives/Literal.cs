@@ -33,7 +33,7 @@ namespace JsonMasher.Mashers.Primitives
 
         public IEnumerable<Json> Mash(Json json, IMashContext context, IMashStack stack)
         {
-            context.Tick(stack);
+            context.Tick(stack.Push(this));
             return Value.AsEnumerable();
         }
     }

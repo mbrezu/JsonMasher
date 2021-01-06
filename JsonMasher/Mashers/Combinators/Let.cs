@@ -14,7 +14,7 @@ namespace JsonMasher.Mashers.Combinators
         {
             context.PushEnvironmentFrame();
             var newStack = stack.Push(this);
-            context.Tick(stack);
+            context.Tick(newStack);
             if (Body is IPathGenerator pathGenerator)
             {
                 foreach (var jsonValue in Value.Mash(json, context, newStack))
@@ -37,7 +37,7 @@ namespace JsonMasher.Mashers.Combinators
         {
             context.PushEnvironmentFrame();
             var newStack = stack.Push(this);
-            context.Tick(stack);
+            context.Tick(newStack);
             foreach (var jsonValue in Value.Mash(json, context, newStack))
             {
                 context.SetVariable(Name, jsonValue);
