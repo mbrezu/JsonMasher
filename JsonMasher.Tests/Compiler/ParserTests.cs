@@ -8,7 +8,6 @@ using JsonMasher.Mashers.Builtins;
 using JsonMasher.Mashers.Primitives;
 using Xunit;
 using Ops = JsonMasher.Mashers.Builtins;
-using System;
 using JsonMasher.JsonRepresentation;
 
 namespace JsonMasher.Tests.Compiler
@@ -122,6 +121,19 @@ namespace JsonMasher.Tests.Compiler
                 new Enumerate()));
 
             yield return new TestItem("..", new FunctionCall(Recurse.Builtin));
+
+            yield return new TestItem("$obj[.]", new Selector { 
+                Target = new GetVariable { Name = "obj" }, 
+                Index = new Identity()
+            });
+            yield return new TestItem("$obj[10:20]", new SliceSelector { 
+                Target = new GetVariable { Name = "obj" }, 
+                From = new Literal(10),
+                To = new Literal(20)
+            });
+            yield return new TestItem("$obj[]", new Enumerate { 
+                Target = new GetVariable { Name = "obj" }
+            });
         }
 
         private static IEnumerable<TestItem> IfThenElseTests()

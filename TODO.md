@@ -24,13 +24,13 @@
     - [x] has, in
     - [x] del
     - [x] getpath, setpath, delpaths
+    - [x] add
+    - [x] to_entries, from_entries, with_entries
     - [ ] utf8bytelength
-    - [ ] to_entries, from_entries, with_entries
     - [ ] arrays, objects, iterables, booleans, numbers, normals, finites, strings, nulls, values, scalars 
     - [ ] error, halt, halt_error/0, halt_error/1
     - [ ] $\_\_loc\_\_
     - [ ] paths/0, paths/1, leaf_paths
-    - [ ] add
     - [ ] any/0, any/1, any/2
     - [ ] all/0, all/1, all/2
     - [ ] flatten/0, flatten/1

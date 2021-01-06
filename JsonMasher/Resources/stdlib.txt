@@ -6,3 +6,14 @@ def map_values(x): .[] |= x;
 
 def keys_unsorted: keys;
 
+def to_entries:
+    . as $obj | keys | map({ key: ., value: $obj[.] });
+
+def add:
+    reduce .[] as $n (0; . + $n);
+
+def from_entries:
+    reduce .[] as $kv ({}; . + ({} | .[$kv.key] = $kv.value));
+
+def with_entries(f):
+    to_entries | map(f) | from_entries;

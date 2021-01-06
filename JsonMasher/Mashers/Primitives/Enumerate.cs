@@ -7,9 +7,25 @@ namespace JsonMasher.Mashers.Primitives
     public class Enumerate : IJsonMasherOperator, IPathGenerator
     {
         public bool IsOptional { get; init; }
+        public IJsonMasherOperator Target { get; init; }
 
         public IEnumerable<Json> Mash(Json json, IMashContext context, IMashStack stack)
-            => json.Type switch
+        {
+            if (Target == null)
+            {
+                return MashOne(json, context, stack);
+            }
+            else
+            {
+                return Target
+                    .Mash(json, context, stack)
+                    .SelectMany(x => MashOne(x, context, stack));
+            }
+        }
+
+        private IEnumerable<Json> MashOne(Json json, IMashContext context, IMashStack stack)
+        {
+            return json.Type switch
             {
                 JsonValueType.Array => json.EnumerateArray(),
                 JsonValueType.Object => json.EnumerateObject().Select(kv => kv.Value),
@@ -17,6 +33,7 @@ namespace JsonMasher.Mashers.Primitives
                     ? throw context.Error($"Can't enumerate {json.Type}.", stack.Push(this), json)
                     : Enumerable.Empty<Json>()
             };
+        }
 
         // All these are the same for testing/FluentAssertions purposes,
         // but different for SourceInformation purposes, so the singletons were removed.

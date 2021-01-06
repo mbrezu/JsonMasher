@@ -17,3 +17,9 @@ jq -n '[1, 2, 3] | .[2:8]'
 jq -n 'path(.[10:])'
 
 jq -n '[1, 2, 3] | foreach .[] as $item (0; . + $item; 1|2)'
+
+jq -n '{a:1, b:2} | . as $obj | keys | map({ key: ., value: $obj[.] })'
+
+jq -n '[1, 2, 3] | . as $array | 1 | $array[.:]'
+
+jq -n '{ ["a"]: 2}'

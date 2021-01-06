@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using JsonMasher.JsonRepresentation;
 
 namespace JsonMasher.Mashers.Combinators
@@ -6,6 +7,7 @@ namespace JsonMasher.Mashers.Combinators
     public class Selector : IJsonMasherOperator, IPathGenerator
     {
         public IJsonMasherOperator Index { get; init; }
+        public IJsonMasherOperator Target { get; init; }
         public bool IsOptional { get; init; }
 
         public IEnumerable<PathAndValue> GeneratePaths(
@@ -66,18 +68,33 @@ namespace JsonMasher.Mashers.Combinators
         {
             var newStack = stack.Push(this);
             context.Tick(newStack);
-            return MashOne(json, context, newStack);
+            if (Target == null)
+            {
+                return MashOne(json, json, context, newStack);
+            }
+            else
+            {
+                return Target
+                    .Mash(json, context, newStack)
+                    .SelectMany(x => MashOne(x, json, context, stack));
+            }
         }
 
-        private IEnumerable<Json> MashOne(Json json, IMashContext context, IMashStack stack)
+        private IEnumerable<Json> MashOne(Json target, Json index, IMashContext context, IMashStack stack)
         {
-            foreach (var index in Index.Mash(json, context, stack))
+            foreach (var indexValue in Index.Mash(index, context, stack))
             {
-                var value = (index.Type, json.Type) switch {
-                    (JsonValueType.Number, JsonValueType.Array) => json.GetElementAt((int)(index.GetNumber())),
-                    (JsonValueType.String, JsonValueType.Object) => json.GetElementAt(index.GetString()),
+                var value = (indexValue.Type, target.Type) switch {
+                    (JsonValueType.Number, JsonValueType.Array)
+                        => target.GetElementAt((int)(indexValue.GetNumber())),
+                    (JsonValueType.String, JsonValueType.Object)
+                        => target.GetElementAt(indexValue.GetString()),
                     _ => !IsOptional 
-                        ? throw context.Error($"Can't index {json.Type} with {index.Type}.", stack, json, index)
+                        ? throw context.Error(
+                            $"Can't index {target.Type} with {indexValue.Type}.",
+                            stack,
+                            target,
+                            indexValue)
                         : null
                 };
                 if (value != null)

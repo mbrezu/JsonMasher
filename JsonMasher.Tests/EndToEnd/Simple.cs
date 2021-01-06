@@ -248,6 +248,30 @@ namespace JsonMasher.Tests.EndToEnd
                 ".[] | in({a:1,b:2})",
                 "[\"a\", \"c\"]",
                 "[true, false]");
+            yield return new TestItem(
+                ". as $array | $array[1]",
+                "[1, 2, 3]",
+                "[2]");
+            yield return new TestItem(
+                ". as $array | 1 | $array[.]",
+                "[1, 2, 3]",
+                "[2]");
+            yield return new TestItem(
+                ". as $array | $array[1:]",
+                "[1, 2, 3]",
+                "[[2, 3]]");
+            yield return new TestItem(
+                ". as $array | 1 | $array[.:]",
+                "[1, 2, 3]",
+                "[[2, 3]]");
+            yield return new TestItem(
+                ". as $object | $object[\"b\"]",
+                "{\"a\": 1, \"b\": 2}",
+                "[2]");
+            yield return new TestItem(
+                ". as $object | \"b\" | $object[\"b\"]",
+                "{\"a\": 1, \"b\": 2}",
+                "[2]");
         }
 
         private static IEnumerable<TestItem> IfThenElsePrograms()
@@ -548,6 +572,25 @@ map(select(. < 2))",
                 ".[] | delpaths([path(.[2,1])], [path(.[.0])])",
                 "[[1, 2, 3], [3, 4, 5]]",
                 "[[1],[2,3],[3],[4,5]]");
+
+            yield return new TestItem(
+                "to_entries",
+                "{\"a\": 1, \"b\": 2}",
+                "[[{\"key\": \"a\", \"value\": 1}, {\"key\": \"b\", \"value\": 2}]]");
+
+            yield return new TestItem(
+                "add",
+                "[1, 2, 3]",
+                "[6]");
+
+            yield return new TestItem(
+                "to_entries | from_entries",
+                "{\"a\": 1, \"b\": 2}",
+                "[{\"a\": 1, \"b\": 2}]");
+            yield return new TestItem(
+                "with_entries(.value |= . * .)",
+                "{\"a\": 1, \"b\": 2}",
+                "[{\"a\": 1, \"b\": 4}]");
         }
     }
 }

@@ -29,7 +29,7 @@ namespace JsonMasher.Compiler
 
             public int Position => AtEnd ? _program.Length : _tokens[_index].StartPos;
             public int GetOffsetPosition(int offset) => _tokens[_index - offset].StartPos;
-            
+
             public IJsonMasherOperator RecordPosition(IJsonMasherOperator ast, int startPosition)
             {
                 SourceInformation.SetProgramPosition(
@@ -199,13 +199,13 @@ namespace JsonMasher.Compiler
         private IJsonMasherOperator ParseFilter(State state)
             => ChainIntoArray(
                 state,
-                ParsePipeTerm, 
+                ParsePipeTerm,
                 token => token == Tokens.Pipe,
                 Compose.All);
 
         private IJsonMasherOperator ChainIntoArray(
-            State state, 
-            Func<State, IJsonMasherOperator> termParser, 
+            State state,
+            Func<State, IJsonMasherOperator> termParser,
             Func<Token, bool> isLinkToken,
             Func<IEnumerable<IJsonMasherOperator>, IJsonMasherOperator> combiner)
         {
@@ -231,14 +231,14 @@ namespace JsonMasher.Compiler
         private IJsonMasherOperator ParseFilterNoComma(State state)
             => ChainIntoArray(
                 state,
-                ParseAlternatives, 
+                ParseAlternatives,
                 token => token == Tokens.Pipe,
                 Compose.All);
 
         private IJsonMasherOperator ParsePipeTerm(State state)
             => ChainIntoArray(
                 state,
-                ParseAlternatives, 
+                ParseAlternatives,
                 token => token == Tokens.Comma,
                 Concat.All);
 
@@ -333,7 +333,7 @@ namespace JsonMasher.Compiler
             }
         }
 
-        private IJsonMasherOperator ParseRelationalExpression(State state) 
+        private IJsonMasherOperator ParseRelationalExpression(State state)
         {
             var position = state.Position;
             var t1 = ParseArithmeticLowerExpression(state);
@@ -366,7 +366,7 @@ namespace JsonMasher.Compiler
                 op => op == Tokens.Plus ? Plus.Builtin : Minus.Builtin_2);
 
         private IJsonMasherOperator ChainAssocLeft(
-            State state, 
+            State state,
             Func<State, IJsonMasherOperator> termParser,
             Func<Token, bool> validOps,
             Func<Token, Builtin> builtinFunc)
@@ -389,8 +389,8 @@ namespace JsonMasher.Compiler
                 state,
                 ParseErrorSuppression,
                 op => op == Tokens.Times || op == Tokens.Divide || op == Tokens.Modulo,
-                op => op == Tokens.Times 
-                    ? Times.Builtin 
+                op => op == Tokens.Times
+                    ? Times.Builtin
                     : (op == Tokens.Divide ? Divide.Builtin : Modulo.Builtin));
 
         private IJsonMasherOperator ParseErrorSuppression(State state)
@@ -418,6 +418,10 @@ namespace JsonMasher.Compiler
             {
                 var dotExpr = ParseDot(state);
                 return state.RecordPosition(Compose.AllParams(term, dotExpr), position);
+            }
+            else if (state.Current == Tokens.OpenSquareParen)
+            {
+                return ParseSelector(state, false, term);
             }
             else
             {
@@ -720,7 +724,8 @@ namespace JsonMasher.Compiler
             }
         }
 
-        private IJsonMasherOperator ParseSelector(State state, bool offsetPosition)
+        private IJsonMasherOperator ParseSelector(
+            State state, bool offsetPosition, IJsonMasherOperator target = null)
         {
             var position = state.GetOffsetPosition(offsetPosition ? 1 : 0); // include the dot
             state.Advance();
@@ -731,13 +736,15 @@ namespace JsonMasher.Compiler
                 state.Match(Tokens.CloseSquareParen);
                 bool isOptional = CheckIfOptional(state);
                 return state.RecordPosition(
-                    new SliceSelector { To = to, IsOptional = isOptional }, position);
+                    new SliceSelector { To = to, IsOptional = isOptional, Target = target },
+                    position);
             }
             else if (state.Current == Tokens.CloseSquareParen)
             {
                 state.Advance();
                 bool isOptional = CheckIfOptional(state);
-                return state.RecordPosition(new Enumerate { IsOptional = isOptional }, position);
+                return state.RecordPosition(
+                    new Enumerate { IsOptional = isOptional, Target = target }, position);
             }
             else
             {
@@ -749,7 +756,12 @@ namespace JsonMasher.Compiler
                     state.Match(Tokens.CloseSquareParen);
                     bool isOptional = CheckIfOptional(state);
                     return state.RecordPosition(
-                        new SliceSelector { From = filter, To = to, IsOptional = isOptional },
+                        new SliceSelector {
+                            From = filter,
+                            To = to,
+                            IsOptional = isOptional,
+                            Target = target 
+                        },
                         position);
                 }
                 else
@@ -757,7 +769,8 @@ namespace JsonMasher.Compiler
                     state.Match(Tokens.CloseSquareParen);
                     bool isOptional = CheckIfOptional(state);
                     return state.RecordPosition(
-                        new Selector { Index = filter, IsOptional = isOptional }, position);
+                        new Selector { Index = filter, IsOptional = isOptional, Target = target },
+                        position);
                 }
             }
         }
