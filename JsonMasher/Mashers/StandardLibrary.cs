@@ -42,6 +42,7 @@ namespace JsonMasher.Mashers
             environment.SetCallable(new FunctionName("del", 1), Del.Builtin);
             environment.SetCallable(new FunctionName("getpath", 1), GetPath.Builtin);
             environment.SetCallable(new FunctionName("setpath", 2), SetPath.Builtin);
+            environment.SetCallable(new FunctionName("delpaths", 1), DelPaths.Builtin);
         }
 
         private static void AddCode(MashEnvironment environment)

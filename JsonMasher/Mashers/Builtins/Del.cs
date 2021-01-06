@@ -31,7 +31,7 @@ namespace JsonMasher.Mashers.Builtins
             }
         }
 
-        private static Json DeletePath(Json json, JsonPath path, IMashContext context, IMashStack stack)
+        public static Json DeletePath(Json json, JsonPath path, IMashContext context, IMashStack stack)
             => json.TransformByPath(
                 path,
                 leafJson => null,

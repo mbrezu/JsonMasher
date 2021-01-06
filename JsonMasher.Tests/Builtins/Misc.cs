@@ -51,7 +51,8 @@ namespace JsonMasher.Tests.Builtins
                 .Concat(ModuloTests())
                 .Concat(HasInTests())
                 .Concat(DelTests())
-                .Concat(GetSetPathTests());
+                .Concat(GetSetPathTests())
+                .Concat(DelPathsTests());
 
         private static IEnumerable<TestItem> RangeTests()
         {
@@ -214,6 +215,18 @@ namespace JsonMasher.Tests.Builtins
                     new Literal(100)),
                 "[[1, 100], 3]",
                 "[[[1, 100], 3]]");
+        }
+
+        private static IEnumerable<TestItem> DelPathsTests()
+        {
+            yield return new TestItem(
+                new FunctionCall(
+                    DelPaths.Builtin, 
+                    new Literal { Value = Json.ArrayParams(
+                        Json.ArrayParams(Json.Number(2)), 
+                        Json.ArrayParams(Json.Number(1))) }),
+                "[1, 2, 3]",
+                "[[1]]");
         }
     }
 }
