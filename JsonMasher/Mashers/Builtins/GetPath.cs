@@ -16,19 +16,7 @@ namespace JsonMasher.Mashers.Builtins
             var result = new List<Json>();
             foreach (var pathAsJson in mashers[0].Mash(json, context, stack))
             {
-                if (pathAsJson.Type != JsonValueType.Array)
-                {
-                    throw context.Error($"Can't use {pathAsJson.Type} as a path.", stack, pathAsJson);
-                }
-                JsonPath path = null;
-                try
-                {
-                    path = JsonPath.FromParts(pathAsJson.EnumerateArray().Select(x => x.GetPathPart()));
-                }
-                catch (JsonMasherException ex)
-                {
-                    throw context.Error(ex.Message, stack, ex.Values.ToArray());
-                }
+                var path = context.GetPathFromArray(pathAsJson, stack);
                 json.TransformByPath(
                     path,
                     leafJson => {

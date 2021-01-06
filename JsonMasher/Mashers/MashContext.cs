@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using JsonMasher.Compiler;
 using JsonMasher.JsonRepresentation;
@@ -30,8 +31,8 @@ namespace JsonMasher.Mashers
 
         public void SetVariable(string name, Json value) => _env.SetVariable(name, value);
 
-        public Json GetVariable(string name, IMashStack stack) 
-            => _env.GetVariable(name, stack) 
+        public Json GetVariable(string name, IMashStack stack)
+            => _env.GetVariable(name, stack)
                 ?? throw Error($"Cannot find variable ${name}.", stack);
 
         public void SetCallable(FunctionName name, Callable value) => _env.SetCallable(name, value);
@@ -46,12 +47,12 @@ namespace JsonMasher.Mashers
         public void SetCallable(string name, Callable value) => _env.SetCallable(name, value);
 
         public Callable GetCallable(string name, IMashStack stack)
-            => _env.GetCallable(name, stack) 
+            => _env.GetCallable(name, stack)
                 ?? throw Error($"Function {name}/0 is not known.", stack);
 
         public Exception Error(string message, IMashStack stack, params Json[] values)
         {
-            var programWithLines = SourceInformation != null 
+            var programWithLines = SourceInformation != null
                 ? new ProgramWithLines(SourceInformation.Program)
                 : null;
             var stackSb = new StringBuilder();
@@ -88,11 +89,27 @@ namespace JsonMasher.Mashers
         {
             if (TickLimit != 0)
             {
-                ticks ++;
+                ticks++;
                 if (ticks > TickLimit)
                 {
                     throw Error($"Failed to complete in {TickLimit} ticks.", stack);
                 }
+            }
+        }
+
+        public JsonPath GetPathFromArray(Json pathAsJson, IMashStack stack)
+        {
+            if (pathAsJson.Type != JsonValueType.Array)
+            {
+                throw Error($"Can't use {pathAsJson.Type} as a path.", stack, pathAsJson);
+            }
+            try
+            {
+                return JsonPath.FromParts(pathAsJson.EnumerateArray().Select(x => x.GetPathPart()));
+            }
+            catch (JsonMasherException ex)
+            {
+                throw Error(ex.Message, stack, ex.Values.ToArray());
             }
         }
     }

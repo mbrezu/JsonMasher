@@ -494,6 +494,11 @@ map(select(. < 2))",
             yield return new TestItem("[[1, 2], 3] | getpath([0, 1])", "null", "[2]");
             yield return new TestItem("[[1, 2], 3] | getpath([])", "null", "[[[1, 2], 3]]");
             yield return new TestItem("[[1, 2], 3] | [getpath(path(..))] == [..]", "null", "[true]");
+
+            yield return new TestItem(
+                "[1, 2, 3] | setpath(path(.[2,1]); 100, 200)",
+                "null",
+                "[[1,2,100],[1,100,3],[1,2,200],[1,200,3]]");
         }
     }
 }

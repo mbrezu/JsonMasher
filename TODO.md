@@ -23,8 +23,8 @@
     - [x] %
     - [x] has, in
     - [x] del
-    - [x] getpath
-    - [ ] setpath, delpaths
+    - [x] getpath, setpath
+    - [ ] delpaths
     - [ ] utf8bytelength
     - [ ] to_entries, from_entries, with_entries
     - [ ] arrays, objects, iterables, booleans, numbers, normals, finites, strings, nulls, values, scalars 

@@ -20,5 +20,6 @@ namespace JsonMasher.Mashers
         Callable GetCallable(string name, IMashStack stack);
         Exception Error(string message, IMashStack stack, params Json[] values);
         void Tick(IMashStack stack);
+        JsonPath GetPathFromArray(Json pathAsJson, IMashStack stack);
     }
 }

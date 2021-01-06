@@ -207,6 +207,13 @@ namespace JsonMasher.Tests.Builtins
                     new Literal { Value = Json.ArrayParams(Json.Number(0), Json.Number(1)) }),
                 "[[1, 2], 3]",
                 "[2]");
+            yield return new TestItem(
+                new FunctionCall(
+                    SetPath.Builtin, 
+                    new Literal { Value = Json.ArrayParams(Json.Number(0), Json.Number(1)) },
+                    new Literal(100)),
+                "[[1, 100], 3]",
+                "[[[1, 100], 3]]");
         }
     }
 }
