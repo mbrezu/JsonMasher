@@ -31,7 +31,7 @@ namespace JsonMasher.Tests.EndToEnd
         {
             // Arrange
             var parser = new Parser();
-            var (filter, _) = parser.Parse(program);
+            var (filter, _) = parser.Parse(program, new SequenceGenerator());
             var input = inputJson.AsJson().AsEnumerable();
 
             // Act
@@ -514,6 +514,7 @@ def select(x): if x then . else empty end;
 map(select(. < 2))",
                 "[1, 2, 3]",
                 "[[1]]");
+            yield return new TestItem("def f(x): x; def g(x): f(x); g(1)", "null", "[1]");
         }
 
         private static IEnumerable<TestItem> ReduceAndForeach()

@@ -42,7 +42,7 @@ namespace JsonMasher.Cli
         {
             try
             {
-                var (filter, sourceInformation) = new Parser().Parse(_program);
+                var (filter, sourceInformation) = new Parser().Parse(_program, new SequenceGenerator());
                 IMashStack stack = _options.Debug ? new DebugMashStack() : DefaultMashStack.Instance;
                 var inputs = _input.AsMultipleJson();
                 if (_options.Slurp)

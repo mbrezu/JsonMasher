@@ -10,6 +10,16 @@ namespace JsonMasher.Mashers
 {
     public static class StandardLibrary
     {
+
+        private class StdSequenceGenerator : ISequenceGenerator
+        {
+
+            private int _current = 0;
+            public string GetValue() => $"_std_{_current}";
+
+            public void Next() => _current ++;
+        }
+
         public static MashEnvironment DefaultEnvironment => _defaultEnvironment;
 
         private static MashEnvironment _defaultEnvironment = InitDefaultEnvironment();
@@ -32,6 +42,7 @@ namespace JsonMasher.Mashers
             environment.SetCallable(new FunctionName("length", 0), Length.Builtin);
             environment.SetCallable(new FunctionName("limit", 2), Limit.Builtin);
             environment.SetCallable(new FunctionName("keys", 0), Keys.Builtin);
+            environment.SetCallable(new FunctionName("keys_unsorted", 0), Keys.Builtin);
             environment.SetCallable(new FunctionName("debug", 0), Debug.Builtin);
             environment.SetCallable(new FunctionName("recurse", 0), Recurse.Builtin);
             environment.SetCallable(new FunctionName("path", 1), Builtins.Path.Builtin);
@@ -47,7 +58,8 @@ namespace JsonMasher.Mashers
         private static void AddCode(MashEnvironment environment)
         {
             var stdlib = ReadStdLibCode();
-            var (ast, _) = new Parser().Parse(stdlib);
+            var sequenceGenerator = new StdSequenceGenerator();
+            var (ast, _) = new Parser().Parse(stdlib, sequenceGenerator);
             foreach (FunctionDefinition def in ExtractFunctionDefinitions(ast))
             {
                 environment.SetCallable(def.Name, def.Arguments, def.Body);

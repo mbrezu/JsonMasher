@@ -13,7 +13,7 @@ namespace JsonMasher.Benchmarks
 
         public MasherBenchmark()
         {
-            (_filter, _sourceInformation) = new Parser().Parse(_program);
+            (_filter, _sourceInformation) = new Parser().Parse(_program, new SequenceGenerator());
             _masher = new();
         }
 

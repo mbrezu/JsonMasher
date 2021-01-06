@@ -27,7 +27,7 @@ namespace JsonMasher.Tests.Compiler
             var parser = new Parser();
 
             // Act
-            var (result, _) = parser.Parse(program);
+            var (result, _) = parser.Parse(program, new SequenceGenerator());
 
             // Assert
             result.Should().BeEquivalentTo(
@@ -561,21 +561,21 @@ namespace JsonMasher.Tests.Compiler
                 "def test(a): 1 + a;",
                 new FunctionDefinition {
                     Name = "test",
-                    Arguments = new List<string> { "a" },
+                    Arguments = new List<string> { "a_1" },
                     Body = new FunctionCall(
                         Plus.Builtin,
                         new Literal(1),
-                        new FunctionCall(new FunctionName("a", 0)))
+                        new FunctionCall(new FunctionName("a_1", 0)))
                 });
 
             yield return new TestItem(
                 "def test($a): 1 + $a;",
                 new FunctionDefinition {
                     Name = "test",
-                    Arguments = new List<string> { "a" },
+                    Arguments = new List<string> { "a_1" },
                     Body = new Let {
                         Name = "a",
-                        Value = new FunctionCall(new FunctionName("a" ,0)),
+                        Value = new FunctionCall(new FunctionName("a_1" ,0)),
                         Body = new FunctionCall(
                             Plus.Builtin,
                             new Literal(1),
@@ -587,11 +587,11 @@ namespace JsonMasher.Tests.Compiler
                 "def point(x; y): [x, y];",
                 new FunctionDefinition {
                     Name = "point",
-                    Arguments = new List<string> { "x", "y" },
+                    Arguments = new List<string> { "x_1", "y_1" },
                     Body = new ConstructArray {
                         Elements = Concat.AllParams(
-                            new FunctionCall(new FunctionName("x", 0)),
-                            new FunctionCall(new FunctionName("y", 0)))
+                            new FunctionCall(new FunctionName("x_1", 0)),
+                            new FunctionCall(new FunctionName("y_1", 0)))
                     }
                 });
 
@@ -599,13 +599,13 @@ namespace JsonMasher.Tests.Compiler
                 "def point($x; $y): [$x, $y];",
                 new FunctionDefinition {
                     Name = "point",
-                    Arguments = new List<string> { "x", "y" },
+                    Arguments = new List<string> { "x_1", "y_1" },
                     Body = new Let {
                         Name = "x",
-                        Value = new FunctionCall(new FunctionName("x", 0)),
+                        Value = new FunctionCall(new FunctionName("x_1", 0)),
                         Body = new Let {
                             Name = "y",
-                            Value = new FunctionCall(new FunctionName("y", 0)),
+                            Value = new FunctionCall(new FunctionName("y_1", 0)),
                             Body = new ConstructArray {
                                 Elements = Concat.AllParams(
                                     new GetVariable { Name = "x" },
@@ -619,12 +619,12 @@ namespace JsonMasher.Tests.Compiler
                 "def point(x; y; z): [x, y, z];",
                 new FunctionDefinition {
                     Name = "point",
-                    Arguments = new List<string> { "x", "y", "z" },
+                    Arguments = new List<string> { "x_1", "y_1", "z_1" },
                     Body = new ConstructArray {
                         Elements = Concat.AllParams(
-                            new FunctionCall(new FunctionName("x", 0)),
-                            new FunctionCall(new FunctionName("y", 0)),
-                            new FunctionCall(new FunctionName("z", 0)))
+                            new FunctionCall(new FunctionName("x_1", 0)),
+                            new FunctionCall(new FunctionName("y_1", 0)),
+                            new FunctionCall(new FunctionName("z_1", 0)))
                     }
                 });
 
@@ -633,11 +633,11 @@ namespace JsonMasher.Tests.Compiler
                 Compose.AllParams(
                     new FunctionDefinition {
                         Name = "point",
-                        Arguments = new List<string> { "x", "y" },
+                        Arguments = new List<string> { "x_1", "y_1" },
                         Body = new ConstructArray {
                             Elements = Concat.AllParams(
-                                new FunctionCall(new FunctionName("x", 0)),
-                                new FunctionCall(new FunctionName("y", 0)))
+                                new FunctionCall(new FunctionName("x_1", 0)),
+                                new FunctionCall(new FunctionName("y_1", 0)))
                         }
                     },
                     new FunctionCall(

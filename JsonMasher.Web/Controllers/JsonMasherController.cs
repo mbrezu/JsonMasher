@@ -26,7 +26,7 @@ namespace JsonMasher.Web.Controllers
         {
             try
             {
-                var (filter, sourceInformation) = new Parser().Parse(dto.Program);
+                var (filter, sourceInformation) = new Parser().Parse(dto.Program, new SequenceGenerator());
                 IMashStack stack = new DebugMashStack();
                 var inputs = dto.Input.AsMultipleJson();
                 if (dto.Slurp)

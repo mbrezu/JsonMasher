@@ -22,7 +22,7 @@ namespace JsonMasher.Tests.EndToEnd
         {
             // Arrange
             var parser = new Parser();
-            var (filter, _) = parser.Parse(program);
+            var (filter, _) = parser.Parse(program, new SequenceGenerator());
             var input = "null".AsJson().AsEnumerable();
 
             // Act
