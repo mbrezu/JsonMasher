@@ -561,6 +561,21 @@ namespace JsonMasher.Tests.Compiler
                 });
 
             yield return new TestItem(
+                "def test($a): 1 + $a;",
+                new FunctionDefinition {
+                    Name = "test",
+                    Arguments = new List<string> { "a" },
+                    Body = new Let {
+                        Name = "a",
+                        Value = new FunctionCall(new FunctionName("a" ,0)),
+                        Body = new FunctionCall(
+                            Plus.Builtin,
+                            new Literal(1),
+                            new GetVariable { Name = "a" })
+                    }
+                });
+
+            yield return new TestItem(
                 "def point(x; y): [x, y];",
                 new FunctionDefinition {
                     Name = "point",
@@ -569,6 +584,26 @@ namespace JsonMasher.Tests.Compiler
                         Elements = Concat.AllParams(
                             new FunctionCall(new FunctionName("x", 0)),
                             new FunctionCall(new FunctionName("y", 0)))
+                    }
+                });
+
+            yield return new TestItem(
+                "def point($x; $y): [$x, $y];",
+                new FunctionDefinition {
+                    Name = "point",
+                    Arguments = new List<string> { "x", "y" },
+                    Body = new Let {
+                        Name = "x",
+                        Value = new FunctionCall(new FunctionName("x", 0)),
+                        Body = new Let {
+                            Name = "y",
+                            Value = new FunctionCall(new FunctionName("y", 0)),
+                            Body = new ConstructArray {
+                                Elements = Concat.AllParams(
+                                    new GetVariable { Name = "x" },
+                                    new GetVariable { Name = "y" })
+                            }
+                        }
                     }
                 });
 

@@ -101,7 +101,7 @@ Line 1:          ^
                 ));
             yield return new TestItem(
                 "def test(1)",
-                "Expected an identifier, but got '1'.",
+                "Expected an identifier or a variable identifier (e.g. '$a'), but got '1'.",
                 new PositionInformation(
                     1, 10,
                     @"Line 1: def test(1)
@@ -110,7 +110,7 @@ Line 1:          ^
                 ));
             yield return new TestItem(
                 "def test(a;)",
-                "Expected an identifier, but got ')'.",
+                "Expected an identifier or a variable identifier (e.g. '$a'), but got ')'.",
                 new PositionInformation(
                     1, 12,
                     @"Line 1: def test(a;)
@@ -119,7 +119,7 @@ Line 1:            ^
                 ));
             yield return new TestItem(
                 "def test(a;",
-                "Expected an identifier, but reached end of input.",
+                "Expected an identifier or a variable identifier (e.g. '$a'), but reached end of input.",
                 new PositionInformation(
                     1, 12,
                     @""

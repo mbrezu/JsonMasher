@@ -109,6 +109,9 @@ namespace JsonMasher.Compiler
 
             internal Exception ErrorVariableIdentifierExpected()
                 => ErrorExpected("a variable identifier (e.g. '$a')");
+
+            internal Exception ErrorIdentifierOrVariableIdentifierExpected()
+                => ErrorExpected("an identifier or a variable identifier (e.g. '$a')");
         }
 
         public (IJsonMasherOperator, SourceInformation) Parse(string program)
@@ -155,6 +158,7 @@ namespace JsonMasher.Compiler
             var name = GetIdentifierName(state);
             state.Advance();
             var arguments = new List<string>();
+            var letWrappers = new List<string>();
             if (state.Current == Tokens.OpenParen)
             {
                 state.Advance();
@@ -164,14 +168,27 @@ namespace JsonMasher.Compiler
                 }
                 while (state.Current != Tokens.CloseParen)
                 {
-                    arguments.Add(GetIdentifierName(state));
-                    state.Advance();
+                    if (state.Current is Identifier identifier)
+                    {
+                        arguments.Add(identifier.Id);
+                        state.Advance();
+                    }
+                    else if (state.Current is VariableIdentifier variableIdentifier)
+                    {
+                        arguments.Add(variableIdentifier.Id);
+                        letWrappers.Add(variableIdentifier.Id);
+                        state.Advance();
+                    }
+                    else
+                    {
+                        throw state.ErrorIdentifierOrVariableIdentifierExpected();
+                    }
                     if (state.Current == Tokens.Semicolon)
                     {
                         state.Advance();
                         if (state.Current == Tokens.CloseParen)
                         {
-                            throw state.ErrorIdentifierExpected();
+                            throw state.ErrorIdentifierOrVariableIdentifierExpected();
                         }
                     }
                 }
@@ -185,9 +202,24 @@ namespace JsonMasher.Compiler
                 {
                     Name = name,
                     Arguments = arguments.Count > 0 ? arguments : null,
-                    Body = body
+                    Body = ApplyLetWrappers(letWrappers, body)
                 },
                 startPosition);
+        }
+
+        private IJsonMasherOperator ApplyLetWrappers(IEnumerable<string> letWrappers, IJsonMasherOperator body)
+        {
+            if (!letWrappers.Any())
+            {
+                return body;
+            }
+            var firstWrapper = letWrappers.First();
+            var remainingLetWrappers = letWrappers.Skip(1);
+            return new Let {
+                Name = firstWrapper,
+                Value = new FunctionCall(new FunctionName(firstWrapper, 0)),
+                Body = ApplyLetWrappers(remainingLetWrappers, body)
+            };
         }
 
         private string GetIdentifierName(State state) => state.Current switch
