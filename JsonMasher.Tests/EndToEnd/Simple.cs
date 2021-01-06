@@ -562,10 +562,11 @@ map(select(. < 2))",
                 "{\"a\": 1, \"b\": 2}",
                 "[[{\"key\": \"a\", \"value\": 1}, {\"key\": \"b\", \"value\": 2}]]");
 
+            yield return new TestItem("add", "[1, 2, 3]", "[6]");
             yield return new TestItem(
                 "add",
-                "[1, 2, 3]",
-                "[6]");
+                "[[1], [2, 3]]",
+                "[[1, 2, 3]]");
 
             yield return new TestItem(
                 "to_entries | from_entries",

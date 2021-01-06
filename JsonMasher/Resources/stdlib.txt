@@ -10,7 +10,7 @@ def to_entries:
     . as $obj | keys | map({ key: ., value: $obj[.] });
 
 def add:
-    reduce .[] as $n (0; . + $n);
+    reduce .[] as $n (null; . + $n);
 
 def from_entries:
     reduce .[] as $kv ({}; . + ({} | .[$kv.key] = $kv.value));

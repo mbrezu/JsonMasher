@@ -11,6 +11,8 @@ namespace JsonMasher.Mashers.Builtins
         static Json Operator(Json t1, Json t2, IMashContext context, IMashStack stack)
             => (t1.Type, t2.Type) switch
             {
+                (JsonValueType.Null, _) => t2,
+                (_, JsonValueType.Null) => t1,
                 (JsonValueType.Number, JsonValueType.Number)
                     => Json.Number(t1.GetNumber() + t2.GetNumber()),
                 (JsonValueType.String, JsonValueType.String)

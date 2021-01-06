@@ -22,4 +22,4 @@ jq -n '{a:1, b:2} | . as $obj | keys | map({ key: ., value: $obj[.] })'
 
 jq -n '[1, 2, 3] | . as $array | 1 | $array[.:]'
 
-jq -n '{ ["a"]: 2}'
+jq -n 'builtins'
