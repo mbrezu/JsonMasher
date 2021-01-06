@@ -62,7 +62,8 @@ namespace JsonMasher.Tests.Compiler
                 .Concat(EmptyTests())
                 .Concat(FunctionTests())
                 .Concat(AlternativeTests())
-                .Concat(TryCatchTests());
+                .Concat(TryCatchTests())
+                .Concat(ReduceForeachTests());
 
         private static IEnumerable<TestItem> DotTests()
         {
@@ -625,6 +626,17 @@ namespace JsonMasher.Tests.Compiler
             yield return new TestItem("try 1 catch 2", new TryCatch {
                 TryBody = new Literal(1),
                 CatchBody = new Literal(2)
+            });
+        }
+
+        private static IEnumerable<TestItem> ReduceForeachTests()
+        {
+            yield return new TestItem("reduce .[] as $item (0; . + $item)", new Reduce {
+                Name = "item",
+                Inputs = new Enumerate(),
+                Initial = new Literal(0),
+                Update = new FunctionCall(
+                    Plus.Builtin, new Identity(), new GetVariable { Name = "item" })
             });
         }
     }

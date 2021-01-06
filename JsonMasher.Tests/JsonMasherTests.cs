@@ -541,6 +541,27 @@ namespace JsonMasher.Tests
             result.Count().Should().Be(0);
         }
 
+        [Fact]
+        public void Reduce()
+        {
+            // Arrange
+            var data = "[1, 2, 3]".AsJson();
+            var op = new Reduce {
+                Name = "item",
+                Inputs = new Enumerate(),
+                Initial = new Literal(0),
+                Update = new FunctionCall(
+                    Plus.Builtin, new Identity(), new GetVariable { Name = "item"} )
+            };
+
+            // Act
+            var result = op.RunAsSequence(data);
+
+            // Assert
+            result.Count().Should().Be(1);
+            result.First().DeepEqual(Json.Number(6)).Should().BeTrue();
+        }
+
         private static Json MakeArray()
         {
             return Json.ArrayParams(

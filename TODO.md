@@ -74,7 +74,7 @@
       - [ ] with destructuring
     - [ ] Destructuring Alternative Operator: ?//
     - [x] Defining functions
-    - [ ] reduce
+    - [x] reduce
     - [ ] isempty
     - [x] limit
     - [ ] first/1, last/1, nth/2

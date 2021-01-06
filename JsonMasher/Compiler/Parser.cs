@@ -443,6 +443,10 @@ namespace JsonMasher.Compiler
             {
                 return ParseTry(state);
             }
+            else if (state.Current == Tokens.Keywords.Reduce)
+            {
+                return ParseReduce(state);
+            }
             else if (state.Current == Tokens.Dot)
             {
                 return ParseDot(state);
@@ -535,6 +539,33 @@ namespace JsonMasher.Compiler
                 return state.RecordPosition(new TryCatch {
                     TryBody = tryBody
                 }, position);
+            }
+        }
+
+        private IJsonMasherOperator ParseReduce(State state)
+        {
+            var position = state.Position;
+            state.Advance();
+            var inputs = ParseRelationalLowerExpression(state);
+            state.Match(Tokens.Keywords.As);
+            if (state.Current is VariableIdentifier identifier)
+            {
+                state.Advance();
+                state.Match(Tokens.OpenParen);
+                var initial = ParseAlternatives(state);
+                state.Match(Tokens.Semicolon);
+                var update = ParsePipeTerm(state);
+                state.Match(Tokens.CloseParen);
+                return state.RecordPosition(new Reduce {
+                    Name = identifier.Id,
+                    Inputs = inputs,
+                    Initial = initial,
+                    Update = update
+                }, position);
+            }
+            else
+            {
+                throw state.ErrorVariableIdentifierExpected();
             }
         }
 
