@@ -824,12 +824,21 @@ namespace JsonMasher.Compiler
             var result = new List<PropertyDescriptor>();
             while (state.Current != Tokens.CloseBrace)
             {
-                string key = state.Current switch {
-                    Identifier identifier => identifier.Id,
-                    String str => str.Value,
-                    _ => throw state.ErrorExpected("a string (e.g. '\"test\"') or an identifier (e.g. 'x')")
-                };
-                state.Advance();
+                IJsonMasherOperator key = null;
+                if (state.Current is Identifier identifier)
+                {
+                    key = new Literal(identifier.Id);
+                    state.Advance();
+                }
+                else if (state.Current is String str)
+                {
+                    key = new Literal(str.Value);
+                    state.Advance();
+                }
+                else
+                {
+                    key = ParseTerm(state);
+                }
                 state.Match(Tokens.Colon);
                 var value = ParseFilterNoComma(state);
                 result.Add(new PropertyDescriptor(key, value));

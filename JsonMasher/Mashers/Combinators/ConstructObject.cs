@@ -4,7 +4,7 @@ using JsonMasher.JsonRepresentation;
 
 namespace JsonMasher.Mashers.Combinators
 {
-    public record PropertyDescriptor(string Key, IJsonMasherOperator Operator);
+    public record PropertyDescriptor(IJsonMasherOperator Key, IJsonMasherOperator Value);
 
     public class ConstructObject : IJsonMasherOperator
     {
@@ -30,14 +30,24 @@ namespace JsonMasher.Mashers.Combinators
             else
             {
                 var descriptor = Descriptors[level];
-                foreach (var value in descriptor.Operator.Mash(json, context, stack))
+                foreach (var key in descriptor.Key.Mash(json, context, stack))
                 {
-                    properties.Add(new JsonProperty(descriptor.Key, value));
-                    foreach (var result in Mash(json, context, stack, properties))
+                    if (key.Type != JsonValueType.String)
                     {
-                        yield return result;
+                        context.Error(
+                            $"While building an object, cannot index object with {key.Type}",
+                            stack,
+                            key);
                     }
-                    properties.RemoveAt(level);
+                    foreach (var value in descriptor.Value.Mash(json, context, stack))
+                    {
+                        properties.Add(new JsonProperty(key.GetString(), value));
+                        foreach (var result in Mash(json, context, stack, properties))
+                        {
+                            yield return result;
+                        }
+                        properties.RemoveAt(level);
+                    }
                 }
             }
         }

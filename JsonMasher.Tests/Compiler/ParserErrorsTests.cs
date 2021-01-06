@@ -185,16 +185,14 @@ Line 1:             ^^^^^
                 ));
             yield return new TestItem(
                 "{ 2",
-                "Expected a string (e.g. '\"test\"') or an identifier (e.g. 'x'), but got '2'.",
+                "Expected ':', but reached end of input.",
                 new PositionInformation(
-                    1, 3,
-                    @"Line 1: { 2
-Line 1:   ^
-"
+                    1, 4,
+                    @""
                 ));
             yield return new TestItem(
                 "{",
-                "Expected a string (e.g. '\"test\"') or an identifier (e.g. 'x'), but reached end of input.",
+                "Unknown construct.",
                 new PositionInformation(
                     1, 2,
                     @""

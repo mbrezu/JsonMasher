@@ -235,56 +235,64 @@ namespace JsonMasher.Tests.Compiler
             yield return new TestItem("{}", new ConstructObject());
             yield return new TestItem("{a:.}", new ConstructObject(
                 new PropertyDescriptor(
-                    "a", 
+                    new Literal("a"), 
                     new Identity())));
             yield return new TestItem("{a:1}", new ConstructObject(
                 new PropertyDescriptor(
-                    "a", 
+                    new Literal("a"), 
                     new Literal(1))));
             yield return new TestItem("{\"a\":1}", new ConstructObject(
                 new PropertyDescriptor(
-                    "a", 
+                    new Literal("a"), 
+                    new Literal(1))));
+            yield return new TestItem("{(\"a\" + \"b\"):1}", new ConstructObject(
+                new PropertyDescriptor(
+                    new FunctionCall(Plus.Builtin, new Literal("a"), new Literal("b")),
+                    new Literal(1))));
+            yield return new TestItem("{\"a\":1}", new ConstructObject(
+                new PropertyDescriptor(
+                    new Literal("a"), 
                     new Literal(1))));
             yield return new TestItem("{a:1, b:2}", new ConstructObject(
                 new PropertyDescriptor(
-                    "a", 
+                    new Literal("a"), 
                     new Literal(1)),
                 new PropertyDescriptor(
-                    "b", 
+                    new Literal("b"), 
                     new Literal(2))));
             yield return new TestItem("{\"a\":1, b:2}", new ConstructObject(
                 new PropertyDescriptor(
-                    "a", 
+                    new Literal("a"), 
                     new Literal(1)),
                 new PropertyDescriptor(
-                    "b", 
+                    new Literal("b"), 
                     new Literal(2))));
             yield return new TestItem("{\"a\":1, \"b\":2}", new ConstructObject(
                 new PropertyDescriptor(
-                    "a", 
+                    new Literal("a"), 
                     new Literal(1)),
                 new PropertyDescriptor(
-                    "b", 
+                    new Literal("b"), 
                     new Literal(2))));
             yield return new TestItem("{a:1, \"b\":2}", new ConstructObject(
                 new PropertyDescriptor(
-                    "a", 
+                    new Literal("a"), 
                     new Literal(1)),
                 new PropertyDescriptor(
-                    "b", 
+                    new Literal("b"), 
                     new Literal(2))));
             yield return new TestItem("{a:1, b: {c: 2}, d: 3}", new ConstructObject(
                 new PropertyDescriptor(
-                    "a", 
+                    new Literal("a"), 
                     new Literal(1)),
                 new PropertyDescriptor(
-                    "b",
+                    new Literal("b"),
                     new ConstructObject(
                         new PropertyDescriptor(
-                            "c", 
+                            new Literal("c"), 
                             new Literal(2)))),
                 new PropertyDescriptor(
-                    "d", 
+                    new Literal("d"),
                     new Literal(3))));
         }
 

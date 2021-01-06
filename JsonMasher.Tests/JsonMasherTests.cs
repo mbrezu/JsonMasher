@@ -329,7 +329,7 @@ namespace JsonMasher.Tests
             var op = Compose.AllParams(
                 new Enumerate(),
                 new ConstructObject(
-                    new PropertyDescriptor("a", new Identity())));
+                    new PropertyDescriptor(new Literal("a"), new Identity())));
 
             // Act
             var result = op.RunAsSequence(data);
@@ -349,8 +349,8 @@ namespace JsonMasher.Tests
             // Arrange
             var data = MakeArray();
             var op = new ConstructObject(
-                new PropertyDescriptor("a", new Identity()),
-                new PropertyDescriptor("b", new Enumerate()));
+                new PropertyDescriptor(new Literal("a"), new Identity()),
+                new PropertyDescriptor(new Literal("b"), new Enumerate()));
 
             // Act
             var result = op.RunAsSequence(data);
@@ -378,8 +378,8 @@ namespace JsonMasher.Tests
             var op = new Compose {
                 First = new Enumerate(),
                 Second = new ConstructObject(
-                    new PropertyDescriptor("a", new Identity()),
-                    new PropertyDescriptor("b", new Identity()))};
+                    new PropertyDescriptor(new Literal("a"), new Identity()),
+                    new PropertyDescriptor(new Literal("b"), new Identity()))};
 
             // Act
             var result = op.RunAsSequence(data);

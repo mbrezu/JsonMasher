@@ -107,6 +107,11 @@ namespace JsonMasher.Tests.EndToEnd
                 "[{\"a\":1}]");
 
             yield return new TestItem(
+                "{(\"a\", \"b\"):(1, 2)}",
+                "null",
+                "[{\"a\":1}, {\"a\":2}, {\"b\":1}, {\"b\":2}]");
+
+            yield return new TestItem(
                 ".[] | {a:.}",
                 "[1, 2]",
                 "[{\"a\":1}, {\"a\":2}]");
