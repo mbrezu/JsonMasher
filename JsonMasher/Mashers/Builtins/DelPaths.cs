@@ -25,11 +25,21 @@ namespace JsonMasher.Mashers.Builtins
                 var jsonResult = json;
                 foreach (var path in paths)
                 {
-                    jsonResult = Del.DeletePath(jsonResult, path, context, stack);
+                    jsonResult = DeletePath(jsonResult, path, context, stack);
                 }
                 yield return jsonResult;
             }
         }
+
+        private static Json DeletePath(Json json, JsonPath path, IMashContext context, IMashStack stack)
+            => json.TransformByPath(
+                path,
+                leafJson => null,
+                (json, pathPart) => context.Error(
+                    $"Can't index {json.Type} with {pathPart.ToString()}.",
+                    stack,
+                    json,
+                    pathPart.ToJson()));
 
         public static Builtin Builtin => _builtin;
     }

@@ -50,7 +50,6 @@ namespace JsonMasher.Tests.Builtins
                 .Concat(SortTests())
                 .Concat(ModuloTests())
                 .Concat(HasInTests())
-                .Concat(DelTests())
                 .Concat(GetSetPathTests())
                 .Concat(DelPathsTests());
 
@@ -172,32 +171,6 @@ namespace JsonMasher.Tests.Builtins
                 new FunctionCall(In.Builtin, new Literal { Value = "[1, 2, 3]".AsJson() }),
                 "2",
                 "[true]");
-        }
-
-        private static IEnumerable<TestItem> DelTests()
-        {
-            yield return new TestItem(
-                new FunctionCall(Del.Builtin, new Selector {
-                    Index = Concat.AllParams(
-                        new Literal(0),
-                        new Literal(1)
-                )}),
-                "[1, 2, 3]",
-                "[[3]]");
-            yield return new TestItem(
-                new FunctionCall(Del.Builtin, new Selector {
-                    Index = Concat.AllParams(
-                        new Literal("a"),
-                        new Literal("b")
-                )}),
-                "{\"a\": 1, \"b\": 2}",
-                "[{}]");
-            yield return new TestItem(
-                new FunctionCall(Del.Builtin, Compose.AllParams(
-                    new StringSelector { Key = "b" },
-                    new Selector { Index = new Literal(1) })),
-                "{\"a\": 1, \"b\": [1, 2]}",
-                "[{\"a\":1,\"b\":[1]}]");
         }
 
         private static IEnumerable<TestItem> GetSetPathTests()

@@ -17,3 +17,6 @@ def from_entries:
 
 def with_entries(f):
     to_entries | map(f) | from_entries;
+
+def del(f): delpaths([path(f)]);
+
