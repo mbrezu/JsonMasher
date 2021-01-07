@@ -30,8 +30,8 @@
     - [x] arrays, objects, iterables, booleans, numbers, strings, nulls, values, scalars 
     - [x] reverse
     - [x] finites, isinfinite, isfinite
+    - [x] normals, isnormal
     - [ ] utf8bytelength
-    - [ ] normals
     - [ ] error, halt, halt_error/0, halt_error/1
     - [ ] $\_\_loc\_\_
     - [ ] paths/0, paths/1, leaf_paths
@@ -40,7 +40,7 @@
     - [ ] flatten/0, flatten/1
     - [ ] floor, sqrt
     - [ ] tonumber, tostring
-    - [ ] infinite, nan, isnan, isnormal
+    - [ ] infinite, nan, isnan
     - [ ] group_by
     - [ ] min, max, min_by(path_exp), max_by(path_exp)
     - [ ] unique, unique_by(path_exp) 

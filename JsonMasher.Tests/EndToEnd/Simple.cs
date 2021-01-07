@@ -674,6 +674,14 @@ map(select(. < 2))",
                 ".[] | finites",
                 "[100, 200, 300]",
                 "[100, 200, 300]");
+            yield return new TestItem(
+                "isnormal",
+                "100",
+                "[true]");
+            yield return new TestItem(
+                ".[] | normals",
+                "[-100, 0, 100, 200, 300]",
+                "[-100, 100, 200, 300]");
         }
     }
 }

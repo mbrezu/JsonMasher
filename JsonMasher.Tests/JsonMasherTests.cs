@@ -582,6 +582,23 @@ namespace JsonMasher.Tests
             Json.Array(result).DeepEqual("[true, true, false]".AsJson()).Should().BeTrue();
         }
 
+        [Fact]
+        public void IsNormalTest()
+        {
+            // Arrange
+            var data = Json.ArrayParams(Json.Number(0));
+            var op = Compose.AllParams(
+                new Enumerate(),
+                new FunctionCall(IsNormal.Builtin)
+            );
+
+            // Act
+            var result = op.RunAsSequence(data);
+
+            // Assert
+            Json.Array(result).DeepEqual("[false]".AsJson()).Should().BeTrue();
+        }
+
         private static Json MakeArray()
         {
             return Json.ArrayParams(
