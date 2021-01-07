@@ -151,15 +151,15 @@ def leaf_paths: paths(scalars);
 # TODO:      def _until:
 # TODO:          if cond then . else (next|_until) end;
 # TODO:      _until;
-# TODO: def limit($n; exp):
-# TODO:     if $n > 0 then label $out | foreach exp as $item ($n; .-1; $item, if . <= 0 then break $out else empty end)
-# TODO:     elif $n == 0 then empty
-# TODO:     else exp end;
-# TODO: # range/3, with a `by` expression argument
-# TODO: def range($init; $upto; $by):
-# TODO:     if $by > 0 then $init|while(. < $upto; . + $by)
-# TODO:   elif $by < 0 then $init|while(. > $upto; . + $by)
-# TODO:   else empty end;
+# C# builtin: def limit($n; exp):
+# C# builtin:     if $n > 0 then label $out | foreach exp as $item ($n; .-1; $item, if . <= 0 then break $out else empty end)
+# C# builtin:     elif $n == 0 then empty
+# C# builtin:     else exp end;
+# C# builtin: # range/3, with a `by` expression argument
+# C# builtin: def range($init; $upto; $by):
+# C# builtin:     if $by > 0 then $init|while(. < $upto; . + $by)
+# C# builtin:   elif $by < 0 then $init|while(. > $upto; . + $by)
+# C# builtin:   else empty end;
 # TODO: def first(g): label $out | g | ., break $out;
 # TODO: def isempty(g): first((g|false), true);
 # TODO: def all(generator; condition): isempty(generator|condition and empty);

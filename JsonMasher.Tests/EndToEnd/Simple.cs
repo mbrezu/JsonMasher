@@ -686,6 +686,10 @@ map(select(. < 2))",
                 "leaf_paths",
                 "[-100, 0, [1, 2, 3, {\"a\": 1}], 100, 200, 300]",
                 "[[0],[1],[2, 0],[2, 1],[2, 2],[2, 3, \"a\"],[3],[4],[5]]");
+            yield return new TestItem(
+                "tostring",
+                "[null, false, true, 10]",
+                "[\"[null, false, true, 10]\"]");
         }
     }
 }

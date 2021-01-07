@@ -51,7 +51,8 @@ namespace JsonMasher.Tests.Builtins
                 .Concat(HasInTests())
                 .Concat(GetSetPathTests())
                 .Concat(DelPathsTests())
-                .Concat(TypeTests());
+                .Concat(TypeTests())
+                .Concat(ToStringTests());
 
         private static IEnumerable<TestItem> RangeTests()
         {
@@ -193,6 +194,11 @@ namespace JsonMasher.Tests.Builtins
             yield return new TestItem(new FunctionCall(JsonType.Builtin), "\"abc\"", "[\"string\"]");
             yield return new TestItem(new FunctionCall(JsonType.Builtin), "[]", "[\"array\"]");
             yield return new TestItem(new FunctionCall(JsonType.Builtin), "{}", "[\"object\"]");
+        }
+
+        private static IEnumerable<TestItem> ToStringTests()
+        {
+            yield return new TestItem(new FunctionCall(Tostring.Builtin), "null", "[\"null\"]");
         }
     }
 }

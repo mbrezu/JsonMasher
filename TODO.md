@@ -32,15 +32,16 @@
     - [x] finites, isinfinite, isfinite
     - [x] normals, isnormal
     - [x] leaf_paths
+    - [x] paths/0, paths/1
+    - [x] tostring
     - [ ] utf8bytelength
     - [ ] error, halt, halt_error/0, halt_error/1
     - [ ] $\_\_loc\_\_
-    - [ ] paths/0, paths/1
     - [ ] any/0, any/1, any/2
     - [ ] all/0, all/1, all/2
     - [ ] flatten/0, flatten/1
     - [ ] floor, sqrt
-    - [ ] tonumber, tostring
+    - [ ] tonumber
     - [ ] infinite, nan, isnan
     - [ ] group_by
     - [ ] min, max, min_by(path_exp), max_by(path_exp)
