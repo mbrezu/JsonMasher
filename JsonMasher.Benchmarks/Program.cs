@@ -7,13 +7,15 @@ namespace JsonMasher.Benchmarks
     {
         LexerBenchmark _lexerBenchmark;
         ParserBenchmark _parserBenchmark;
-        MasherBenchmark _masherBenchmark;
+        RangeMasherBenchmark _masherBenchmarkRange;
+        RecurseMasherBenchmark _masherBenchmarkRecurse;
 
         public Benchmarks()
         {
             _lexerBenchmark = new();
             _parserBenchmark = new();
-            _masherBenchmark = new();
+            _masherBenchmarkRange = new();
+            _masherBenchmarkRecurse = new();
         }
 
         [Benchmark]
@@ -29,17 +31,30 @@ namespace JsonMasher.Benchmarks
         }
 
         [Benchmark]
-        public void MasherWithoutDebug()
+        public void RangeMasherWithoutDebug()
         {
-            _masherBenchmark.MashWithoutDebug();
+            _masherBenchmarkRange.MashWithoutDebug();
         }
 
         [Benchmark]
-        public void MasherWithDebug()
+        public void RangeMasherWithDebug()
         {
-            _masherBenchmark.MashWithDebug();
+            _masherBenchmarkRange.MashWithDebug();
+        }
+        [Benchmark]
+
+        public void RecurseMasherWithoutDebug()
+        {
+            _masherBenchmarkRecurse.MashWithoutDebug();
+        }
+
+        [Benchmark]
+        public void RecurseMasherWithDebug()
+        {
+            _masherBenchmarkRecurse.MashWithDebug();
         }
     }
+
     class Program
     {
         static void Main(string[] args)

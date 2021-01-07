@@ -23,3 +23,5 @@ jq -n '[[1, 2], [3, 4]] | combinations'
 jq -c -n 'def f: $x; 1 as $x | f'
 
 jq -c -n '[[0,1] | combinations(2)]'
+
+jq -c -n '[range(10)] | map(sqrt)'
