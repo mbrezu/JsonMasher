@@ -16,10 +16,11 @@ namespace JsonMasher.Mashers.Combinators
 
         public IEnumerable<Json> Mash(Json json, IMashContext context)
         {
-            var newContext = context.PushVariablesFrame().PushStack(this);
+            context = context.PushStack(this);
+            var newContext = context.PushVariablesFrame();
             newContext.Tick();
-            var result = Initial.Mash(json, newContext).FirstOrDefault() ?? Json.Null;
-            foreach (var value in Inputs.Mash(json, newContext))
+            var result = Initial.Mash(json, context).FirstOrDefault() ?? Json.Null;
+            foreach (var value in Inputs.Mash(json, context))
             {
                 newContext.SetVariable(Name, value);
                 result = Update.Mash(result, newContext).LastOrDefault() ?? Json.Null;
