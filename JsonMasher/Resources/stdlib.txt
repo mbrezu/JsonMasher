@@ -48,7 +48,7 @@ def strings: select(type == "string");
 def nulls: select(. == null);
 def values: select(. != null);
 def scalars: select(type|. != "array" and . != "object");
-# TODO: def leaf_paths: paths(scalars);
+def leaf_paths: paths(scalars);
 # TODO: def join($x): reduce .[] as $i (null;
 # TODO:             (if .==null then "" else .+$x end) +
 # TODO:             ($i | if type=="boolean" or type=="number" then tostring else .//"" end)
