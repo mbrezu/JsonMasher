@@ -53,9 +53,9 @@ def join($x): reduce .[] as $i (null;
             (if .==null then "" else .+$x end) +
             ($i | if type=="boolean" or type=="number" then tostring else .//"" end)
         ) // "";
-# TODO: def _flatten($x): reduce .[] as $i ([]; if $i | type == "array" and $x != 0 then . + ($i | _flatten($x-1)) else . + [$i] end);
-# TODO: def flatten($x): if $x < 0 then error("flatten depth must not be negative") else _flatten($x) end;
-# TODO: def flatten: _flatten(-1);
+def _flatten($x): reduce .[] as $i ([]; if $i | type == "array" and $x != 0 then . + ($i | _flatten($x-1)) else . + [$i] end);
+def flatten($x): if $x < 0 then error("flatten depth must not be negative") else _flatten($x) end;
+def flatten: _flatten(-1);
 # C# builtin: def range($x): range(0;$x);
 # TODO: def fromdateiso8601: strptime("%Y-%m-%dT%H:%M:%SZ")|mktime;
 # TODO: def todateiso8601: strftime("%Y-%m-%dT%H:%M:%SZ");

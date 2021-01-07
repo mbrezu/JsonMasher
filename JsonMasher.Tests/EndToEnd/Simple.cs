@@ -698,6 +698,14 @@ map(select(. < 2))",
                 "join(\" \")",
                 "[\"102\", 103, 104]",
                 "[\"102 103 104\"]");
+            yield return new TestItem(
+                "flatten",
+                "[[1, [2, 3]], 4]",
+                "[[1, 2, 3, 4]]");
+            yield return new TestItem(
+                "flatten(1)",
+                "[[1, [2, 3]], 4]",
+                "[[1, [2, 3], 4]]");
         }
     }
 }
