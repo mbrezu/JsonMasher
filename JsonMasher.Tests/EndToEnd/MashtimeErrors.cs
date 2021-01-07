@@ -166,34 +166,6 @@ Line 1: ^^^^^^^^^^^^
 Line 1: ^^^^^^^^^^^^
 "));
             yield return new TestItem(
-                "200 > [1, 2]",
-                "null",
-                "Can't compare Number and Array.",
-                new PositionInformation(1, 1, @"Line 1: 200 > [1, 2]
-Line 1: ^^^^^^^^^^^^
-"));
-            yield return new TestItem(
-                "200 >= [1, 2]",
-                "null",
-                "Can't compare Number and Array.",
-                new PositionInformation(1, 1, @"Line 1: 200 >= [1, 2]
-Line 1: ^^^^^^^^^^^^^
-"));
-            yield return new TestItem(
-                "200 < [1, 2]",
-                "null",
-                "Can't compare Number and Array.",
-                new PositionInformation(1, 1, @"Line 1: 200 < [1, 2]
-Line 1: ^^^^^^^^^^^^
-"));
-            yield return new TestItem(
-                "200 <= [1, 2]",
-                "null",
-                "Can't compare Number and Array.",
-                new PositionInformation(1, 1, @"Line 1: 200 <= [1, 2]
-Line 1: ^^^^^^^^^^^^^
-"));
-            yield return new TestItem(
                 "limit([1]; 1, 2, 3)",
                 "null",
                 "Can't use Array as limit.",

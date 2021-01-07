@@ -650,6 +650,18 @@ map(select(. < 2))",
                 "reverse",
                 "[1, 2, 3]",
                 "[[3, 2, 1]]");
+            yield return new TestItem(
+                "paths",
+                "[1, 2, 3]",
+                "[[0], [1], [2]]");
+            yield return new TestItem(
+                "paths(. < 3)",
+                "[1, 2, 3]",
+                "[[0], [1]]");
+            yield return new TestItem(
+                "paths(. < 3)",
+                "{\"a\": 1, \"b\": 2, \"c\": [1, 2, 3]}",
+                "[[\"a\"],[\"b\"],[\"c\",0],[\"c\",1]]");
         }
     }
 }
