@@ -28,6 +28,7 @@
     - [x] to_entries, from_entries, with_entries
     - [x] type
     - [x] arrays, objects, iterables, booleans, numbers, strings, nulls, values, scalars 
+    - [x] reverse
     - [ ] utf8bytelength
     - [ ] normals, finites
     - [ ] error, halt, halt_error/0, halt_error/1
@@ -42,7 +43,6 @@
     - [ ] group_by
     - [ ] min, max, min_by(path_exp), max_by(path_exp)
     - [ ] unique, unique_by(path_exp) 
-    - [ ] reverse
     - [ ] contains, indices, index, rindex, inside
     - [ ] startswith, endswith
     - [ ] combinations/0, combinations/1

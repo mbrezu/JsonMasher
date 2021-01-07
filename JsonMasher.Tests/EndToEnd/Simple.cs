@@ -646,6 +646,10 @@ map(select(. < 2))",
                 ".[] | scalars",
                 "[1, [], 2, null, {}, null, {\"a\":1}, \"test\"]",
                 "[1, 2, null, null, \"test\"]");
+            yield return new TestItem(
+                "reverse",
+                "[1, 2, 3]",
+                "[[3, 2, 1]]");
         }
     }
 }
