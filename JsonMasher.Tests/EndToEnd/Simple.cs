@@ -710,6 +710,12 @@ map(select(. < 2))",
                 "try error(\"not good\") catch .",
                 "null",
                 "[\"not good\"]");
+            yield return new TestItem("first(.[])", "[1, 2, 3]", "[1]");
+            yield return new TestItem("first", "[1, 2, 3]", "[1]");
+            yield return new TestItem("last(.[])", "[1, 2, 3]", "[3]");
+            yield return new TestItem("last", "[1, 2, 3]", "[3]");
+            yield return new TestItem("nth(1; .[])", "[1, 2, 3]", "[2]");
+            yield return new TestItem("nth(1)", "[1, 2, 3]", "[2]");
         }
     }
 }

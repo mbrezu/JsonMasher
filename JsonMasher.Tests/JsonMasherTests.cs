@@ -618,6 +618,20 @@ namespace JsonMasher.Tests
             action.Should().Throw<JsonMasherException>().Where(ex => ex.Message == "not good");
         }
 
+        [Fact]
+        public void FirstTest()
+        {
+            // Arrange
+            var data = Json.ArrayParams(Json.Number(0), Json.Number(1));
+            var op = new FunctionCall(First.Builtin, new Enumerate());
+
+            // Act
+            var result = op.RunAsSequence(data);
+
+            // Assert
+            Json.Array(result).DeepEqual("[0]".AsJson()).Should().BeTrue();
+        }
+
         private static Json MakeArray()
         {
             return Json.ArrayParams(

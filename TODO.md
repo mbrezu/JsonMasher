@@ -83,8 +83,8 @@
     - [x] reduce
     - [ ] isempty
     - [x] limit
-    - [ ] first/1, last/1, nth/2
-    - [ ] first/0, last/0, nth/1
+    - [x] first/1, last/1, nth/2
+    - [x] first/0, last/0, nth/1
     - [x] foreach
   - [ ] [Math](https://stedolan.github.io/jq/manual/#Math)
   - [ ] [I/O](https://stedolan.github.io/jq/manual/#IO)

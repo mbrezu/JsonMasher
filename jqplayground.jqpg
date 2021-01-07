@@ -10,8 +10,8 @@ jq -n '[1, 2, 3] | reverse'
 
 jq -n '{"a": 1, "b": 2, "c": [1, 2, 3]} | paths(. < 3)'
 
-jq -n '[[-100, [0, 100], {a:2}], 200, 300] | flatten'
+jq -n '[[1, [2, 3]], 4] | flatten(1)'
 
 jq -n '"100" | tonumber'
 
-jq -n '[-100, 0, 30, "hello"] | join(" ")'
+jq -n '20 | empty or 10'

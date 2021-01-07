@@ -160,7 +160,7 @@ def flatten: _flatten(-1);
 # C# builtin:     if $by > 0 then $init|while(. < $upto; . + $by)
 # C# builtin:   elif $by < 0 then $init|while(. > $upto; . + $by)
 # C# builtin:   else empty end;
-# TODO: def first(g): label $out | g | ., break $out;
+# C# builtin: def first(g): label $out | g | ., break $out;
 # TODO: def isempty(g): first((g|false), true);
 # TODO: def all(generator; condition): isempty(generator|condition and empty);
 # TODO: def any(generator; condition): isempty(generator|condition or empty)|not;
@@ -168,11 +168,11 @@ def flatten: _flatten(-1);
 # TODO: def any(condition): any(.[]; condition);
 # TODO: def all: all(.[]; .);
 # TODO: def any: any(.[]; .);
-# TODO: def last(g): reduce g as $item (null; $item);
-# TODO: def nth($n; g): if $n < 0 then error("nth doesn't support negative indices") else last(limit($n + 1; g)) end;
-# TODO: def first: .[0];
-# TODO: def last: .[-1];
-# TODO: def nth($n): .[$n];
+def last(g): reduce g as $item (null; $item);
+def nth($n; g): if $n < 0 then error("nth doesn't support negative indices") else last(limit($n + 1; g)) end;
+def first: .[0];
+def last: .[-1];
+def nth($n): .[$n];
 # TODO: def combinations:
 # TODO:     if length == 0 then [] else
 # TODO:         .[0][] as $x
