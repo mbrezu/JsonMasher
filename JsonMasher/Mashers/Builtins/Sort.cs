@@ -34,14 +34,22 @@ namespace JsonMasher.Mashers.Builtins
                 if (json.Type == JsonValueType.Array)
                 {
                     var masher = mashers.First();
-                    var values = json
-                        .EnumerateArray()
-                        .Select(e => Tuple.Create(
-                            e, 
-                            masher.Mash(e, context, stack).FirstOrDefault() ?? e))
-                        .OrderBy(x => x.Item2, JsonComparer.Instance)
-                        .Select(x => x.Item1);
-                    return Json.Array(values).AsEnumerable();
+                    var keys = masher.Mash(json, context, stack).FirstOrDefault();
+                    if (keys == null || keys.Type != JsonValueType.Array)
+                    {
+                        return Json.Array(json.EnumerateArray().OrderBy(x => x, JsonComparer.Instance))
+                            .AsEnumerable();
+                    }
+                    else
+                    {
+                        var values = json
+                            .EnumerateArray()
+                            .Zip(keys.EnumerateArray(), (v,k) => Tuple.Create(v, k))
+                            .OrderBy(x => x.Item2, JsonComparer.Instance)
+                            .Select(x => x.Item1);
+                        return Json.Array(values).AsEnumerable();
+
+                    }
                 }
                 else
                 {

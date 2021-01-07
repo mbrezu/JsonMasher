@@ -46,7 +46,7 @@ namespace JsonMasher.Mashers
             environment.SetCallable(new FunctionName("debug", 0), Debug.Builtin);
             environment.SetCallable(new FunctionName("path", 1), Builtins.Path.Builtin);
             environment.SetCallable(new FunctionName("sort", 0), Sort.Builtin_0);
-            environment.SetCallable(new FunctionName("sort_by", 1), Sort.Builtin_1);
+            environment.SetCallable(new FunctionName("_sort_by_impl", 1), Sort.Builtin_1);
             environment.SetCallable(new FunctionName("has", 1), Has.Builtin);
             environment.SetCallable(new FunctionName("in", 1), In.Builtin);
             environment.SetCallable(new FunctionName("getpath", 1), GetPath.Builtin);

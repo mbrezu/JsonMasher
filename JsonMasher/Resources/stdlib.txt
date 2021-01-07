@@ -6,7 +6,7 @@ def keys_unsorted: keys;
 # TODO: def error(msg): msg|error;
 def map(f): [.[] | f];
 def select(f): if f then . else empty end;
-# TODO: def sort_by(f): _sort_by_impl(map([f]));
+def sort_by(f): _sort_by_impl(map([f]));
 # TODO: def group_by(f): _group_by_impl(map([f]));
 # TODO: def unique: group_by(.) | map(.[0]);
 # TODO: def unique_by(f): group_by(f) | map(.[0]);
