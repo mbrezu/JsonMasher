@@ -126,6 +126,13 @@ namespace JsonMasher.Tests.Compiler
                 Target = new GetVariable { Name = "obj" }, 
                 Index = new Identity()
             });
+            yield return new TestItem("$obj[1][2]", new Selector {
+                Target = new Selector { 
+                    Target = new GetVariable { Name = "obj" }, 
+                    Index = new Literal(1)
+                },
+                Index = new Literal(2)
+            });
             yield return new TestItem("$obj[10:20]", new SliceSelector { 
                 Target = new GetVariable { Name = "obj" }, 
                 From = new Literal(10),

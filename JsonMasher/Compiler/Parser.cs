@@ -454,7 +454,11 @@ namespace JsonMasher.Compiler
             }
             else if (state.Current == Tokens.OpenSquareParen)
             {
-                return ParseSelector(state, false, term);
+                while (state.Current == Tokens.OpenSquareParen)
+                {
+                    term = ParseSelector(state, false, term);
+                }
+                return term;
             }
             else
             {
