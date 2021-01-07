@@ -550,7 +550,9 @@ namespace JsonMasher.Compiler
             else if (state.Current == Tokens.DotDot)
             {
                 state.Advance();
-                return state.RecordPosition(new FunctionCall(Recurse.Builtin), position);
+                return state.RecordPosition(
+                    new FunctionCall(new FunctionName("recurse", 0)),
+                    position);
             }
             else if (state.Current is Number n)
             {

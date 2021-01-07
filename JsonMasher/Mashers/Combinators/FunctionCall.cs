@@ -92,8 +92,6 @@ namespace JsonMasher.Mashers.Combinators
             var result = Descriptor switch {
                 FunctionName name => GeneratePathsFunctionName(
                     pathSoFar, name, json, context, newStack),
-                Builtin b when b == Recurse.Builtin
-                    => Recurse.GeneratePaths(pathSoFar, json),
                 _ => throw context.Error("Not a path expression.", newStack)
             };
             return result;

@@ -19,10 +19,10 @@ def del(f): delpaths([path(f)]);
 def map_values(f): .[] |= f;
 
 # recurse
-# TODO: def recurse(f): def r: ., (f | r); r;
-# TODO: def recurse(f; cond): def r: ., (f | select(cond) | r); r;
-# TODO: def recurse: recurse(.[]?);
-# TODO: def recurse_down: recurse;
+def recurse(f): def r: ., (f | r); r;
+def recurse(f; cond): def r: ., (f | select(cond) | r); r;
+def recurse: recurse(.[]?);
+def recurse_down: recurse;
 
 def to_entries: [keys_unsorted[] as $k | {key: $k, value: .[$k]}];
 def from_entries: map({(.key // .Key // .name // .Name): (if has("value") then .value else .Value end)}) | add | . // {};

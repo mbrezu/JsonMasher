@@ -120,7 +120,7 @@ namespace JsonMasher.Tests.Compiler
                 new Enumerate(),
                 new Enumerate()));
 
-            yield return new TestItem("..", new FunctionCall(Recurse.Builtin));
+            yield return new TestItem("..", new FunctionCall(new FunctionName("recurse", 0)));
 
             yield return new TestItem("$obj[.]", new Selector { 
                 Target = new GetVariable { Name = "obj" }, 

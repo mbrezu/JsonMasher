@@ -599,6 +599,21 @@ map(select(. < 2))",
                 "[{a:1, b:2}, {a:3, b:4}, {a:5, b:6}] | del(.[-2:][].a)",
                 "null",
                 "[[{\"a\":1,\"b\": 2},{\"b\": 4},{\"b\": 6}]]");
+
+            yield return new TestItem("..", "1", "[1]");
+            yield return new TestItem("..", "\"a\"", "[\"a\"]");
+            yield return new TestItem("..", "true", "[true]");
+            yield return new TestItem("..", "false", "[false]");
+            yield return new TestItem("..", "null", "[null]");
+            yield return new TestItem("..", "[1,2]", "[[1, 2], 1, 2]");
+            yield return new TestItem(
+                "..",
+                "{\"a\": 1, \"b\": 2}", 
+                "[{\"a\": 1, \"b\": 2}, 1, 2]");
+            yield return new TestItem(
+                "..",
+                "{\"a\": 1, \"b\": [1, 2]}", 
+                "[{\"a\": 1, \"b\": [1, 2]}, 1, [1, 2], 1, 2]");
         }
     }
 }
