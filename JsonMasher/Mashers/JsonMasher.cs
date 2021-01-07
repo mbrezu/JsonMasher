@@ -14,11 +14,7 @@ namespace JsonMasher.Mashers
             SourceInformation sourceInformation = null,
             int tickLimit = 0)
         {
-            MashContext _context = new()
-            {
-                SourceInformation = sourceInformation,
-                TickLimit = tickLimit
-            };
+            MashContext _context = new(tickLimit, sourceInformation);
             return (
                 sequence: seq.SelectMany(json => op.Mash(json, _context, stack)),
                 context: _context);

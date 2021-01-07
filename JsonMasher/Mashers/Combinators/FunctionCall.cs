@@ -73,18 +73,15 @@ namespace JsonMasher.Mashers.Combinators
             {
                 throw new InvalidOperationException();
             }
-            context.PushCallablesFrame();
+            var newContext = context.PushCallablesFrame();
             for (int i = 0; i < Arguments.Count; i++)
             {
-                context.SetCallable(func.Arguments[i], Arguments[i]);
+                newContext.SetCallable(func.Arguments[i], Arguments[i]);
             }
-            var resultList = new List<Json>();
-            foreach (var result in func.Op.Mash(json, context, stack))
+            foreach (var result in func.Op.Mash(json, newContext, stack))
             {
-                resultList.Add(result);
+                yield return result;
             }
-            context.PopCallablesFrame();
-            return resultList;
         }
 
         public IEnumerable<PathAndValue> GeneratePaths(
@@ -117,24 +114,23 @@ namespace JsonMasher.Mashers.Combinators
             {
                 throw new InvalidOperationException();
             }
-            context.PushCallablesFrame();
+            var newContext = context.PushCallablesFrame();
             for (int i = 0; i < Arguments.Count; i++)
             {
-                context.SetCallable(func.Arguments[i], Arguments[i]);
+                newContext.SetCallable(func.Arguments[i], Arguments[i]);
             }
             if (func.Op is IPathGenerator pathGenerator)
             {
                 foreach (var pathAndValue in pathGenerator.GeneratePaths(
-                    pathSoFar, json, context, stack))
+                    pathSoFar, json, newContext, stack))
                 {
                     yield return pathAndValue;
                 }
             }
             else
             {
-                throw context.Error("Not a path expression.", stack);
+                throw newContext.Error("Not a path expression.", stack);
             }
-            context.PopCallablesFrame();
         }
     }
 }

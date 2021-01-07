@@ -15,11 +15,6 @@ namespace JsonMasher.Mashers
             return newOne;
         }
 
-        public VariablesEnvironment PopFrame()
-        {
-            return _previous;
-        }
-
         public void SetVariable(string name, Json value)
         {
             _variables[name] = value;

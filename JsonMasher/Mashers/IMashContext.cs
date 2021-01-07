@@ -9,10 +9,8 @@ namespace JsonMasher.Mashers
     {
         void LogValue(Json value);
         IEnumerable<Json> Log { get; }
-        void PushVariablesFrame();
-        void PopVariablesFrame();
-        void PushCallablesFrame();
-        void PopCallablesFrame();
+        IMashContext PushVariablesFrame();
+        IMashContext PushCallablesFrame();
         void SetVariable(string name, Json value);
         Json GetVariable(string name, IMashStack stack);
         void SetCallable(FunctionName name, Callable value);

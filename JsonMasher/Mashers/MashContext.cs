@@ -8,66 +8,93 @@ using JsonMasher.Mashers.Combinators;
 
 namespace JsonMasher.Mashers
 {
-    public class MashContext : IMashContext
+    public class ContextMutableState
     {
-        List<Json> _log = new();
-        VariablesEnvironment _envVariables = new();
-        CallablesEnvironment _envCallables = new();
-        int ticks = 0;
+        public List<Json> Log { get; init; } = new();
+        public int Ticks { get; set; }
         public int TickLimit { get; init; }
-        public IEnumerable<Json> Log => _log;
-        public SourceInformation SourceInformation { get; init; }
 
-        public MashContext()
+        public void Tick()
         {
-            _envCallables = StandardLibrary.DefaultEnvironment;
-            PushVariablesFrame();
-            PushCallablesFrame();
+            if (TickLimit != 0)
+            {
+                Ticks++;
+            }
         }
 
-        public void LogValue(Json value) => _log.Add(value);
+        public bool OverTickLimit() => TickLimit != 0 && Ticks > TickLimit;
+    }
 
-        public void PushVariablesFrame() => _envVariables = _envVariables.PushFrame();
+    public record ContextState(
+        ContextMutableState MutableState,
+        VariablesEnvironment EnvVariables,
+        CallablesEnvironment EnvCallables,
+        SourceInformation SourceInformation);
 
-        public void PopVariablesFrame() => _envVariables = _envVariables.PopFrame();
+    public class MashContext : IMashContext
+    {
+        private ContextState _state;
+        public IEnumerable<Json> Log => _state.MutableState.Log;
 
-        public void PushCallablesFrame() => _envCallables = _envCallables.PushFrame();
+        public MashContext(int tickLimit = 0, SourceInformation sourceInformation = null)
+        {
+            _state = new ContextState(
+                new() { TickLimit = tickLimit },
+                new(),
+                StandardLibrary.DefaultEnvironment.PushFrame(),
+                sourceInformation);
+        }
 
-        public void PopCallablesFrame() => _envCallables = _envCallables.PopFrame();
+        private MashContext(ContextState state)
+        {
+            _state = state;
+        }
 
-        public void SetVariable(string name, Json value) => _envVariables.SetVariable(name, value);
+        public void LogValue(Json value) => _state.MutableState.Log.Add(value);
+
+        public IMashContext PushVariablesFrame()
+        {
+            return new MashContext(_state with { EnvVariables = _state.EnvVariables.PushFrame() });
+        }
+
+        public IMashContext PushCallablesFrame()
+        {
+            return new MashContext(_state with { EnvCallables = _state.EnvCallables.PushFrame() });
+        }
+
+        public void SetVariable(string name, Json value) => _state.EnvVariables.SetVariable(name, value);
 
         public Json GetVariable(string name, IMashStack stack)
-            => _envVariables.GetVariable(name, stack)
+            => _state.EnvVariables.GetVariable(name, stack)
                 ?? throw Error($"Cannot find variable ${name}.", stack);
 
-        public void SetCallable(FunctionName name, Callable value) => _envCallables.SetCallable(name, value);
+        public void SetCallable(FunctionName name, Callable value) => _state.EnvCallables.SetCallable(name, value);
 
         public Callable GetCallable(FunctionName name, IMashStack stack)
         {
-            var result = _envCallables.GetCallable(name, stack)
+            var result = _state.EnvCallables.GetCallable(name, stack)
                 ?? throw Error($"Function {name.Name}/{name.Arity} is not known.", stack);
             return result;
         }
 
         public void SetCallable(string name, List<string> arguments, IJsonMasherOperator body)
-            => _envCallables.SetCallable(name, arguments, body);
+            => _state.EnvCallables.SetCallable(name, arguments, body);
 
-        public void SetCallable(string name, Callable value) => _envCallables.SetCallable(name, value);
+        public void SetCallable(string name, Callable value) => _state.EnvCallables.SetCallable(name, value);
 
         public Callable GetCallable(string name, IMashStack stack)
-            => _envCallables.GetCallable(name, stack)
+            => _state.EnvCallables.GetCallable(name, stack)
                 ?? throw Error($"Function {name}/0 is not known.", stack);
 
         public Exception Error(string message, IMashStack stack, params Json[] values)
         {
-            var programWithLines = SourceInformation != null
-                ? new ProgramWithLines(SourceInformation.Program)
+            var programWithLines = _state.SourceInformation != null
+                ? new ProgramWithLines(_state.SourceInformation.Program)
                 : null;
             var stackSb = new StringBuilder();
             foreach (var frame in stack.GetValues())
             {
-                var position = SourceInformation?.GetProgramPosition(frame);
+                var position = _state.SourceInformation?.GetProgramPosition(frame);
                 if (position != null)
                 {
                     stackSb.Append(PositionHighlighter.Highlight(
@@ -83,7 +110,7 @@ namespace JsonMasher.Mashers
             var topFrame = stack.Top;
             if (topFrame != null) // TODO: should search the first frame with a position.
             {
-                var position = SourceInformation?.GetProgramPosition(topFrame);
+                var position = _state.SourceInformation?.GetProgramPosition(topFrame);
                 if (position != null)
                 {
                     line = programWithLines.GetLineNumber(position.StartPosition) + 1;
@@ -96,13 +123,10 @@ namespace JsonMasher.Mashers
 
         public void Tick(IMashStack stack)
         {
-            if (TickLimit != 0)
+            _state.MutableState.Tick();
+            if (_state.MutableState.OverTickLimit())
             {
-                ticks++;
-                if (ticks > TickLimit)
-                {
-                    throw Error($"Failed to complete in {TickLimit} ticks.", stack);
-                }
+                throw Error($"Failed to complete in {_state.MutableState.TickLimit} ticks.", stack);
             }
         }
 

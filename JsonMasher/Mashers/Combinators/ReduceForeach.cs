@@ -16,19 +16,19 @@ namespace JsonMasher.Mashers.Combinators
 
         public IEnumerable<Json> Mash(Json json, IMashContext context, IMashStack stack)
         {
-            context.PushVariablesFrame();
+            var newContext = context.PushVariablesFrame();
             var newStack = stack.Push(this);
-            context.Tick(newStack);
-            var result = Initial.Mash(json, context, newStack).FirstOrDefault() ?? Json.Null;
-            foreach (var value in Inputs.Mash(json, context, newStack))
+            newContext.Tick(newStack);
+            var result = Initial.Mash(json, newContext, newStack).FirstOrDefault() ?? Json.Null;
+            foreach (var value in Inputs.Mash(json, newContext, newStack))
             {
-                context.SetVariable(Name, value);
-                result = Update.Mash(result, context, newStack).LastOrDefault() ?? Json.Null;
+                newContext.SetVariable(Name, value);
+                result = Update.Mash(result, newContext, newStack).LastOrDefault() ?? Json.Null;
                 if (IsForeach)
                 {
                     if (Extract != null)
                     {
-                        foreach (var extractedValue in Extract.Mash(result, context, newStack))
+                        foreach (var extractedValue in Extract.Mash(result, newContext, newStack))
                         {
                             yield return extractedValue;
                         }
@@ -39,7 +39,6 @@ namespace JsonMasher.Mashers.Combinators
                     }
                 }
             }
-            context.PopVariablesFrame();
             if (!IsForeach) {
                 yield return result;
             }

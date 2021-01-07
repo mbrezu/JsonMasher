@@ -16,11 +16,6 @@ namespace JsonMasher.Mashers
             return newOne;
         }
 
-        public CallablesEnvironment PopFrame()
-        {
-            return _previous;
-        }
-
         public void SetCallable(FunctionName name, Callable value)
         {
             if (name.Arity == 0)

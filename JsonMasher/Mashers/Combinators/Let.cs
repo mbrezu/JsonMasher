@@ -1,7 +1,5 @@
 using System.Collections.Generic;
 using JsonMasher.JsonRepresentation;
-using System.Diagnostics;
-using System;
 
 namespace JsonMasher.Mashers.Combinators
 {
@@ -14,43 +12,39 @@ namespace JsonMasher.Mashers.Combinators
         public IEnumerable<PathAndValue> GeneratePaths(
             JsonPath pathSoFar, Json json, IMashContext context, IMashStack stack)
         {
-            context.PushVariablesFrame();
+            var newContext = context.PushVariablesFrame();
             var newStack = stack.Push(this);
-            context.Tick(newStack);
+            newContext.Tick(newStack);
             if (Body is IPathGenerator pathGenerator)
             {
-                foreach (var jsonValue in Value.Mash(json, context, newStack))
+                foreach (var jsonValue in Value.Mash(json, newContext, newStack))
                 {
-                    context.SetVariable(Name, jsonValue);
-                    foreach (var result in pathGenerator.GeneratePaths(pathSoFar, json, context, newStack))
+                    newContext.SetVariable(Name, jsonValue);
+                    foreach (var result in pathGenerator.GeneratePaths(pathSoFar, json, newContext, newStack))
                     {
                         yield return result;
                     }
                 }
-                context.PopVariablesFrame();
             }
             else
             {
-                throw context.Error("Not a path expression.", newStack.Push(Body));
+                throw newContext.Error("Not a path expression.", newStack.Push(Body));
             }
         }
 
         public IEnumerable<Json> Mash(Json json, IMashContext context, IMashStack stack)
         {
-            context.PushVariablesFrame();
+            var newContext = context.PushVariablesFrame();
             var newStack = stack.Push(this);
-            context.Tick(newStack);
-            var resultList = new List<Json>();
-            foreach (var jsonValue in Value.Mash(json, context, newStack))
+            newContext.Tick(newStack);
+            foreach (var jsonValue in Value.Mash(json, newContext, newStack))
             {
-                context.SetVariable(Name, jsonValue);
-                foreach (var result in Body.Mash(json, context, newStack))
+                newContext.SetVariable(Name, jsonValue);
+                foreach (var result in Body.Mash(json, newContext, newStack))
                 {
-                    resultList.Add(result);
+                    yield return result;
                 }
             }
-            context.PopVariablesFrame();
-            return resultList;
         }
     }
 }
