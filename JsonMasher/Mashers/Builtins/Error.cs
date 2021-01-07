@@ -9,17 +9,16 @@ namespace JsonMasher.Mashers.Builtins
         private static Builtin _builtin 
             = new Builtin((mashers, json, context) =>
         {
-            var value = mashers[0].Mash(json, context).FirstOrDefault();
-            if (value != null && value.Type == JsonValueType.String)
+            if (json != null && json.Type == JsonValueType.String)
             {
-                throw context.Error(value.GetString(), value);
+                throw context.Error(json.GetString(), json);
             }
             else
             {
                 throw context.Error(
-                    $"Argument to error must be string, not {value?.Type}.", value);
+                    $"Argument to error must be string, not {json?.Type}.", json);
             }
-        }, 1);
+        }, 0);
 
         public static Builtin Builtin => _builtin;
     }

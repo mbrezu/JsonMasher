@@ -707,6 +707,10 @@ map(select(. < 2))",
                 "[[1, [2, 3]], 4]",
                 "[[1, [2, 3], 4]]");
             yield return new TestItem(
+                "try \"not good\" | error catch .",
+                "null",
+                "[\"not good\"]");
+            yield return new TestItem(
                 "try error(\"not good\") catch .",
                 "null",
                 "[\"not good\"]");

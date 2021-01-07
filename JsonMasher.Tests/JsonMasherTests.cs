@@ -607,8 +607,8 @@ namespace JsonMasher.Tests
             // Arrange
             var data = Json.ArrayParams(Json.Number(0));
             var op = Compose.AllParams(
-                new Enumerate(),
-                new FunctionCall(Error.Builtin, new Literal("not good"))
+                new Literal("not good"),
+                new FunctionCall(Error.Builtin)
             );
 
             // Act
