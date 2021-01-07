@@ -34,6 +34,7 @@
     - [x] leaf_paths
     - [x] paths/0, paths/1
     - [x] tostring, tonumber
+    - [x] join
     - [ ] utf8bytelength
     - [ ] error, halt, halt_error/0, halt_error/1
     - [ ] $\_\_loc\_\_
@@ -50,7 +51,7 @@
     - [ ] combinations/0, combinations/1
     - [ ] ltrimstr, rtrimstr
     - [ ] explode/implode
-    - [ ] split/join
+    - [ ] split
     - [ ] ascii_downcase, ascii_upcase
     - [ ] while, until
     - [ ] recurse/1, recurse/2, recurse_down
