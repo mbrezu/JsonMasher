@@ -28,7 +28,6 @@ namespace JsonMasher.Mashers.Builtins
                         yield return function(t1, t2, context, stack);
                     }
                 }
-
             }
             return result;
         }

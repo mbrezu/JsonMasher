@@ -719,6 +719,12 @@ map(select(. < 2))",
             yield return new TestItem("isempty(1)", "[1, 2, 3]", "[false]");
             yield return new TestItem("isempty(.[])", "[1, 2, 3]", "[false]");
             yield return new TestItem("isempty(.[] | strings)", "[1, 2, 3]", "[true]");
+            yield return new TestItem("all", "[1, 2, 3]", "[true]");
+            yield return new TestItem("all(. > 0)", "[1, 2, 3]", "[true]");
+            yield return new TestItem("all(.[]; . > 0)", "[1, 2, 3]", "[true]");
+            yield return new TestItem("any", "[false, 2, false]", "[true]");
+            yield return new TestItem("any(. > 0)", "[-1, 2, -3]", "[true]");
+            yield return new TestItem("any(.[]; . > 0)", "[-1, 2, -3]", "[true]");
         }
     }
 }
