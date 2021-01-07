@@ -1,30 +1,25 @@
-using System;
 using System.Collections.Generic;
-using JsonMasher.JsonRepresentation;
 using JsonMasher.Mashers.Combinators;
 
 namespace JsonMasher.Mashers
 {
-    public class MashEnvironment
+    public class CallablesEnvironment
     {
-        Dictionary<string, Json> _variables { get; } = new();
         Dictionary<FunctionName, Callable> _callables { get; } = new();
         Dictionary<string, Callable> _zeroArityCallables { get; } = new();
-        MashEnvironment _previous;
+        CallablesEnvironment _previous;
 
-        public MashEnvironment PushFrame()
+        public CallablesEnvironment PushFrame()
         {
-            MashEnvironment newOne = new();
+            CallablesEnvironment newOne = new();
             newOne._previous = this;
             return newOne;
         }
 
-        public MashEnvironment PopFrame()
+        public CallablesEnvironment PopFrame()
         {
             return _previous;
         }
-
-        public void SetVariable(string name, Json value) => _variables[name] = value;
 
         public void SetCallable(FunctionName name, Callable value)
         {
@@ -35,22 +30,6 @@ namespace JsonMasher.Mashers
             else
             {
                 _callables[name] = value;
-            }
-        }
-
-        public Json GetVariable(string name, IMashStack stack)
-        {
-            if (_variables.ContainsKey(name))
-            {
-                return _variables[name];
-            }
-            else if (_previous != null)
-            {
-                return _previous.GetVariable(name, stack);
-            }
-            else
-            {
-                return null;
             }
         }
 

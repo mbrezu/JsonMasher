@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using JsonMasher.JsonRepresentation;
+using System.Diagnostics;
+using System;
 
 namespace JsonMasher.Mashers.Combinators
 {
@@ -12,7 +14,7 @@ namespace JsonMasher.Mashers.Combinators
         public IEnumerable<PathAndValue> GeneratePaths(
             JsonPath pathSoFar, Json json, IMashContext context, IMashStack stack)
         {
-            context.PushEnvironmentFrame();
+            context.PushVariablesFrame();
             var newStack = stack.Push(this);
             context.Tick(newStack);
             if (Body is IPathGenerator pathGenerator)
@@ -25,7 +27,7 @@ namespace JsonMasher.Mashers.Combinators
                         yield return result;
                     }
                 }
-                context.PopEnvironmentFrame();
+                context.PopVariablesFrame();
             }
             else
             {
@@ -35,18 +37,20 @@ namespace JsonMasher.Mashers.Combinators
 
         public IEnumerable<Json> Mash(Json json, IMashContext context, IMashStack stack)
         {
-            context.PushEnvironmentFrame();
+            context.PushVariablesFrame();
             var newStack = stack.Push(this);
             context.Tick(newStack);
+            var resultList = new List<Json>();
             foreach (var jsonValue in Value.Mash(json, context, newStack))
             {
                 context.SetVariable(Name, jsonValue);
                 foreach (var result in Body.Mash(json, context, newStack))
                 {
-                    yield return result;
+                    resultList.Add(result);
                 }
             }
-            context.PopEnvironmentFrame();
+            context.PopVariablesFrame();
+            return resultList;
         }
     }
 }

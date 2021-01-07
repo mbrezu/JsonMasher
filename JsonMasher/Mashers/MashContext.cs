@@ -11,7 +11,8 @@ namespace JsonMasher.Mashers
     public class MashContext : IMashContext
     {
         List<Json> _log = new();
-        MashEnvironment _env = new();
+        VariablesEnvironment _envVariables = new();
+        CallablesEnvironment _envCallables = new();
         int ticks = 0;
         public int TickLimit { get; init; }
         public IEnumerable<Json> Log => _log;
@@ -19,35 +20,43 @@ namespace JsonMasher.Mashers
 
         public MashContext()
         {
-            _env = StandardLibrary.DefaultEnvironment;
-            PushEnvironmentFrame();
+            _envCallables = StandardLibrary.DefaultEnvironment;
+            PushVariablesFrame();
+            PushCallablesFrame();
         }
 
         public void LogValue(Json value) => _log.Add(value);
 
-        public void PushEnvironmentFrame() => _env = _env.PushFrame();
+        public void PushVariablesFrame() => _envVariables = _envVariables.PushFrame();
 
-        public void PopEnvironmentFrame() => _env = _env.PopFrame();
+        public void PopVariablesFrame() => _envVariables = _envVariables.PopFrame();
 
-        public void SetVariable(string name, Json value) => _env.SetVariable(name, value);
+        public void PushCallablesFrame() => _envCallables = _envCallables.PushFrame();
+
+        public void PopCallablesFrame() => _envCallables = _envCallables.PopFrame();
+
+        public void SetVariable(string name, Json value) => _envVariables.SetVariable(name, value);
 
         public Json GetVariable(string name, IMashStack stack)
-            => _env.GetVariable(name, stack)
+            => _envVariables.GetVariable(name, stack)
                 ?? throw Error($"Cannot find variable ${name}.", stack);
 
-        public void SetCallable(FunctionName name, Callable value) => _env.SetCallable(name, value);
+        public void SetCallable(FunctionName name, Callable value) => _envCallables.SetCallable(name, value);
 
         public Callable GetCallable(FunctionName name, IMashStack stack)
-            => _env.GetCallable(name, stack)
+        {
+            var result = _envCallables.GetCallable(name, stack)
                 ?? throw Error($"Function {name.Name}/{name.Arity} is not known.", stack);
+            return result;
+        }
 
         public void SetCallable(string name, List<string> arguments, IJsonMasherOperator body)
-            => _env.SetCallable(name, arguments, body);
+            => _envCallables.SetCallable(name, arguments, body);
 
-        public void SetCallable(string name, Callable value) => _env.SetCallable(name, value);
+        public void SetCallable(string name, Callable value) => _envCallables.SetCallable(name, value);
 
         public Callable GetCallable(string name, IMashStack stack)
-            => _env.GetCallable(name, stack)
+            => _envCallables.GetCallable(name, stack)
                 ?? throw Error($"Function {name}/0 is not known.", stack);
 
         public Exception Error(string message, IMashStack stack, params Json[] values)

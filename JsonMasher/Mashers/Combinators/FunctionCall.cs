@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using JsonMasher.JsonRepresentation;
 using JsonMasher.Mashers.Builtins;
@@ -72,16 +73,18 @@ namespace JsonMasher.Mashers.Combinators
             {
                 throw new InvalidOperationException();
             }
-            context.PushEnvironmentFrame();
+            context.PushCallablesFrame();
             for (int i = 0; i < Arguments.Count; i++)
             {
                 context.SetCallable(func.Arguments[i], Arguments[i]);
             }
+            var resultList = new List<Json>();
             foreach (var result in func.Op.Mash(json, context, stack))
             {
-                yield return result;
+                resultList.Add(result);
             }
-            context.PopEnvironmentFrame();
+            context.PopCallablesFrame();
+            return resultList;
         }
 
         public IEnumerable<PathAndValue> GeneratePaths(
@@ -114,7 +117,7 @@ namespace JsonMasher.Mashers.Combinators
             {
                 throw new InvalidOperationException();
             }
-            context.PushEnvironmentFrame();
+            context.PushCallablesFrame();
             for (int i = 0; i < Arguments.Count; i++)
             {
                 context.SetCallable(func.Arguments[i], Arguments[i]);
@@ -131,7 +134,7 @@ namespace JsonMasher.Mashers.Combinators
             {
                 throw context.Error("Not a path expression.", stack);
             }
-            context.PopEnvironmentFrame();
+            context.PopCallablesFrame();
         }
     }
 }

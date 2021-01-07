@@ -20,19 +20,19 @@ namespace JsonMasher.Mashers
             public void Next() => _current ++;
         }
 
-        public static MashEnvironment DefaultEnvironment => _defaultEnvironment;
+        public static CallablesEnvironment DefaultEnvironment => _defaultEnvironment;
 
-        private static MashEnvironment _defaultEnvironment = InitDefaultEnvironment();
+        private static CallablesEnvironment _defaultEnvironment = InitDefaultEnvironment();
 
-        private static MashEnvironment InitDefaultEnvironment()
+        private static CallablesEnvironment InitDefaultEnvironment()
         {
-            var environment = new MashEnvironment();
+            var environment = new CallablesEnvironment();
             AddBuiltins(environment);
             AddCode(environment);
             return environment;
         }
 
-        private static void AddBuiltins(MashEnvironment environment)
+        private static void AddBuiltins(CallablesEnvironment environment)
         {
             environment.SetCallable(new FunctionName("not", 0), Not.Builtin);
             environment.SetCallable(new FunctionName("empty", 0), Empty.Builtin);
@@ -61,7 +61,7 @@ namespace JsonMasher.Mashers
             environment.SetCallable(new FunctionName("first", 1), First.Builtin);
         }
 
-        private static void AddCode(MashEnvironment environment)
+        private static void AddCode(CallablesEnvironment environment)
         {
             var stdlib = ReadStdLibCode();
             var sequenceGenerator = new StdSequenceGenerator();

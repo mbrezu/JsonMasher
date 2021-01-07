@@ -16,7 +16,7 @@ namespace JsonMasher.Mashers.Combinators
 
         public IEnumerable<Json> Mash(Json json, IMashContext context, IMashStack stack)
         {
-            context.PushEnvironmentFrame();
+            context.PushVariablesFrame();
             var newStack = stack.Push(this);
             context.Tick(newStack);
             var result = Initial.Mash(json, context, newStack).FirstOrDefault() ?? Json.Null;
@@ -39,7 +39,7 @@ namespace JsonMasher.Mashers.Combinators
                     }
                 }
             }
-            context.PopEnvironmentFrame();
+            context.PopVariablesFrame();
             if (!IsForeach) {
                 yield return result;
             }
