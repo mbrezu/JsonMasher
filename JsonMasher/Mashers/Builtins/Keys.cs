@@ -10,14 +10,14 @@ namespace JsonMasher.Mashers.Builtins
         private static Builtin _builtin = new Builtin(Function, 0);
 
         private static IEnumerable<Json> Function(
-            List<IJsonMasherOperator> mashers, Json json, IMashContext context, IMashStack stack)
+            List<IJsonMasherOperator> mashers, Json json, IMashContext context)
             => json.Type switch
             {
                 JsonValueType.Object
                     => Json.Array(ObjectKeys(json)).AsEnumerable(),
                 JsonValueType.Array
                     => Json.Array(ArrayKeys(json)).AsEnumerable(),
-                _ => throw context.Error($"{json.Type} has no keys.", stack, json)
+                _ => throw context.Error($"{json.Type} has no keys.", json)
             };
 
         private static IEnumerable<Json> ObjectKeys(Json json)

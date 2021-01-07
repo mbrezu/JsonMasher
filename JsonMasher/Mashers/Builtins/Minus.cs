@@ -8,14 +8,14 @@ namespace JsonMasher.Mashers.Builtins
     {
         public static Builtin Builtin_1 = Utils.MakeUnaryBuiltin(Operator_1);
 
-        private static Json Operator_1(Json arg, IMashContext context, IMashStack stack)
+        private static Json Operator_1(Json arg, IMashContext context)
             => arg.Type switch {
                 JsonValueType.Number => Json.Number(-arg.GetNumber()),
-                _ => throw context.Error($"Can't make negative an {arg.Type}.", stack, arg)
+                _ => throw context.Error($"Can't make negative an {arg.Type}.", arg)
             };
 
         public static Builtin Builtin_2 = Utils.MakeBinaryBuiltin(Operator_2);
-        static Json Operator_2(Json t1, Json t2, IMashContext context, IMashStack stack)
+        static Json Operator_2(Json t1, Json t2, IMashContext context)
             => (t1.Type, t2.Type) switch
             {
                 (JsonValueType.Number, JsonValueType.Number)
@@ -23,7 +23,7 @@ namespace JsonMasher.Mashers.Builtins
                 (JsonValueType.Array, JsonValueType.Array)
                     => Json.Array(t1.EnumerateArray()
                         .Where(e1 => !t2.EnumerateArray().Any(e2 => e1.DeepEqual(e2)))),
-                _ => throw context.Error($"Can't subtract {t2.Type} from {t1.Type}.", stack, t1, t2)
+                _ => throw context.Error($"Can't subtract {t2.Type} from {t1.Type}.", t1, t2)
             };
     }
 }

@@ -14,21 +14,20 @@ namespace JsonMasher.Mashers.Combinators
         public bool IsForeach { get; init; }
         public IJsonMasherOperator Extract { get; init; }
 
-        public IEnumerable<Json> Mash(Json json, IMashContext context, IMashStack stack)
+        public IEnumerable<Json> Mash(Json json, IMashContext context)
         {
-            var newContext = context.PushVariablesFrame();
-            var newStack = stack.Push(this);
-            newContext.Tick(newStack);
-            var result = Initial.Mash(json, newContext, newStack).FirstOrDefault() ?? Json.Null;
-            foreach (var value in Inputs.Mash(json, newContext, newStack))
+            var newContext = context.PushVariablesFrame().PushStack(this);
+            newContext.Tick();
+            var result = Initial.Mash(json, newContext).FirstOrDefault() ?? Json.Null;
+            foreach (var value in Inputs.Mash(json, newContext))
             {
                 newContext.SetVariable(Name, value);
-                result = Update.Mash(result, newContext, newStack).LastOrDefault() ?? Json.Null;
+                result = Update.Mash(result, newContext).LastOrDefault() ?? Json.Null;
                 if (IsForeach)
                 {
                     if (Extract != null)
                     {
-                        foreach (var extractedValue in Extract.Mash(result, newContext, newStack))
+                        foreach (var extractedValue in Extract.Mash(result, newContext))
                         {
                             yield return extractedValue;
                         }

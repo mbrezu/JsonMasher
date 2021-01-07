@@ -10,16 +10,16 @@ namespace JsonMasher.Mashers.Combinators
         public IJsonMasherOperator Body { get; init; }
 
         public IEnumerable<PathAndValue> GeneratePaths(
-            JsonPath pathSoFar, Json json, IMashContext context, IMashStack stack)
+            JsonPath pathSoFar, Json json, IMashContext context)
         {
-            context.Tick(stack);
+            context.Tick();
             context.SetCallable(Name, Arguments, Body);
             yield return new PathAndValue(pathSoFar, json);
         }
 
-        public IEnumerable<Json> Mash(Json json, IMashContext context, IMashStack stack)
+        public IEnumerable<Json> Mash(Json json, IMashContext context)
         {
-            context.Tick(stack);
+            context.Tick();
             context.SetCallable(Name, Arguments, Body);
             return json.AsEnumerable();
         }

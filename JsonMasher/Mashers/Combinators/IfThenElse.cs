@@ -10,11 +10,11 @@ namespace JsonMasher.Mashers.Combinators
         public IJsonMasherOperator Else { get; init; }
 
         public IEnumerable<PathAndValue> GeneratePaths(
-            JsonPath pathSoFar, Json json, IMashContext context, IMashStack stack)
+            JsonPath pathSoFar, Json json, IMashContext context)
         {
-            var newStack = stack.Push(this);
-            context.Tick(newStack);
-            var condSequence = Cond.Mash(json, context, newStack);
+            context = context.PushStack(this);
+            context.Tick();
+            var condSequence = Cond.Mash(json, context);
             foreach (var condValue in condSequence)
             {
                 if (condValue.GetBool())
@@ -22,14 +22,14 @@ namespace JsonMasher.Mashers.Combinators
                     if (Then is IPathGenerator pathGenerator)
                     {
                         foreach (var pathAndValue in pathGenerator.GeneratePaths(
-                            pathSoFar, json, context, stack))
+                            pathSoFar, json, context))
                         {
                             yield return pathAndValue;
                         }
                     }
                     else
                     {
-                        throw context.Error("Not a path expression.", newStack.Push(Then));
+                        throw context.PushStack(Then).Error("Not a path expression.");
                     }
                 }
                 else
@@ -37,29 +37,29 @@ namespace JsonMasher.Mashers.Combinators
                     if (Else is IPathGenerator pathGenerator)
                     {
                         foreach (var pathAndValue in pathGenerator.GeneratePaths(
-                            pathSoFar, json, context, stack))
+                            pathSoFar, json, context))
                         {
                             yield return pathAndValue;
                         }
                     }
                     else
                     {
-                        throw context.Error("Not a path expression.", newStack.Push(Else));
+                        throw context.PushStack(Else).Error("Not a path expression.");
                     }
                 }
             }
         }
 
-        public IEnumerable<Json> Mash(Json json, IMashContext context, IMashStack stack)
+        public IEnumerable<Json> Mash(Json json, IMashContext context)
         {
-            var newStack = stack.Push(this);
-            context.Tick(newStack);
-            var condSequence = Cond.Mash(json, context, newStack);
+            context = context.PushStack(this);
+            context.Tick();
+            var condSequence = Cond.Mash(json, context);
             foreach (var condValue in condSequence)
             {
                 var resultSequence = condValue.GetBool()
-                    ? Then.Mash(json, context, newStack)
-                    : Else.Mash(json, context, newStack);
+                    ? Then.Mash(json, context)
+                    : Else.Mash(json, context);
                 foreach (var result in resultSequence)
                 {
                     yield return result;

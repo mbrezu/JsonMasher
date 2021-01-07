@@ -7,7 +7,7 @@ namespace JsonMasher.Mashers.Builtins
     {
         private static Builtin _builtin 
             = new Builtin(
-                (mashers, json, context, stack) => Json.Bool(!json.GetBool()).AsEnumerable(),
+                (mashers, json, context) => Json.Bool(!json.GetBool()).AsEnumerable(),
                 0);
         
         public static Builtin Builtin => _builtin;

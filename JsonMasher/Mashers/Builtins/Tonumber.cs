@@ -9,13 +9,13 @@ namespace JsonMasher.Mashers.Builtins
         private static Builtin _builtin = new Builtin(Function, 0);
 
         private static IEnumerable<Json> Function(
-            List<IJsonMasherOperator> mashers, Json json, IMashContext context, IMashStack stack)
+            List<IJsonMasherOperator> mashers, Json json, IMashContext context)
             => json.Type switch {
-                JsonValueType.String => TryParse(json.GetString(), context, stack),
-                _ => throw context.Error($"Cannot parse {json.Type} as number.", stack, json)
+                JsonValueType.String => TryParse(json.GetString(), context),
+                _ => throw context.Error($"Cannot parse {json.Type} as number.", json)
             };
 
-        private static IEnumerable<Json> TryParse(string value, IMashContext context, IMashStack stack)
+        private static IEnumerable<Json> TryParse(string value, IMashContext context)
         {
             if (double.TryParse(value, out double number))
             {
@@ -23,7 +23,7 @@ namespace JsonMasher.Mashers.Builtins
             }
             else
             {
-                throw context.Error($"Can't parse \"{value}\" as number.", stack);
+                throw context.Error($"Can't parse \"{value}\" as number.");
             }
         }
 

@@ -32,7 +32,7 @@ namespace JsonMasher.Mashers
             }
         }
 
-        public Json GetVariable(string name, IMashStack stack)
+        public Json GetVariable(string name)
         {
             if (_variables.ContainsKey(name))
             {
@@ -40,7 +40,7 @@ namespace JsonMasher.Mashers
             }
             else if (_previous != null)
             {
-                return _previous.GetVariable(name, stack);
+                return _previous.GetVariable(name);
             }
             else
             {

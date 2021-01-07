@@ -7,12 +7,12 @@ namespace JsonMasher.Mashers.Combinators
     {
         public IJsonMasherOperator Elements { get; init; }
 
-        public IEnumerable<Json> Mash(Json json, IMashContext context, IMashStack stack)
+        public IEnumerable<Json> Mash(Json json, IMashContext context)
         {
-            context.Tick(stack);
+            context.Tick();
             if (Elements != null)
             {
-                return Json.Array(Elements.Mash(json, context, stack.Push(this))).AsEnumerable();
+                return Json.Array(Elements.Mash(json, context.PushStack(this))).AsEnumerable();
             }
             else
             {

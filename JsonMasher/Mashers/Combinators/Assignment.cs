@@ -12,20 +12,19 @@ namespace JsonMasher.Mashers.Combinators
         public IJsonMasherOperator Masher { get; init; }
         public bool UseWholeValue { get; init; }
 
-        public IEnumerable<Json> Mash(Json json, IMashContext context, IMashStack stack)
+        public IEnumerable<Json> Mash(Json json, IMashContext context)
         {
-            var newStack = stack.Push(this);
-            context.Tick(newStack);
-            var pathsAndValues = Path.GeneratePaths(PathExpression, json, context, newStack);
+            context = context.PushStack(this);
+            context.Tick();
+            var pathsAndValues = Path.GeneratePaths(PathExpression, json, context);
             Exception onError(Json json, JsonPathPart jsonPathPart)
                 => context.Error(
                     $"Can't index {json.Type} with {jsonPathPart.ToString()}.",
-                    newStack,
                     json,
                     jsonPathPart.ToJson());
             if (UseWholeValue)
             {
-                foreach (var value in Masher.Mash(json, context, stack))
+                foreach (var value in Masher.Mash(json, context))
                 {
                     var newJson = json;
                     foreach (var pathAndValue in pathsAndValues)
@@ -42,7 +41,7 @@ namespace JsonMasher.Mashers.Combinators
                 {
                     json = json.TransformByPath(
                         pathAndValue.Path,
-                        leafJson => Masher.Mash(leafJson, context, newStack).First(),
+                        leafJson => Masher.Mash(leafJson, context).First(),
                         onError);
                 }
                 yield return json;

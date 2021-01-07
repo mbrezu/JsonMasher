@@ -9,11 +9,11 @@ namespace JsonMasher.Mashers.Builtins
         private static Builtin _builtin = new Builtin(Function, 1);
 
         private static IEnumerable<Json> Function(
-            List<IJsonMasherOperator> mashers, Json json, IMashContext context, IMashStack stack)
+            List<IJsonMasherOperator> mashers, Json json, IMashContext context)
         {
-            foreach (var value in mashers[0].Mash(json, context, stack))
+            foreach (var value in mashers[0].Mash(json, context))
             {
-                yield return Has.HasIndex(value, json, context, stack);
+                yield return Has.HasIndex(value, json, context);
             }
         }
 

@@ -5,9 +5,9 @@ namespace JsonMasher.Mashers.Primitives
 {
     public class Identity : IJsonMasherOperator, IPathGenerator
     {
-        public IEnumerable<Json> Mash(Json json, IMashContext context, IMashStack stack)
+        public IEnumerable<Json> Mash(Json json, IMashContext context)
         {
-            context.Tick(stack.Push(this));
+            context.PushStack(this).Tick();
             return json.AsEnumerable();
         }
 
@@ -17,7 +17,7 @@ namespace JsonMasher.Mashers.Primitives
         public override int GetHashCode() => 1;
 
         public IEnumerable<PathAndValue> GeneratePaths(
-            JsonPath pathSoFar, Json json, IMashContext context, IMashStack stack)
+            JsonPath pathSoFar, Json json, IMashContext context)
         {
             yield return new PathAndValue(pathSoFar, json);
         }

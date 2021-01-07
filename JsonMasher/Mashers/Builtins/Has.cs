@@ -9,15 +9,15 @@ namespace JsonMasher.Mashers.Builtins
         private static Builtin _builtin = new Builtin(Function, 1);
 
         private static IEnumerable<Json> Function(
-            List<IJsonMasherOperator> mashers, Json json, IMashContext context, IMashStack stack)
+            List<IJsonMasherOperator> mashers, Json json, IMashContext context)
         {
-            foreach (var value in mashers[0].Mash(json, context, stack))
+            foreach (var value in mashers[0].Mash(json, context))
             {
-                yield return HasIndex(json, value, context, stack);
+                yield return HasIndex(json, value, context);
             }
         }
 
-        public static Json HasIndex(Json json, Json index, IMashContext context, IMashStack stack)
+        public static Json HasIndex(Json json, Json index, IMashContext context)
         {
             return (json.Type, index.Type) switch
             {
@@ -26,7 +26,7 @@ namespace JsonMasher.Mashers.Builtins
                 (JsonValueType.Object, JsonValueType.String)
                     => Json.Bool(json.ContainsKey(index.GetString())),
                 _ => throw context.Error(
-                    $"Can't index {json.Type} with {index.Type}.", stack, json, index)
+                    $"Can't index {json.Type} with {index.Type}.", json, index)
             };
         }
 

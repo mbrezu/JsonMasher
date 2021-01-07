@@ -9,9 +9,9 @@ namespace JsonMasher.Mashers.Builtins
         private static Builtin _builtin = new Builtin(Function, 0);
 
         private static IEnumerable<Json> Function(
-            List<IJsonMasherOperator> mashers, Json json, IMashContext context, IMashStack stack)
+            List<IJsonMasherOperator> mashers, Json json, IMashContext context)
         {
-            context.Tick(stack);
+            context.Tick();
             context.LogValue(Json.ArrayParams(Json.String("DEBUG"), json));
             yield return json;
         }

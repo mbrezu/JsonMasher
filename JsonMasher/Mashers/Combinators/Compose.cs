@@ -8,13 +8,13 @@ namespace JsonMasher.Mashers.Combinators
         public IJsonMasherOperator First { get; init; }
         public IJsonMasherOperator Second { get; init; }
 
-        public IEnumerable<Json> Mash(Json json, IMashContext context, IMashStack stack)
+        public IEnumerable<Json> Mash(Json json, IMashContext context)
         {
-            var newStack = stack.Push(this);
-            context.Tick(newStack);
-            foreach (var temp in First.Mash(json, context, newStack))
+            context = context.PushStack(this);
+            context.Tick();
+            foreach (var temp in First.Mash(json, context))
             {
-                foreach (var result in Second.Mash(temp, context, newStack))
+                foreach (var result in Second.Mash(temp, context))
                 {
                     yield return result;
                 }
@@ -28,18 +28,18 @@ namespace JsonMasher.Mashers.Combinators
             => mashers.Fold((m1, m2) => new Compose { First = m1, Second = m2 });
 
         public IEnumerable<PathAndValue> GeneratePaths(
-            JsonPath pathSoFar, Json json, IMashContext context, IMashStack stack)
+            JsonPath pathSoFar, Json json, IMashContext context)
         {
-            var newStack = stack.Push(this);
-            context.Tick(newStack);
+            context = context.PushStack(this);
+            context.Tick();
             if (First is IPathGenerator pg1)
             {
                 if (Second is IPathGenerator pg2)
                 {
-                    foreach (var pathAndValue1 in pg1.GeneratePaths(pathSoFar, json, context, stack))
+                    foreach (var pathAndValue1 in pg1.GeneratePaths(pathSoFar, json, context))
                     {
                         foreach (var pathAndValue2 in pg2.GeneratePaths(
-                            pathAndValue1.Path, pathAndValue1.Value, context, stack))
+                            pathAndValue1.Path, pathAndValue1.Value, context))
                         {
                             yield return pathAndValue2;
                         }
@@ -47,12 +47,12 @@ namespace JsonMasher.Mashers.Combinators
                 }
                 else
                 {
-                    throw context.Error("Not a path expression.", newStack.Push(Second));
+                    throw context.PushStack(Second).Error("Not a path expression.");
                 }
             }
             else
             {
-                throw context.Error("Not a path expression.", newStack.Push(First));
+                throw context.PushStack(First).Error("Not a path expression.");
             }
         }
     }

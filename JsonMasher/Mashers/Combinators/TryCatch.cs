@@ -9,14 +9,14 @@ namespace JsonMasher.Mashers.Combinators
         public IJsonMasherOperator TryBody { get; set; }
         public IJsonMasherOperator CatchBody { get; set; }
 
-        public IEnumerable<Json> Mash(Json json, IMashContext context, IMashStack stack)
+        public IEnumerable<Json> Mash(Json json, IMashContext context)
         {
-            var newStack = stack.Push(this);
-            context.Tick(newStack);
+            context = context.PushStack(this);
+            context.Tick();
             var result = new List<Json>();
             try
             {
-                foreach (var value in TryBody.Mash(json, context, newStack))
+                foreach (var value in TryBody.Mash(json, context))
                 {
                     result.Add(value);
                 }
@@ -25,7 +25,7 @@ namespace JsonMasher.Mashers.Combinators
             {
                 if (CatchBody != null)
                 {
-                    foreach (var value in CatchBody.Mash(Json.String(ex.Message), context, newStack))
+                    foreach (var value in CatchBody.Mash(Json.String(ex.Message), context))
                     {
                         result.Add(value);
                     }

@@ -7,17 +7,17 @@ namespace JsonMasher.Mashers.Builtins
     public class Error
     {
         private static Builtin _builtin 
-            = new Builtin((mashers, json, context, stack) =>
+            = new Builtin((mashers, json, context) =>
         {
-            var value = mashers[0].Mash(json, context, stack).FirstOrDefault();
+            var value = mashers[0].Mash(json, context).FirstOrDefault();
             if (value != null && value.Type == JsonValueType.String)
             {
-                throw context.Error(value.GetString(), stack, value);
+                throw context.Error(value.GetString(), value);
             }
             else
             {
                 throw context.Error(
-                    $"Argument to error must be string, not {value?.Type}.", stack, value);
+                    $"Argument to error must be string, not {value?.Type}.", value);
             }
         }, 1);
 

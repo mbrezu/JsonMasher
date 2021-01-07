@@ -7,11 +7,11 @@ namespace JsonMasher.Mashers.Primitives
     {
         public string Name { get; init; }
 
-        public IEnumerable<Json> Mash(Json json, IMashContext context, IMashStack stack)
+        public IEnumerable<Json> Mash(Json json, IMashContext context)
         {
-            var newStack = stack.Push(this);
-            context.Tick(newStack);
-            return context.GetVariable(Name, newStack).AsEnumerable();
+            context = context.PushStack(this);
+            context.Tick();
+            return context.GetVariable(Name).AsEnumerable();
         }
     }
 }

@@ -28,17 +28,19 @@ namespace JsonMasher.Mashers
     public record MashContext(ContextMutableState MutableState,
         VariablesEnvironment EnvVariables,
         CallablesEnvironment EnvCallables,
-        SourceInformation SourceInformation) : IMashContext
+        SourceInformation SourceInformation,
+        IMashStack Stack) : IMashContext
     {
         public IEnumerable<Json> Log => MutableState.Log;
 
         public static MashContext CreateContext(
-            int tickLimit = 0, SourceInformation sourceInformation = null)
+            int tickLimit = 0, SourceInformation sourceInformation = null, IMashStack stack = null)
             => new MashContext(
                 new() { TickLimit = tickLimit },
                 new(),
                 StandardLibrary.DefaultEnvironment.PushFrame(),
-                sourceInformation);
+                sourceInformation,
+                stack ?? DefaultMashStack.Instance);
 
         public void LogValue(Json value) => MutableState.Log.Add(value);
 
@@ -50,17 +52,17 @@ namespace JsonMasher.Mashers
 
         public void SetVariable(string name, Json value) => EnvVariables.SetVariable(name, value);
 
-        public Json GetVariable(string name, IMashStack stack)
-            => EnvVariables.GetVariable(name, stack)
-                ?? throw Error($"Cannot find variable ${name}.", stack);
+        public Json GetVariable(string name)
+            => EnvVariables.GetVariable(name)
+                ?? throw Error($"Cannot find variable ${name}.");
 
         public void SetCallable(FunctionName name, Callable value)
             => EnvCallables.SetCallable(name, value);
 
-        public Callable GetCallable(FunctionName name, IMashStack stack)
+        public Callable GetCallable(FunctionName name)
         {
-            var result = EnvCallables.GetCallable(name, stack)
-                ?? throw Error($"Function {name.Name}/{name.Arity} is not known.", stack);
+            var result = EnvCallables.GetCallable(name)
+                ?? throw Error($"Function {name.Name}/{name.Arity} is not known.");
             return result;
         }
 
@@ -69,17 +71,17 @@ namespace JsonMasher.Mashers
 
         public void SetCallable(string name, Callable value) => EnvCallables.SetCallable(name, value);
 
-        public Callable GetCallable(string name, IMashStack stack)
-            => EnvCallables.GetCallable(name, stack)
-                ?? throw Error($"Function {name}/0 is not known.", stack);
+        public Callable GetCallable(string name)
+            => EnvCallables.GetCallable(name)
+                ?? throw Error($"Function {name}/0 is not known.");
 
-        public Exception Error(string message, IMashStack stack, params Json[] values)
+        public Exception Error(string message, params Json[] values)
         {
             var programWithLines = SourceInformation != null
                 ? new ProgramWithLines(SourceInformation.Program)
                 : null;
             var stackSb = new StringBuilder();
-            foreach (var frame in stack.GetValues())
+            foreach (var frame in Stack.GetValues())
             {
                 var position = SourceInformation?.GetProgramPosition(frame);
                 if (position != null)
@@ -94,7 +96,7 @@ namespace JsonMasher.Mashers
             }
             var line = 0;
             var column = 0;
-            var topFrame = stack.Top;
+            var topFrame = Stack.Top;
             if (topFrame != null) // TODO: should search the first frame with a position.
             {
                 var position = SourceInformation?.GetProgramPosition(topFrame);
@@ -108,20 +110,20 @@ namespace JsonMasher.Mashers
                 message, line, column, stackSb.ToString(), null, values);
         }
 
-        public void Tick(IMashStack stack)
+        public void Tick()
         {
             MutableState.Tick();
             if (MutableState.OverTickLimit())
             {
-                throw Error($"Failed to complete in {MutableState.TickLimit} ticks.", stack);
+                throw Error($"Failed to complete in {MutableState.TickLimit} ticks.");
             }
         }
 
-        public JsonPath GetPathFromArray(Json pathAsJson, IMashStack stack)
+        public JsonPath GetPathFromArray(Json pathAsJson)
         {
             if (pathAsJson.Type != JsonValueType.Array)
             {
-                throw Error($"Can't use {pathAsJson.Type} as a path.", stack, pathAsJson);
+                throw Error($"Can't use {pathAsJson.Type} as a path.", pathAsJson);
             }
             try
             {
@@ -129,7 +131,20 @@ namespace JsonMasher.Mashers
             }
             catch (JsonMasherException ex)
             {
-                throw Error(ex.Message, stack, ex.Values.ToArray());
+                throw Error(ex.Message, ex.Values.ToArray());
+            }
+        }
+
+        public IMashContext PushStack(IJsonMasherOperator masher)
+        {
+            var stack = Stack.Push(masher);
+            if (stack == Stack)
+            {
+                return this;
+            }
+            else
+            {
+                return this with { Stack = stack };
             }
         }
     }

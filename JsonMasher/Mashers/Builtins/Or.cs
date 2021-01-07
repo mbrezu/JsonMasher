@@ -10,23 +10,23 @@ namespace JsonMasher.Mashers.Builtins
         private static Builtin _builtin = new Builtin(Function, 2);
 
         private static IEnumerable<Json> Function(
-            List<IJsonMasherOperator> mashers, Json json, IMashContext context, IMashStack stack)
+            List<IJsonMasherOperator> mashers, Json json, IMashContext context)
         {
             if (mashers.Count != 2) {
                 throw new InvalidOperationException();
             }
-            foreach (var t1 in mashers[0].Mash(json, context, stack))
+            foreach (var t1 in mashers[0].Mash(json, context))
             {
                 if (t1.GetBool())
                 {
-                    context.Tick(stack);
+                    context.Tick();
                     yield return Json.True;
                 }
                 else
                 {
-                    foreach (var t2 in mashers[1].Mash(json, context, stack))
+                    foreach (var t2 in mashers[1].Mash(json, context))
                     {
-                        context.Tick(stack);
+                        context.Tick();
                         yield return Json.Bool(t2.GetBool());
                     }
                 }

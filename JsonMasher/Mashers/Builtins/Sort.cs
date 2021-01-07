@@ -11,7 +11,7 @@ namespace JsonMasher.Mashers.Builtins
         private static Builtin _builtin_0 = new Builtin(Function_0, 0);
 
         private static IEnumerable<Json> Function_0(
-            List<IJsonMasherOperator> mashers, Json json, IMashContext context, IMashStack stack)
+            List<IJsonMasherOperator> mashers, Json json, IMashContext context)
             {
                 if (json.Type == JsonValueType.Array)
                 {
@@ -20,7 +20,7 @@ namespace JsonMasher.Mashers.Builtins
                 }
                 else
                 {
-                    throw context.Error($"Can't sort a {json.Type}.", stack, json);
+                    throw context.Error($"Can't sort a {json.Type}.", json);
                 }
             }
 
@@ -29,12 +29,12 @@ namespace JsonMasher.Mashers.Builtins
         private static Builtin _builtin_1 = new Builtin(Function_1, 1);
 
         private static IEnumerable<Json> Function_1(
-            List<IJsonMasherOperator> mashers, Json json, IMashContext context, IMashStack stack)
+            List<IJsonMasherOperator> mashers, Json json, IMashContext context)
             {
                 if (json.Type == JsonValueType.Array)
                 {
                     var masher = mashers.First();
-                    var keys = masher.Mash(json, context, stack).FirstOrDefault();
+                    var keys = masher.Mash(json, context).FirstOrDefault();
                     if (keys == null || keys.Type != JsonValueType.Array)
                     {
                         return Json.Array(json.EnumerateArray().OrderBy(x => x, JsonComparer.Instance))
@@ -53,7 +53,7 @@ namespace JsonMasher.Mashers.Builtins
                 }
                 else
                 {
-                    throw context.Error($"Can't sort a {json.Type}.", stack, json);
+                    throw context.Error($"Can't sort a {json.Type}.", json);
                 }
             }
 

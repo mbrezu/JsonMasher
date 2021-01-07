@@ -7,7 +7,7 @@ namespace JsonMasher.Mashers.Builtins
     {
         public static Builtin Builtin = Utils.MakeBinaryBuiltin(Operator);
 
-        static Json Operator(Json t1, Json t2, IMashContext context, IMashStack stack)
+        static Json Operator(Json t1, Json t2, IMashContext context)
             => Json.Bool(JsonComparer.Instance.Compare(t1, t2) > 0);
     }
 }

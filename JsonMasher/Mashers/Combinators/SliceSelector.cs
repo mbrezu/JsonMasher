@@ -13,69 +13,69 @@ namespace JsonMasher.Mashers.Combinators
         public IJsonMasherOperator Target { get; init; }
 
         public IEnumerable<PathAndValue> GeneratePaths(
-            JsonPath pathSoFar, Json json, IMashContext context, IMashStack stack)
+            JsonPath pathSoFar, Json json, IMashContext context)
         {
-            var newStack = stack.Push(this);
+            context = context.PushStack(this);
 
-            foreach (var fromTo in GetFromsAndTos(json, json, context, newStack))
+            foreach (var fromTo in GetFromsAndTos(json, json, context))
             {
-                context.Tick(newStack);
+                context.Tick();
                 yield return new PathAndValue(
                     pathSoFar.Extend(new SlicePathPart(fromTo.Item1, fromTo.Item2)),
                     json == Json.Null ? json : json.GetSliceAt(fromTo.Item1, fromTo.Item2));
             }
         }
 
-        public IEnumerable<Json> Mash(Json json, IMashContext context, IMashStack stack)
+        public IEnumerable<Json> Mash(Json json, IMashContext context)
         {
-            var newStack = stack.Push(this);
+            context = context.PushStack(this);
             if (Target == null)
             {
-                return MashOne(json, json, context, stack);
+                return MashOne(json, json, context);
             }
             else
             {
                 return Target
-                    .Mash(json, context, newStack)
-                    .SelectMany(target => MashOne(target, json, context, stack));
+                    .Mash(json, context)
+                    .SelectMany(target => MashOne(target, json, context));
             }
         }
 
-        private IEnumerable<Json> MashOne(Json target, Json index, IMashContext context, IMashStack stack)
+        private IEnumerable<Json> MashOne(Json target, Json index, IMashContext context)
         {
             if (target.Type != JsonValueType.Array)
             {
                 if (!IsOptional)
                 {
-                    throw context.Error($"Cannot slice a {target.Type}.", stack, target);
+                    throw context.Error($"Cannot slice a {target.Type}.", target);
                 }
                 else
                 {
                     return Enumerable.Empty<Json>();
                 }
             }
-            return GetFromsAndTos(target, index, context, stack).Select(fromTo => {
-                context.Tick(stack);
+            return GetFromsAndTos(target, index, context).Select(fromTo => {
+                context.Tick();
                 return target.GetSliceAt(fromTo.Item1, fromTo.Item2);
             });
         }
 
         private IEnumerable<Tuple<int, int>> GetFromsAndTos(
-            Json target, Json index, IMashContext context, IMashStack stack)
+            Json target, Json index, IMashContext context)
         {
-            foreach (var from in Froms(target, index, context, stack))
+            foreach (var from in Froms(target, index, context))
             {
                 if (from.Type != JsonValueType.Number)
                 {
-                    context.Error($"Index must be a number, not {from.Type}.", stack, from);
+                    context.Error($"Index must be a number, not {from.Type}.", from);
                 }
-                foreach (var to in Tos(target, index, context, stack))
+                foreach (var to in Tos(target, index, context))
                 {
                     if (from.Type != JsonValueType.Number)
                     {
-                        context.Error($"Index must be a number, not {from.Type}.", stack, from);
+                        context.Error($"Index must be a number, not {from.Type}.", from);
                     }
-                    context.Tick(stack);
+                    context.Tick();
                     int start = (int)from.GetNumber();
                     int end = (int)to.GetNumber();
                     if (start < 0)
@@ -91,15 +91,15 @@ namespace JsonMasher.Mashers.Combinators
             }
         }
 
-        private IEnumerable<Json> Froms(Json target, Json index, IMashContext context, IMashStack stack)
+        private IEnumerable<Json> Froms(Json target, Json index, IMashContext context)
             => From == null
                 ? Json.Number(0).AsEnumerable()
-                : From.Mash(index, context, stack);
+                : From.Mash(index, context);
 
-        private IEnumerable<Json> Tos(Json target, Json index, IMashContext context, IMashStack stack)
+        private IEnumerable<Json> Tos(Json target, Json index, IMashContext context)
             => To == null
                 ? ExtractLength(target)
-                : To.Mash(index, context, stack);
+                : To.Mash(index, context);
 
         private static IEnumerable<Json> ExtractLength(Json json)
         {

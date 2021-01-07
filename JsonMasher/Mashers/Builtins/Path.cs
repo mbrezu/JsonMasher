@@ -10,28 +10,28 @@ namespace JsonMasher.Mashers.Builtins
         private static Builtin _builtin = new Builtin(Function, 1);
 
         public static IEnumerable<Json> Function(
-            List<IJsonMasherOperator> mashers, Json json, IMashContext context, IMashStack stack)
+            List<IJsonMasherOperator> mashers, Json json, IMashContext context)
         {
             var masher = mashers.First();
-            foreach (var pathAndValue in GeneratePaths(masher, json, context, stack))
+            foreach (var pathAndValue in GeneratePaths(masher, json, context))
             {
                 yield return pathAndValue.Path.ToJsonArray();
             }
         }
 
         public static IEnumerable<PathAndValue> GeneratePaths(
-            IJsonMasherOperator masher, Json json, IMashContext context, IMashStack stack)
+            IJsonMasherOperator masher, Json json, IMashContext context)
         {
             if (masher is IPathGenerator generator)
             {
-                foreach (var pathAndValue in generator.GeneratePaths(JsonPath.Empty, json, context, stack))
+                foreach (var pathAndValue in generator.GeneratePaths(JsonPath.Empty, json, context))
                 {
                     yield return pathAndValue;
                 }
             }
             else
             {
-                throw context.Error("Not a path expression.", stack.Push(masher));
+                throw context.PushStack(masher).Error("Not a path expression.");
             }
         }
 

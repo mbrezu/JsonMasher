@@ -10,7 +10,7 @@ namespace JsonMasher.Mashers.Builtins
         private static Builtin _builtin = new Builtin(Function, 0);
 
         private static IEnumerable<Json> Function(
-            List<IJsonMasherOperator> mashers, Json json, IMashContext context, IMashStack stack)
+            List<IJsonMasherOperator> mashers, Json json, IMashContext context)
             => (json.Type switch {
                 JsonValueType.Undefined => Json.String("undefined"),
                 JsonValueType.Null => Json.String("null"),

@@ -9,28 +9,28 @@ namespace JsonMasher.Mashers.Primitives
         public bool IsOptional { get; init; }
         public IJsonMasherOperator Target { get; init; }
 
-        public IEnumerable<Json> Mash(Json json, IMashContext context, IMashStack stack)
+        public IEnumerable<Json> Mash(Json json, IMashContext context)
         {
             if (Target == null)
             {
-                return MashOne(json, context, stack);
+                return MashOne(json, context);
             }
             else
             {
                 return Target
-                    .Mash(json, context, stack)
-                    .SelectMany(x => MashOne(x, context, stack));
+                    .Mash(json, context)
+                    .SelectMany(x => MashOne(x, context));
             }
         }
 
-        private IEnumerable<Json> MashOne(Json json, IMashContext context, IMashStack stack)
+        private IEnumerable<Json> MashOne(Json json, IMashContext context)
         {
             return json.Type switch
             {
                 JsonValueType.Array => json.EnumerateArray(),
                 JsonValueType.Object => json.EnumerateObject().Select(kv => kv.Value),
                 _ => !IsOptional
-                    ? throw context.Error($"Can't enumerate {json.Type}.", stack.Push(this), json)
+                    ? throw context.PushStack(this).Error($"Can't enumerate {json.Type}.", json)
                     : Enumerable.Empty<Json>()
             };
         }
@@ -41,18 +41,18 @@ namespace JsonMasher.Mashers.Primitives
         public override int GetHashCode() => 1;
 
         public IEnumerable<PathAndValue> GeneratePaths(
-            JsonPath pathSoFar, Json json, IMashContext context, IMashStack stack)
+            JsonPath pathSoFar, Json json, IMashContext context)
             => json.Type switch
             {
-                JsonValueType.Array => ArrayGeneratePaths(pathSoFar, json, context, stack),
-                JsonValueType.Object => ObjectGeneratePaths(pathSoFar, json, context, stack),
+                JsonValueType.Array => ArrayGeneratePaths(pathSoFar, json, context),
+                JsonValueType.Object => ObjectGeneratePaths(pathSoFar, json, context),
                 _ => !IsOptional
-                    ? throw context.Error($"Can't enumerate {json.Type}.", stack.Push(this))
+                    ? throw context.PushStack(this).Error($"Can't enumerate {json.Type}.")
                     : Enumerable.Empty<PathAndValue>()
             };
 
         private IEnumerable<PathAndValue> ArrayGeneratePaths(
-            JsonPath pathSoFar, Json json, IMashContext context, IMashStack stack)
+            JsonPath pathSoFar, Json json, IMashContext context)
         {
             for (int i = 0; i < json.GetLength(); i++)
             {
@@ -62,7 +62,7 @@ namespace JsonMasher.Mashers.Primitives
         }
 
         private IEnumerable<PathAndValue> ObjectGeneratePaths(
-            JsonPath pathSoFar, Json json, IMashContext context, IMashStack stack)
+            JsonPath pathSoFar, Json json, IMashContext context)
         {
             foreach (var kv in json.EnumerateObject())
             {

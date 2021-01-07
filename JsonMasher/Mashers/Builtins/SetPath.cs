@@ -11,19 +11,18 @@ namespace JsonMasher.Mashers.Builtins
         private static Builtin _builtin = new Builtin(Function, 2);
 
         private static IEnumerable<Json> Function(
-            List<IJsonMasherOperator> mashers, Json json, IMashContext context, IMashStack stack)
+            List<IJsonMasherOperator> mashers, Json json, IMashContext context)
         {
-            foreach (var value in mashers[1].Mash(json, context, stack))
+            foreach (var value in mashers[1].Mash(json, context))
             {
-                foreach (var pathAsJson in mashers[0].Mash(json, context, stack))
+                foreach (var pathAsJson in mashers[0].Mash(json, context))
                 {
-                    var path = context.GetPathFromArray(pathAsJson, stack);
+                    var path = context.GetPathFromArray(pathAsJson);
                     yield return json.TransformByPath(
                         path,
                         leafJson => value,
                         (json, pathPart) => context.Error(
                             $"Can't index {json.Type} with {pathPart.ToString()}.",
-                            stack,
                             json,
                             pathPart.ToJson()));
                 }

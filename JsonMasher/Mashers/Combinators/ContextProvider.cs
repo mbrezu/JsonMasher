@@ -8,21 +8,21 @@ namespace JsonMasher.Mashers.Combinators
 
         public IMashContext Context { get; init; }
         public IJsonMasherOperator Body { get; init; }
-        public IEnumerable<Json> Mash(Json json, IMashContext context, IMashStack stack)
-            => Body.Mash(json, Context, stack); // <-- ignore `context` passed 
-                                                // as parameter and use the property instead
-                                                // (thus providing the context).
+        public IEnumerable<Json> Mash(Json json, IMashContext context)
+            => Body.Mash(json, Context); // <-- ignore `context` passed 
+                                         // as parameter and use the property instead
+                                         // (thus providing the context).
 
         public IEnumerable<PathAndValue> GeneratePaths(
-            JsonPath pathSoFar, Json json, IMashContext context, IMashStack stack)
+            JsonPath pathSoFar, Json json, IMashContext context)
         {
             if (Body is IPathGenerator pathGenerator)
             {
-                return pathGenerator.GeneratePaths(pathSoFar, json, Context, stack);
+                return pathGenerator.GeneratePaths(pathSoFar, json, Context);
             }
             else
             {
-                throw context.Error("Not a path expression.", stack.Push(Body));
+                throw context.PushStack(Body).Error("Not a path expression.");
             }
         }
 

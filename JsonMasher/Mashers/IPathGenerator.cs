@@ -9,6 +9,6 @@ namespace JsonMasher.Mashers
     public interface IPathGenerator
     {
         IEnumerable<PathAndValue> GeneratePaths(
-            JsonPath pathSoFar, Json json, IMashContext context, IMashStack stack);
+            JsonPath pathSoFar, Json json, IMashContext context);
     }
 }

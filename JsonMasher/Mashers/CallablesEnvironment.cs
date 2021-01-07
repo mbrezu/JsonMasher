@@ -44,22 +44,21 @@ namespace JsonMasher.Mashers
             }
         }
 
-        public Callable GetCallable(FunctionName name, IMashStack stack)
-        {if (name.Arity == 0)
+        public Callable GetCallable(FunctionName name)
+        {
+            if (name.Arity == 0)
             {
-            
-        return GetCallableZero(name.Name, stack);
+                return GetCallableZero(name.Name);
             }
             else
             {
-                return GetCallableNonZero(name, stack);
+                return GetCallableNonZero(name);
             }
         }
 
-        public Callable GetCallable(string name, IMashStack stack) 
-            => GetCallableZero(name, stack);
+        public Callable GetCallable(string name) => GetCallableZero(name);
 
-        private Callable GetCallableZero(string name, IMashStack stack)
+        private Callable GetCallableZero(string name)
         {
             if (_zeroArityCallables.ContainsKey(name))
             {
@@ -67,7 +66,7 @@ namespace JsonMasher.Mashers
             }
             else if (_previous != null)
             {
-                return _previous.GetCallableZero(name, stack);
+                return _previous.GetCallableZero(name);
             }
             else
             {
@@ -75,7 +74,7 @@ namespace JsonMasher.Mashers
             }
         }
 
-        private Callable GetCallableNonZero(FunctionName name, IMashStack stack)
+        private Callable GetCallableNonZero(FunctionName name)
         {
             if (_callables.ContainsKey(name))
             {
@@ -83,7 +82,7 @@ namespace JsonMasher.Mashers
             }
             else if (_previous != null)
             {
-                return _previous.GetCallableNonZero(name, stack);
+                return _previous.GetCallableNonZero(name);
             }
             else
             {

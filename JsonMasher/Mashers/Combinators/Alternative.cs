@@ -9,46 +9,46 @@ namespace JsonMasher.Mashers.Combinators
         public IJsonMasherOperator First { get; init; }
         public IJsonMasherOperator Second { get; init; }
 
-        public IEnumerable<PathAndValue> GeneratePaths(JsonPath pathSoFar, Json json, IMashContext context, IMashStack stack)
+        public IEnumerable<PathAndValue> GeneratePaths(JsonPath pathSoFar, Json json, IMashContext context)
         {
-            var newStack = stack.Push(this);
-            context.Tick(newStack);
+            context = context.PushStack(this);
+            context.Tick();
             if (First is IPathGenerator firstPathGenerator)
             {
                 IEnumerable<PathAndValue> paths = json == Json.Null
                     ? Enumerable.Empty<PathAndValue>()
-                    : firstPathGenerator.GeneratePaths(pathSoFar, json, context, stack).ToList();
+                    : firstPathGenerator.GeneratePaths(pathSoFar, json, context).ToList();
                 if (paths.Select(p => p.Value).Where(p => p.GetBool()).Any())
                 {
                     return paths;
                 }
                 else if (Second is IPathGenerator secondPathGenerator)
                 {
-                    return secondPathGenerator.GeneratePaths(pathSoFar, json, context, stack);
+                    return secondPathGenerator.GeneratePaths(pathSoFar, json, context);
                 }
                 else
                 {
-                    throw context.Error("Not a path expression.", newStack.Push(Second));
+                    throw context.PushStack(Second).Error("Not a path expression.");
                 }
             }
             else
             {
-                throw context.Error("Not a path expression.", newStack.Push(First));
+                throw context.PushStack(First).Error("Not a path expression.");
             }
         }
 
-        public IEnumerable<Json> Mash(Json json, IMashContext context, IMashStack stack)
+        public IEnumerable<Json> Mash(Json json, IMashContext context)
         {
-            var newStack = stack.Push(this);
-            context.Tick(newStack);
-            var values = First.Mash(json, context, newStack).Where(v => v.GetBool());
+            context = context.PushStack(this);
+            context.Tick();
+            var values = First.Mash(json, context).Where(v => v.GetBool());
             if (values.Any()) 
             {
                 return values;
             }
             else
             {
-                return Second.Mash(json, context, newStack);
+                return Second.Mash(json, context);
             }
         }
     }

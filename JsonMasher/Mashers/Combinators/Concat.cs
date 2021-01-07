@@ -8,15 +8,15 @@ namespace JsonMasher.Mashers.Combinators
         public IJsonMasherOperator First { get; init; }
         public IJsonMasherOperator Second { get; init; }
 
-        public IEnumerable<Json> Mash(Json json, IMashContext context, IMashStack stack)
+        public IEnumerable<Json> Mash(Json json, IMashContext context)
         {
-            var newStack = stack.Push(this);
-            context.Tick(newStack);
-            foreach (var value in First.Mash(json, context, newStack))
+            context = context.PushStack(this);
+            context.Tick();
+            foreach (var value in First.Mash(json, context))
             {
                 yield return value;
             }
-            foreach (var value in Second.Mash(json, context, newStack))
+            foreach (var value in Second.Mash(json, context))
             {
                 yield return value;
             }
@@ -29,31 +29,31 @@ namespace JsonMasher.Mashers.Combinators
             => mashers.Fold((m1, m2) => new Concat { First = m1, Second = m2 });
 
         public IEnumerable<PathAndValue> GeneratePaths(
-            JsonPath pathSoFar, Json json, IMashContext context, IMashStack stack)
+            JsonPath pathSoFar, Json json, IMashContext context)
         {
-            var newStack = stack.Push(this);
-            context.Tick(newStack);
+            context = context.PushStack(this);
+            context.Tick();
             if (First is IPathGenerator pg1)
             {
-                foreach (var pathAndValue in pg1.GeneratePaths(pathSoFar, json, context, newStack))
+                foreach (var pathAndValue in pg1.GeneratePaths(pathSoFar, json, context))
                 {
                     yield return pathAndValue;
                 }
             }
             else
             {
-                throw context.Error("Not a path expression.", newStack.Push(First));
+                throw context.PushStack(First).Error("Not a path expression.");
             }
             if (Second is IPathGenerator pg2)
             {
-                foreach (var pathAndValue in pg2.GeneratePaths(pathSoFar, json, context, newStack))
+                foreach (var pathAndValue in pg2.GeneratePaths(pathSoFar, json, context))
                 {
                     yield return pathAndValue;
                 }
             }
             else
             {
-                throw context.Error("Not a path expression.", newStack.Push(Second));
+                throw context.PushStack(Second).Error("Not a path expression.");
             }
         }
     }

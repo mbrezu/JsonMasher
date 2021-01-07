@@ -10,34 +10,33 @@ namespace JsonMasher.Mashers.Builtins
         private static Builtin _builtin = new Builtin(Function, 1);
 
         private static IEnumerable<Json> Function(
-            List<IJsonMasherOperator> mashers, Json json, IMashContext context, IMashStack stack)
+            List<IJsonMasherOperator> mashers, Json json, IMashContext context)
         {
-            foreach (var jsonPaths in mashers[0].Mash(json, context, stack))
+            foreach (var jsonPaths in mashers[0].Mash(json, context))
             {
                 if (jsonPaths.Type != JsonValueType.Array)
                 {
-                    throw context.Error($"Expected an array of paths.", stack, jsonPaths);
+                    throw context.Error($"Expected an array of paths.", jsonPaths);
                 }
                 var paths = jsonPaths
                     .EnumerateArray()
                     .OrderByDescending(x => x, JsonComparer.Instance)
-                    .Select(x => context.GetPathFromArray(x, stack));
+                    .Select(x => context.GetPathFromArray(x));
                 var jsonResult = json;
                 foreach (var path in paths)
                 {
-                    jsonResult = DeletePath(jsonResult, path, context, stack);
+                    jsonResult = DeletePath(jsonResult, path, context);
                 }
                 yield return jsonResult;
             }
         }
 
-        private static Json DeletePath(Json json, JsonPath path, IMashContext context, IMashStack stack)
+        private static Json DeletePath(Json json, JsonPath path, IMashContext context)
             => json.TransformByPath(
                 path,
                 leafJson => null,
                 (json, pathPart) => context.Error(
                     $"Can't index {json.Type} with {pathPart.ToString()}.",
-                    stack,
                     json,
                     pathPart.ToJson()));
 

@@ -15,34 +15,32 @@ namespace JsonMasher.Mashers.Combinators
             Descriptors = descriptors.ToList();
         }
 
-        public IEnumerable<Json> Mash(Json json, IMashContext context, IMashStack stack)
-            => Mash(json, context, stack.Push(this), new List<JsonProperty>());
+        public IEnumerable<Json> Mash(Json json, IMashContext context)
+            => Mash(json, context.PushStack(this), new List<JsonProperty>());
 
         private IEnumerable<Json> Mash(
-            Json json, IMashContext context, IMashStack stack, List<JsonProperty> properties)
+            Json json, IMashContext context, List<JsonProperty> properties)
         {
             int level = properties.Count;
             if (level == Descriptors.Count)
             {
-                context.Tick(stack);
+                context.Tick();
                 yield return Json.Object(properties);
             }
             else
             {
                 var descriptor = Descriptors[level];
-                foreach (var key in descriptor.Key.Mash(json, context, stack))
+                foreach (var key in descriptor.Key.Mash(json, context))
                 {
                     if (key.Type != JsonValueType.String)
                     {
                         context.Error(
-                            $"While building an object, cannot index object with {key.Type}",
-                            stack,
-                            key);
+                            $"While building an object, cannot index object with {key.Type}", key);
                     }
-                    foreach (var value in descriptor.Value.Mash(json, context, stack))
+                    foreach (var value in descriptor.Value.Mash(json, context))
                     {
                         properties.Add(new JsonProperty(key.GetString(), value));
-                        foreach (var result in Mash(json, context, stack, properties))
+                        foreach (var result in Mash(json, context, properties))
                         {
                             yield return result;
                         }
