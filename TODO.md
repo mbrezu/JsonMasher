@@ -26,6 +26,7 @@
     - [x] getpath, setpath, delpaths
     - [x] add
     - [x] to_entries, from_entries, with_entries
+    - [x] type
     - [ ] utf8bytelength
     - [ ] arrays, objects, iterables, booleans, numbers, normals, finites, strings, nulls, values, scalars 
     - [ ] error, halt, halt_error/0, halt_error/1
@@ -35,7 +36,7 @@
     - [ ] all/0, all/1, all/2
     - [ ] flatten/0, flatten/1
     - [ ] floor, sqrt
-    - [ ] tonumber, tostring, type
+    - [ ] tonumber, tostring
     - [ ] infinite, nan, isinfinite, isnan, isfinite, isnormal
     - [ ] group_by
     - [ ] min, max, min_by(path_exp), max_by(path_exp)
