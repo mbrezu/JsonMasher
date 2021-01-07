@@ -173,16 +173,16 @@ def nth($n; g): if $n < 0 then error("nth doesn't support negative indices") els
 def first: .[0];
 def last: .[-1];
 def nth($n): .[$n];
-# TODO: def combinations:
-# TODO:     if length == 0 then [] else
-# TODO:         .[0][] as $x
-# TODO:           | (.[1:] | combinations) as $y
-# TODO:           | [$x] + $y
-# TODO:     end;
-# TODO: def combinations(n):
-# TODO:     . as $dot
-# TODO:       | [range(n) | $dot]
-# TODO:       | combinations;
+def combinations:
+    if length == 0 then [] else
+        .[0][] as $x
+          | (.[1:] | combinations) as $y
+          | [$x] + $y
+    end;
+def combinations(n):
+    . as $dot
+      | [range(n) | $dot]
+      | combinations;
 # TODO: # transpose a possibly jagged matrix, quickly;
 # TODO: # rows are padded with nulls so the result is always rectangular.
 # TODO: def transpose:

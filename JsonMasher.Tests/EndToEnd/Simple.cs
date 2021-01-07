@@ -710,21 +710,35 @@ map(select(. < 2))",
                 "try error(\"not good\") catch .",
                 "null",
                 "[\"not good\"]");
+
             yield return new TestItem("first(.[])", "[1, 2, 3]", "[1]");
             yield return new TestItem("first", "[1, 2, 3]", "[1]");
+
             yield return new TestItem("last(.[])", "[1, 2, 3]", "[3]");
             yield return new TestItem("last", "[1, 2, 3]", "[3]");
+
             yield return new TestItem("nth(1; .[])", "[1, 2, 3]", "[2]");
             yield return new TestItem("nth(1)", "[1, 2, 3]", "[2]");
+
             yield return new TestItem("isempty(1)", "[1, 2, 3]", "[false]");
             yield return new TestItem("isempty(.[])", "[1, 2, 3]", "[false]");
             yield return new TestItem("isempty(.[] | strings)", "[1, 2, 3]", "[true]");
+
             yield return new TestItem("all", "[1, 2, 3]", "[true]");
             yield return new TestItem("all(. > 0)", "[1, 2, 3]", "[true]");
             yield return new TestItem("all(.[]; . > 0)", "[1, 2, 3]", "[true]");
             yield return new TestItem("any", "[false, 2, false]", "[true]");
             yield return new TestItem("any(. > 0)", "[-1, 2, -3]", "[true]");
             yield return new TestItem("any(.[]; . > 0)", "[-1, 2, -3]", "[true]");
+
+            yield return new TestItem(
+                "combinations",
+                "[[1, 2], [3, 4]]",
+                "[[1,3],[1,4],[2,3],[2,4]]");
+            yield return new TestItem(
+                "combinations(2)",
+                "[0, 1]",
+                "[[0,0],[0,1],[1,0],[1,1]]");
         }
     }
 }
