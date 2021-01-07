@@ -161,7 +161,7 @@ def flatten: _flatten(-1);
 # C# builtin:   elif $by < 0 then $init|while(. > $upto; . + $by)
 # C# builtin:   else empty end;
 # C# builtin: def first(g): label $out | g | ., break $out;
-# TODO: def isempty(g): first((g|false), true);
+def isempty(g): first((g|false), true);
 # TODO: def all(generator; condition): isempty(generator|condition and empty);
 # TODO: def any(generator; condition): isempty(generator|condition or empty)|not;
 # TODO: def all(condition): all(.[]; condition);

@@ -716,6 +716,9 @@ map(select(. < 2))",
             yield return new TestItem("last", "[1, 2, 3]", "[3]");
             yield return new TestItem("nth(1; .[])", "[1, 2, 3]", "[2]");
             yield return new TestItem("nth(1)", "[1, 2, 3]", "[2]");
+            yield return new TestItem("isempty(1)", "[1, 2, 3]", "[false]");
+            yield return new TestItem("isempty(.[])", "[1, 2, 3]", "[false]");
+            yield return new TestItem("isempty(.[] | strings)", "[1, 2, 3]", "[true]");
         }
     }
 }
