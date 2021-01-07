@@ -706,6 +706,10 @@ map(select(. < 2))",
                 "flatten(1)",
                 "[[1, [2, 3]], 4]",
                 "[[1, [2, 3], 4]]");
+            yield return new TestItem(
+                "try error(\"not good\") catch .",
+                "null",
+                "[\"not good\"]");
         }
     }
 }

@@ -36,8 +36,9 @@
     - [x] tostring, tonumber
     - [x] join
     - [x] flatten/0, flatten/1
+    - [x] error
     - [ ] utf8bytelength
-    - [ ] error, halt, halt_error/0, halt_error/1
+    - [ ] halt, halt_error/0, halt_error/1
     - [ ] $\_\_loc\_\_
     - [ ] any/0, any/1, any/2
     - [ ] all/0, all/1, all/2

@@ -5,6 +5,8 @@ using JsonMasher.Mashers.Builtins;
 using JsonMasher.Mashers.Primitives;
 using Xunit;
 using JsonMasher.JsonRepresentation;
+using JsonMasher.Compiler;
+using System;
 
 namespace JsonMasher.Tests
 {
@@ -597,6 +599,23 @@ namespace JsonMasher.Tests
 
             // Assert
             Json.Array(result).DeepEqual("[false]".AsJson()).Should().BeTrue();
+        }
+
+        [Fact]
+        public void ErrorTest()
+        {
+            // Arrange
+            var data = Json.ArrayParams(Json.Number(0));
+            var op = Compose.AllParams(
+                new Enumerate(),
+                new FunctionCall(Error.Builtin, new Literal("not good"))
+            );
+
+            // Act
+            Action action = () => op.RunAsSequence(data).ToList();
+
+            // Assert
+            action.Should().Throw<JsonMasherException>().Where(ex => ex.Message == "not good");
         }
 
         private static Json MakeArray()
