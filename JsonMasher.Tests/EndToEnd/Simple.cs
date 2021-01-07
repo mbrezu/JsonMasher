@@ -690,6 +690,10 @@ map(select(. < 2))",
                 "tostring",
                 "[null, false, true, 10]",
                 "[\"[null, false, true, 10]\"]");
+            yield return new TestItem(
+                "tonumber",
+                "\"102\"",
+                "[102]");
         }
     }
 }

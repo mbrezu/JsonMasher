@@ -56,6 +56,7 @@ namespace JsonMasher.Mashers
             environment.SetCallable(new FunctionName("isinfinite", 0), IsInfinite.Builtin);
             environment.SetCallable(new FunctionName("isnormal", 0), IsNormal.Builtin);
             environment.SetCallable(new FunctionName("tostring", 0), Tostring.Builtin);
+            environment.SetCallable(new FunctionName("tonumber", 0), Tonumber.Builtin);
         }
 
         private static void AddCode(MashEnvironment environment)

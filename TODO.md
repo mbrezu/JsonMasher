@@ -33,7 +33,7 @@
     - [x] normals, isnormal
     - [x] leaf_paths
     - [x] paths/0, paths/1
-    - [x] tostring
+    - [x] tostring, tonumber
     - [ ] utf8bytelength
     - [ ] error, halt, halt_error/0, halt_error/1
     - [ ] $\_\_loc\_\_
@@ -41,7 +41,6 @@
     - [ ] all/0, all/1, all/2
     - [ ] flatten/0, flatten/1
     - [ ] floor, sqrt
-    - [ ] tonumber
     - [ ] infinite, nan, isnan
     - [ ] group_by
     - [ ] min, max, min_by(path_exp), max_by(path_exp)
