@@ -27,8 +27,9 @@
     - [x] add
     - [x] to_entries, from_entries, with_entries
     - [x] type
+    - [x] arrays, objects, iterables, booleans, numbers, strings, nulls, values, scalars 
     - [ ] utf8bytelength
-    - [ ] arrays, objects, iterables, booleans, numbers, normals, finites, strings, nulls, values, scalars 
+    - [ ] normals, finites
     - [ ] error, halt, halt_error/0, halt_error/1
     - [ ] $\_\_loc\_\_
     - [ ] paths/0, paths/1, leaf_paths

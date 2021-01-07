@@ -618,6 +618,34 @@ map(select(. < 2))",
                 "type",
                 "{\"a\": 1, \"b\": [1, 2]}", 
                 "[\"object\"]");
+            yield return new TestItem(
+                ".[] | arrays", "[1, [1], [1, 2], \"test\"]", "[[1], [1, 2]]");
+            yield return new TestItem(
+                ".[] | objects", "[1, {}, {\"a\":1}, \"test\"]", "[{}, {\"a\":1}]");
+            yield return new TestItem(
+                ".[] | iterables",
+                "[1, [], [1, 2], {}, {\"a\":1}, \"test\"]",
+                "[[], [1, 2], {}, {\"a\":1}]");
+            yield return new TestItem(
+                ".[] | numbers",
+                "[1, [], 2, {}, {\"a\":1}, \"test\"]",
+                "[1, 2]");
+            yield return new TestItem(
+                ".[] | strings",
+                "[1, [], 2, {}, {\"a\":1}, \"test\"]",
+                "[\"test\"]");
+            yield return new TestItem(
+                ".[] | nulls",
+                "[1, [], 2, null, {}, null, {\"a\":1}, \"test\"]",
+                "[null, null]");
+            yield return new TestItem(
+                ".[] | values",
+                "[1, [], 2, null, {}, null, {\"a\":1}, \"test\"]",
+                "[1, [], 2, {}, {\"a\":1}, \"test\"]");
+            yield return new TestItem(
+                ".[] | scalars",
+                "[1, [], 2, null, {}, null, {\"a\":1}, \"test\"]",
+                "[1, 2, null, null, \"test\"]");
         }
     }
 }
