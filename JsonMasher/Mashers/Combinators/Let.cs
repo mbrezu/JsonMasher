@@ -33,9 +33,10 @@ namespace JsonMasher.Mashers.Combinators
 
         public IEnumerable<Json> Mash(Json json, IMashContext context)
         {
-            var newContext = context.PushVariablesFrame().PushStack(this);
+            context = context.PushStack(this);
+            var newContext = context.PushVariablesFrame();
             newContext.Tick();
-            foreach (var jsonValue in Value.Mash(json, newContext))
+            foreach (var jsonValue in Value.Mash(json, context))
             {
                 newContext.SetVariable(Name, jsonValue);
                 foreach (var result in Body.Mash(json, newContext))
