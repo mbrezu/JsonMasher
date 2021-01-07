@@ -50,8 +50,8 @@ namespace JsonMasher.Tests.Builtins
                 .Concat(ModuloTests())
                 .Concat(HasInTests())
                 .Concat(GetSetPathTests())
-                .Concat(DelPathsTests()
-                .Concat(TypeTests()));
+                .Concat(DelPathsTests())
+                .Concat(TypeTests());
 
         private static IEnumerable<TestItem> RangeTests()
         {

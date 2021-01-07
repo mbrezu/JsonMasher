@@ -662,6 +662,18 @@ map(select(. < 2))",
                 "paths(. < 3)",
                 "{\"a\": 1, \"b\": 2, \"c\": [1, 2, 3]}",
                 "[[\"a\"],[\"b\"],[\"c\",0],[\"c\",1]]");
+            yield return new TestItem(
+                "isinfinite",
+                "100",
+                "[false]");
+            yield return new TestItem(
+                "isfinite",
+                "100",
+                "[true]");
+            yield return new TestItem(
+                ".[] | finites",
+                "[100, 200, 300]",
+                "[100, 200, 300]");
         }
     }
 }

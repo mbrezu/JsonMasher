@@ -562,6 +562,26 @@ namespace JsonMasher.Tests
             result.First().DeepEqual(Json.Number(6)).Should().BeTrue();
         }
 
+        [Fact]
+        public void IsInfiniteTest()
+        {
+            // Arrange
+            var data = Json.ArrayParams(
+                Json.Number(double.NegativeInfinity),
+                Json.Number(double.PositiveInfinity),
+                Json.Number(0));
+            var op = Compose.AllParams(
+                new Enumerate(),
+                new FunctionCall(IsInfinite.Builtin)
+            );
+
+            // Act
+            var result = op.RunAsSequence(data);
+
+            // Assert
+            Json.Array(result).DeepEqual("[true, true, false]".AsJson()).Should().BeTrue();
+        }
+
         private static Json MakeArray()
         {
             return Json.ArrayParams(
