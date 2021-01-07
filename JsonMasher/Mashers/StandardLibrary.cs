@@ -10,16 +10,6 @@ namespace JsonMasher.Mashers
 {
     public static class StandardLibrary
     {
-
-        private class StdSequenceGenerator : ISequenceGenerator
-        {
-
-            private int _current = 0;
-            public string GetValue() => $"_std_{_current}";
-
-            public void Next() => _current ++;
-        }
-
         public static CallablesEnvironment DefaultEnvironment => _defaultEnvironment;
 
         private static CallablesEnvironment _defaultEnvironment = InitDefaultEnvironment();
@@ -64,8 +54,7 @@ namespace JsonMasher.Mashers
         private static void AddCode(CallablesEnvironment environment)
         {
             var stdlib = ReadStdLibCode();
-            var sequenceGenerator = new StdSequenceGenerator();
-            var (ast, _) = new Parser().Parse(stdlib, sequenceGenerator);
+            var (ast, _) = new Parser().Parse(stdlib);
             foreach (FunctionDefinition def in ExtractFunctionDefinitions(ast))
             {
                 environment.SetCallable(def.Name, def.Arguments, def.Body);

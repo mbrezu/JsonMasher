@@ -33,7 +33,7 @@ namespace JsonMasher.Tests.Compiler
             var parser = new Parser();
 
             // Act
-            Action action = () => parser.Parse(program, new SequenceGenerator());
+            Action action = () => parser.Parse(program);
 
             // Assert
             action

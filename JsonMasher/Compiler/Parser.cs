@@ -11,62 +11,19 @@ namespace JsonMasher.Compiler
 {
     public class Parser
     {
-        class LexicalEnvironment
-        {
-            private ISequenceGenerator _sequenceGenerator;
-            private List<Dictionary<string, string>> _argumentMappings;
-
-            public LexicalEnvironment(ISequenceGenerator sequenceGenerator)
-            {
-                _sequenceGenerator = sequenceGenerator;
-                _argumentMappings = new();
-            }
-
-            public void PushArgumentMapping()
-            {
-                _argumentMappings.Add(new ());
-            }
-
-            public void PopArgumentMapping()
-            {
-                _argumentMappings.RemoveAt(_argumentMappings.Count - 1);
-            }
-
-            public void NextInSequence() => _sequenceGenerator.Next();
-
-            public void AddArgumentMapping(string realArgument)
-                => _argumentMappings[_argumentMappings.Count - 1].Add(
-                    realArgument, realArgument + _sequenceGenerator.GetValue());
-
-            public string GetArgumentMapping(string realArgument)
-            {
-                for (int i = _argumentMappings.Count - 1; i >= 0; i--)
-                {
-                    var frame = _argumentMappings[i];
-                    if (frame.ContainsKey(realArgument))
-                    {
-                        return frame[realArgument];
-                    }
-                }
-                return realArgument;
-            }
-        }
-
         class State
         {
-            public LexicalEnvironment LexicalEnvironment { get; private set; }
             private string _program;
             private TokenWithPos[] _tokens;
             private int _index;
             public SourceInformation SourceInformation { get; private set; }
 
-            public State(string program, IEnumerable<TokenWithPos> tokens, ISequenceGenerator sequenceGenerator)
+            public State(string program, IEnumerable<TokenWithPos> tokens)
             {
                 _program = program;
                 _tokens = tokens.ToArray();
                 _index = 0;
                 SourceInformation = new SourceInformation(program);
-                LexicalEnvironment = new LexicalEnvironment(sequenceGenerator);
             }
 
             public int Position => AtEnd ? _program.Length : _tokens[_index].StartPos;
@@ -156,10 +113,9 @@ namespace JsonMasher.Compiler
                 => ErrorExpected("an identifier or a variable identifier (e.g. '$a')");
         }
 
-        public (IJsonMasherOperator, SourceInformation) Parse(
-            string program, ISequenceGenerator sequenceGenerator)
+        public (IJsonMasherOperator, SourceInformation) Parse(string program)
         {
-            var state = new State(program, new Lexer().Tokenize(program), sequenceGenerator);
+            var state = new State(program, new Lexer().Tokenize(program));
             if (string.IsNullOrWhiteSpace(program))
             {
                 return (new Identity(), state.SourceInformation);
@@ -202,8 +158,6 @@ namespace JsonMasher.Compiler
             state.Advance();
             var arguments = new List<string>();
             var letWrappers = new List<string>();
-            state.LexicalEnvironment.PushArgumentMapping();
-            state.LexicalEnvironment.NextInSequence();
             if (state.Current == Tokens.OpenParen)
             {
                 state.Advance();
@@ -239,13 +193,6 @@ namespace JsonMasher.Compiler
                 }
                 state.Match(Tokens.CloseParen);
             }
-            foreach (var argument in arguments)
-            {
-                state.LexicalEnvironment.AddArgumentMapping(argument);
-            }
-            var mappedArguments = arguments
-                .Select(a => state.LexicalEnvironment.GetArgumentMapping(a))
-                .ToList();
             state.Match(Tokens.Colon);
             var body = ParseDefinitionOrFilter(state);
             state.Match(Tokens.Semicolon);
@@ -253,11 +200,10 @@ namespace JsonMasher.Compiler
                 new FunctionDefinition
                 {
                     Name = name,
-                    Arguments = mappedArguments.Count > 0 ? mappedArguments: null,
+                    Arguments = arguments.Count > 0 ? arguments: null,
                     Body = ApplyLetWrappers(state, letWrappers, body)
                 },
                 startPosition);
-            state.LexicalEnvironment.PopArgumentMapping();
             return result;
         }
 
@@ -272,8 +218,7 @@ namespace JsonMasher.Compiler
             var remainingLetWrappers = letWrappers.Skip(1);
             return new Let {
                 Name = firstWrapper,
-                Value = new FunctionCall(new FunctionName(
-                    state.LexicalEnvironment.GetArgumentMapping(firstWrapper), 0)),
+                Value = new FunctionCall(new FunctionName(firstWrapper, 0)),
                 Body = ApplyLetWrappers(state, remainingLetWrappers, body)
             };
         }
@@ -572,8 +517,7 @@ namespace JsonMasher.Compiler
                     "null" => new Literal(Json.Null),
                     "true" => new Literal(Json.True),
                     "false" => new Literal(Json.False),
-                    string function => ParseFunctionCallArguments(
-                        state, state.LexicalEnvironment.GetArgumentMapping(function)),
+                    string function => ParseFunctionCallArguments(state, function),
                 };
                 return state.RecordPosition(ast, position);
             }

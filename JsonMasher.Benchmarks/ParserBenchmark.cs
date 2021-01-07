@@ -15,7 +15,7 @@ namespace JsonMasher.Benchmarks
 
         public void ParseProgram()
         {
-            _parser.Parse(_program, new SequenceGenerator());
+            _parser.Parse(_program);
         }
     }
 }

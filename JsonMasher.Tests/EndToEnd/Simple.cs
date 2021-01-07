@@ -31,7 +31,7 @@ namespace JsonMasher.Tests.EndToEnd
         {
             // Arrange
             var parser = new Parser();
-            var (filter, _) = parser.Parse(program, new SequenceGenerator());
+            var (filter, _) = parser.Parse(program);
             var input = inputJson.AsJson().AsEnumerable();
 
             // Act
