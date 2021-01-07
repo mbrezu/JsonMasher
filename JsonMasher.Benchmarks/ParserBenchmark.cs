@@ -8,7 +8,7 @@ namespace JsonMasher.Benchmarks
         private Parser _parser;
         public ParserBenchmark()
         {
-            _program = "def map(x): [.[] | x;]";
+            _program = "def map(x): [.[] | x];";
             _program += "def select(x): if x then . else empty end;";
             _parser = new Parser();
         }
