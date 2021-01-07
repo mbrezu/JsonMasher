@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using JsonMasher.JsonRepresentation;
 using JsonMasher.Mashers.Builtins;
@@ -76,7 +75,10 @@ namespace JsonMasher.Mashers.Combinators
             var newContext = context.PushCallablesFrame();
             for (int i = 0; i < Arguments.Count; i++)
             {
-                newContext.SetCallable(func.Arguments[i], Arguments[i]);
+                newContext.SetCallable(
+                    func.Arguments[i],
+                    ContextProvider.Wrap(context, Arguments[i]));
+                                        // ^ make the arguments evaluate in the current context.
             }
             foreach (var result in func.Op.Mash(json, newContext, stack))
             {
@@ -117,7 +119,10 @@ namespace JsonMasher.Mashers.Combinators
             var newContext = context.PushCallablesFrame();
             for (int i = 0; i < Arguments.Count; i++)
             {
-                newContext.SetCallable(func.Arguments[i], Arguments[i]);
+                newContext.SetCallable(
+                    func.Arguments[i],
+                    ContextProvider.Wrap(context, Arguments[i]));
+                                        // ^ make the arguments evaluate in the current context.
             }
             if (func.Op is IPathGenerator pathGenerator)
             {
