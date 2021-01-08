@@ -50,6 +50,8 @@ namespace JsonMasher.Mashers
             environment.SetCallable(new FunctionName("error", 0), Error.Builtin);
             environment.SetCallable(new FunctionName("first", 1), First.Builtin);
             environment.SetCallable(new FunctionName("_group_by_impl", 1), GroupBy.Builtin);
+            environment.SetCallable(new FunctionName("_min_by_impl", 1), MinBy.Builtin);
+            environment.SetCallable(new FunctionName("_max_by_impl", 1), MaxBy.Builtin);
         }
 
         private static void AddCode(CallablesEnvironment environment)

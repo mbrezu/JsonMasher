@@ -83,6 +83,7 @@ namespace JsonMasher.JsonRepresentation
 
         public bool Equals(Json x, Json y) => x != null && x.DeepEqual(y);
 
+        // TODO: use a faster, simpler, version of ToString here (and maybe memoize somehow?)
         public int GetHashCode([DisallowNull] Json obj) => obj.ToString().GetHashCode();
 
         private JsonComparer()

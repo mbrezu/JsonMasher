@@ -647,6 +647,66 @@ namespace JsonMasher.Tests
             Json.Array(result).DeepEqual("[[[0, 0], [1], [2]]]".AsJson()).Should().BeTrue();
         }
 
+        [Fact]
+        public void MinByTest()
+        {
+            // Arrange
+            var data = Json.ArrayParams(Json.Number(0), Json.Number(1), Json.Number(0), Json.Number(2));
+            var op = new FunctionCall(
+                MinBy.Builtin, new Literal { Value = "[[0], [1], [0], [2]]".AsJson() });
+
+            // Act
+            var result = op.RunAsSequence(data);
+
+            // Assert
+            Json.Array(result).DeepEqual("[0]".AsJson()).Should().BeTrue();
+        }
+
+        [Fact]
+        public void MinByTestEmpty()
+        {
+            // Arrange
+            var data = Json.ArrayParams();
+            var op = new FunctionCall(
+                MinBy.Builtin, new Literal { Value = "[]".AsJson() });
+
+            // Act
+            var result = op.RunAsSequence(data);
+
+            // Assert
+            Json.Array(result).DeepEqual("[null]".AsJson()).Should().BeTrue();
+        }
+
+        [Fact]
+        public void MaxByTest()
+        {
+            // Arrange
+            var data = Json.ArrayParams(Json.Number(0), Json.Number(1), Json.Number(0), Json.Number(2));
+            var op = new FunctionCall(
+                MaxBy.Builtin, new Literal { Value = "[[0], [1], [0], [2]]".AsJson() });
+
+            // Act
+            var result = op.RunAsSequence(data);
+
+            // Assert
+            Json.Array(result).DeepEqual("[2]".AsJson()).Should().BeTrue();
+        }
+
+        [Fact]
+        public void MaxByTestEmpty()
+        {
+            // Arrange
+            var data = Json.ArrayParams();
+            var op = new FunctionCall(
+                MaxBy.Builtin, new Literal { Value = "[]".AsJson() });
+
+            // Act
+            var result = op.RunAsSequence(data);
+
+            // Assert
+            Json.Array(result).DeepEqual("[null]".AsJson()).Should().BeTrue();
+        }
+
         private static Json MakeArray()
         {
             return Json.ArrayParams(

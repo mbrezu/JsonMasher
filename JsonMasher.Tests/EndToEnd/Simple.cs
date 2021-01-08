@@ -757,6 +757,41 @@ map(select(. < 2))",
                 "unique_by(.)",
                 "[0,1,0,2]",
                 "[[0,1,2]]");
+
+            yield return new TestItem(
+                "min",
+                "[0,1,0,2]",
+                "[0]");
+            yield return new TestItem(
+                "min",
+                "[]",
+                "[null]");
+
+            yield return new TestItem(
+                "min_by(.)",
+                "[0,1,0,2]",
+                "[0]");
+            yield return new TestItem(
+                "min_by(.)",
+                "[]",
+                "[null]");
+
+            yield return new TestItem(
+                "max",
+                "[0,1,0,2]",
+                "[2]");
+            yield return new TestItem(
+                "max",
+                "[]",
+                "[null]");
+            yield return new TestItem(
+                "max_by(.)",
+                "[0,1,0,2]",
+                "[2]");
+            yield return new TestItem(
+                "max_by(.)",
+                "[]",
+                "[null]");
         }
     }
 }
