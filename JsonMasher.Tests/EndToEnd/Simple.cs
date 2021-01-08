@@ -277,6 +277,23 @@ namespace JsonMasher.Tests.EndToEnd
                 ". as $object | \"b\" | $object[\"b\"]",
                 "{\"a\": 1, \"b\": 2}",
                 "[2]");
+            
+            yield return new TestItem(
+                ".[[2]]",
+                "[1, 2, 3, 4, 2]",
+                "[[1, 4]]");
+            yield return new TestItem(
+                ".[[2, 3]]",
+                "[1, 2, 3, 4, 2]",
+                "[[1]]");
+            yield return new TestItem(
+                ".[[2, 3]]",
+                "[1, 2, 3, 4, 2, 2, 3]",
+                "[[1, 5]]");
+            yield return new TestItem(
+                ".[[2, 3, 4], [2, 3]]",
+                "[1, 2, 3, 4, 2, 3, 2, 3, 4]",
+                "[[1,6],[1,4,6]]");
         }
 
         private static IEnumerable<TestItem> IfThenElsePrograms()

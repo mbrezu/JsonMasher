@@ -85,6 +85,8 @@ namespace JsonMasher.Mashers.Combinators
             foreach (var indexValue in Index.Mash(index, context))
             {
                 var value = (indexValue.Type, target.Type) switch {
+                    (JsonValueType.Array, JsonValueType.Array)
+                        => FindIndicesOf(target, indexValue),
                     (JsonValueType.Number, JsonValueType.Array)
                         => target.GetElementAt((int)(indexValue.GetNumber())),
                     (JsonValueType.String, JsonValueType.Object)
@@ -99,6 +101,33 @@ namespace JsonMasher.Mashers.Combinators
                     yield return value;
                 }
             }
+        }
+
+        private Json FindIndicesOf(Json target, Json indexValue)
+        {
+            var result = new List<Json>();
+            for (int i = 0; i < target.GetLength(); i++)
+            {
+                var found = true;
+                for (int j = 0; j < indexValue.GetLength(); j++)
+                {
+                    if (i + j >= target.GetLength())
+                    {
+                        found = false;
+                        break;
+                    }
+                    if (!indexValue.GetElementAt(j).DeepEqual(target.GetElementAt(i + j)))
+                    {
+                        found = false;
+                        break;
+                    }
+                }
+                if (found)
+                {
+                    result.Add(Json.Number(i));
+                }
+            }
+            return Json.Array(result);
         }
     }
 }
