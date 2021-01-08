@@ -192,6 +192,7 @@ const App = (_props) => {
     if (selection.length === 0) {
       return;
     }
+    setSlurp(false);
     setProgram(selection[0].program);
     setInput(selection[0].input);
   };
