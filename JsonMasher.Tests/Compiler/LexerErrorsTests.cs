@@ -75,7 +75,7 @@ Line 1: ^^^^^^^^^^
             e.Message.Should().Be(message);
             e.Line.Should().Be(line);
             e.Column.Should().Be(column);
-            e.Highlights.Should().Be(highlights);
+            e.Highlights.CleanCR().Should().Be(highlights.CleanCR());
             return true;
         }
     }

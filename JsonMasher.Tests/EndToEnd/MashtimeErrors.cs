@@ -61,7 +61,7 @@ namespace JsonMasher.Tests.EndToEnd
             {
                 ex.Line.Should().Be(expectedPositionInformation.Line);
                 ex.Column.Should().Be(expectedPositionInformation.Column);
-                ex.Highlights.Should().Be(expectedPositionInformation.Highlights);
+                ex.Highlights.CleanCR().Should().Be(expectedPositionInformation.Highlights.CleanCR());
             }
             return true;
         }
