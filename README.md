@@ -14,7 +14,7 @@ both the compiler and the resulting object tree.
 
 The most important interface: [IJsonMasherOperator.cs](JsonMasher/Mashers/IJsonMasherOperator.cs).
 
-Json representation used internally: [Json.cs](JsonMasher/Json.cs). `System.Text.Json`
+Json representation used internally: [Json.cs](JsonMasher/JsonRepresentation/Json.cs). `System.Text.Json`
 `JsonElement`/`JsonDocument` can be converted to `Json`, and `Json` can be pretty printed. Did not
 add a conversion for [Newtonsoft Json](https://www.newtonsoft.com/json) to avoid the extra
 dependency, but it shouldn't be hard to add.
