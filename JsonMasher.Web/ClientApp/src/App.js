@@ -138,7 +138,7 @@ path(..)
 ------
 sort_by(.a)
 ------
-[{\"a\": 2, \"b\": 5}, {\"a\": 1, \"b\": 3}, { \"a\": 3, \"b\": 2}]`,
+[{"a": 2, "b": 5}, {"a": 1, "b": 3}, { "a": 3, "b": 2}]`,
 `reduce
 ------
 reduce .[] as $n (0; . + $n)
@@ -216,7 +216,7 @@ const App = (_props) => {
                 <div className="fixed">
                   <label>Examples:&nbsp;</label>
                   <select onChange={selectExample}>
-                    {parsedExamples.map(ex => <option value={ex.title}>{ex.title}</option>)}
+                    {parsedExamples.map((ex, idx) => <option key={idx} value={ex.title}>{ex.title}</option>)}
                   </select>
                 </div>
                 <div className="filler" />
