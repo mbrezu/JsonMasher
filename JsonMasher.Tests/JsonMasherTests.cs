@@ -707,6 +707,21 @@ namespace JsonMasher.Tests
             Json.Array(result).DeepEqual("[null]".AsJson()).Should().BeTrue();
         }
 
+        [Fact]
+        public void StrIndicesTest()
+        {
+            // Arrange
+            var data = Json.String("abacabacab");
+            var op = new FunctionCall(
+                StrIndices.Builtin, new Literal("acab"));
+
+            // Act
+            var result = op.RunAsSequence(data);
+
+            // Assert
+            Json.Array(result).DeepEqual("[[2, 6]]".AsJson()).Should().BeTrue();
+        }
+
         private static Json MakeArray()
         {
             return Json.ArrayParams(

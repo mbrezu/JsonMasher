@@ -41,14 +41,15 @@
     - [x] all/0, all/1, all/2
     - [x] group_by, unique, unique_by(path_exp) 
     - [x] min, max, min_by(path_exp), max_by(path_exp)
+    - [x] indices, index, rindex
+    - [x] combinations/0, combinations/1
     - [ ] utf8bytelength
     - [ ] halt, halt_error/0, halt_error/1
     - [ ] $\_\_loc\_\_
     - [ ] floor, sqrt
     - [ ] infinite, nan, isnan
-    - [ ] contains, indices, index, rindex, inside
+    - [ ] contains, inside
     - [ ] startswith, endswith
-    - [ ] combinations/0, combinations/1
     - [ ] ltrimstr, rtrimstr
     - [ ] explode/implode
     - [ ] split

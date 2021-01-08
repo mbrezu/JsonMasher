@@ -4,4 +4,4 @@ jq -n '[1, 20, 30] | max'
 
 jq -n '{ a: 1, b: 3} | group_by(.)'
 
-jq -c -n '[1, 2, 3, 4, 2, 3, 2, 3, 4] | .[[2, 3, 4], [2, 3]]'
+jq -c -n '"baobabob" | indices("ob", "ba")'

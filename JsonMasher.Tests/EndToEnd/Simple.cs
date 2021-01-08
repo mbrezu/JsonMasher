@@ -809,6 +809,39 @@ map(select(. < 2))",
                 "max_by(.)",
                 "[]",
                 "[null]");
+
+            yield return new TestItem(
+                "indices([2])",
+                "[1, 2, 3]",
+                "[[1]]");
+            yield return new TestItem(
+                "indices(2)",
+                "[1, 2, 3]",
+                "[[1]]");
+            yield return new TestItem(
+                "index(2)",
+                "[1, 2, 3, 2]",
+                "[1]");
+            yield return new TestItem(
+                "rindex(2)",
+                "[1, 2, 3, 2]",
+                "[3]");
+            yield return new TestItem(
+                "indices(\"acab\")",
+                "\"abacabacab\"",
+                "[[2, 6]]");
+            yield return new TestItem(
+                "indices(\"acab\", \"ac\")",
+                "\"abacabacab\"",
+                "[[2, 6], [2, 6]]");
+            yield return new TestItem(
+                "index(\"acab\", \"ac\")",
+                "\"abacabacab\"",
+                "[2, 2]");
+            yield return new TestItem(
+                "rindex(\"acab\", \"ac\")",
+                "\"abacabacab\"",
+                "[6, 6]");
         }
     }
 }
