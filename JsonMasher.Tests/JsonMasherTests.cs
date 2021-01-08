@@ -632,6 +632,21 @@ namespace JsonMasher.Tests
             Json.Array(result).DeepEqual("[0]".AsJson()).Should().BeTrue();
         }
 
+        [Fact]
+        public void GroupByTest()
+        {
+            // Arrange
+            var data = Json.ArrayParams(Json.Number(0), Json.Number(1), Json.Number(0), Json.Number(2));
+            var op = new FunctionCall(
+                GroupBy.Builtin, new Literal { Value = "[[0], [1], [0], [2]]".AsJson() });
+
+            // Act
+            var result = op.RunAsSequence(data);
+
+            // Assert
+            Json.Array(result).DeepEqual("[[[0, 0], [1], [2]]]".AsJson()).Should().BeTrue();
+        }
+
         private static Json MakeArray()
         {
             return Json.ArrayParams(

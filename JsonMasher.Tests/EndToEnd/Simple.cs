@@ -743,6 +743,20 @@ map(select(. < 2))",
                 "combinations(2)",
                 "[0, 1]",
                 "[[0,0],[0,1],[1,0],[1,1]]");
+
+            yield return new TestItem(
+                "group_by(.)",
+                "[0,1,0,2]",
+                "[[[0, 0], [1], [2]]]");
+
+            yield return new TestItem(
+                "unique",
+                "[0,1,0,2]",
+                "[[0,1,2]]");
+            yield return new TestItem(
+                "unique_by(.)",
+                "[0,1,0,2]",
+                "[[0,1,2]]");
         }
     }
 }

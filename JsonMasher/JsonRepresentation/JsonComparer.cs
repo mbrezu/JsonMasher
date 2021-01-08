@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace JsonMasher.JsonRepresentation
 {
-    public class JsonComparer : Comparer<Json>
+    public class JsonComparer : Comparer<Json>, IEqualityComparer<Json>
     {
         public override int Compare(Json x, Json y)
         {
@@ -79,6 +80,10 @@ namespace JsonMasher.JsonRepresentation
             var yv = ykv.Select(kv => kv.Value);
             return Compare(Json.Array(xv), Json.Array(yv));
         }
+
+        public bool Equals(Json x, Json y) => x != null && x.DeepEqual(y);
+
+        public int GetHashCode([DisallowNull] Json obj) => obj.ToString().GetHashCode();
 
         private JsonComparer()
         {

@@ -39,14 +39,13 @@
     - [x] error
     - [x] any/0, any/1, any/2
     - [x] all/0, all/1, all/2
+    - [x] group_by, unique, unique_by(path_exp) 
     - [ ] utf8bytelength
     - [ ] halt, halt_error/0, halt_error/1
     - [ ] $\_\_loc\_\_
     - [ ] floor, sqrt
     - [ ] infinite, nan, isnan
-    - [ ] group_by
     - [ ] min, max, min_by(path_exp), max_by(path_exp)
-    - [ ] unique, unique_by(path_exp) 
     - [ ] contains, indices, index, rindex, inside
     - [ ] startswith, endswith
     - [ ] combinations/0, combinations/1
