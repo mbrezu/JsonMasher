@@ -4,15 +4,16 @@ using JsonMasher.Mashers;
 
 namespace JsonMasher.Benchmarks
 {
-    public class RangeMasherBenchmark
+    public class MasherBenchmark
     {
-        private string _program = @"range(1000000) | . + 2 | empty";
+        private string _program;
         private IJsonMasherOperator _filter;
         private Mashers.JsonMasher _masher;
         private SourceInformation _sourceInformation;
 
-        public RangeMasherBenchmark()
+        public MasherBenchmark(string program)
         {
+            _program = program;
             (_filter, _sourceInformation) = new Parser().Parse(_program);
             _masher = new();
         }

@@ -7,15 +7,15 @@ namespace JsonMasher.Benchmarks
     {
         LexerBenchmark _lexerBenchmark;
         ParserBenchmark _parserBenchmark;
-        RangeMasherBenchmark _masherBenchmarkRange;
-        RecurseMasherBenchmark _masherBenchmarkRecurse;
+        MasherBenchmark _masherBenchmarkRange;
+        MasherBenchmark _masherBenchmarkRecurse;
 
         public Benchmarks()
         {
             _lexerBenchmark = new();
             _parserBenchmark = new();
-            _masherBenchmarkRange = new();
-            _masherBenchmarkRecurse = new();
+            _masherBenchmarkRange = new(@"range(1000000) | . + 2 | empty");
+            _masherBenchmarkRecurse = new(@"[range(2000)] | map([range(.)]) | recurse | empty");
         }
 
         [Benchmark]
