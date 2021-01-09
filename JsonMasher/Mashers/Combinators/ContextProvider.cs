@@ -30,10 +30,7 @@ namespace JsonMasher.Mashers.Combinators
         {
             if (body is ContextProvider contextProvider)
             {
-                return new ContextProvider {
-                    Context = context,
-                    Body = contextProvider.Body
-                };
+                return body; // do not re-wrap needlessly.
             }
             else
             {
