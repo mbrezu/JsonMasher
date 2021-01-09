@@ -218,7 +218,7 @@ Line 1:        ^
             {
                 ex.Line.Should().Be(positionInformationExpectation.Line);
                 ex.Column.Should().Be(positionInformationExpectation.Column);
-                ex.Highlights.Should().Be(positionInformationExpectation.Highlights);
+                ex.Highlights.CleanCR().Should().Be(positionInformationExpectation.Highlights.CleanCR());
             }
             return true;
         }

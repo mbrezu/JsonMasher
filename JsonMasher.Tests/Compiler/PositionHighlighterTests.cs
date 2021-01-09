@@ -55,7 +55,7 @@ line4
 line5".CleanCR(), 2, 20);
 
             // Assert
-            result.Should().Be(@"Line 1: line1
+            result.CleanCR().Should().Be(@"Line 1: line1
 Line 1:   ^^^
 Line 2: line2
 Line 2: ^^^^^
@@ -63,7 +63,7 @@ Line 4: line4
 Line 4: ^^^^^
 Line 5: line5
 Line 5: ^
-");
+".CleanCR());
         }
     }
 }
