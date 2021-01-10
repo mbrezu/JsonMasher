@@ -197,10 +197,10 @@ def transpose:
 	        end;
 def in(xs): . as $x | xs | has($x);
 # TODO: def inside(xs): . as $x | xs | contains($x);
-# TODO: def repeat(exp):
-# TODO:      def _repeat:
-# TODO:          exp, _repeat;
-# TODO:      _repeat;
+def repeat(exp):
+     def _repeat:
+         exp, _repeat;
+     _repeat;
 # TODO: def inputs: try repeat(input) catch if .=="break" then empty else error end;
 # TODO: # like ruby's downcase - only characters A to Z are affected
 # TODO: def ascii_downcase:

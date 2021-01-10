@@ -4,4 +4,14 @@ jq -n '[1, 20, 30] | max'
 
 jq -n '{ a: 1, b: 3} | group_by(.)'
 
-jq -c -n '10 | pow(2; 10)'
+jq -c -n '10 | limit(10; repeat(pow(2; 10)))'
+
+jq -c -n '[1, 2, 3, 4] | contains([1,2,3], [1, 2, 4])'
+
+jq -c -n '[{a:1,b:2}] | contains({a:1})'
+
+jq -c -n '["abcd"] | contains(["abd"])'
+
+jq -c -n '"abcd" | contains("ab")'
+
+
