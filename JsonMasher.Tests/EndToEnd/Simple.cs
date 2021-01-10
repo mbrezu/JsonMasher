@@ -910,6 +910,12 @@ map(select(. < 2))",
 
             yield return new TestItem(
                 "\"abcd    \" | rtrimstr(\" \")", "null", "[\"abcd\"]");
+
+            yield return new TestItem(
+                "\"abcd\" | ascii_upcase", "null", "[\"ABCD\"]");
+
+            yield return new TestItem(
+                "\"ABCD\" | ascii_downcase", "null", "[\"abcd\"]");
         }
     }
 }

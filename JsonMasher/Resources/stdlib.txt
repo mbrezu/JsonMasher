@@ -202,13 +202,13 @@ def repeat(exp):
          exp, _repeat;
      _repeat;
 # TODO: def inputs: try repeat(input) catch if .=="break" then empty else error end;
-# TODO: # like ruby's downcase - only characters A to Z are affected
-# TODO: def ascii_downcase:
-# TODO:   explode | map( if 65 <= . and . <= 90 then . + 32  else . end) | implode;
-# TODO: # like ruby's upcase - only characters a to z are affected
-# TODO: def ascii_upcase:
-# TODO:   explode | map( if 97 <= . and . <= 122 then . - 32  else . end) | implode;
-# TODO: 
+# like ruby's downcase - only characters A to Z are affected
+def ascii_downcase:
+  explode | map( if 65 <= . and . <= 90 then . + 32  else . end) | implode;
+# like ruby's upcase - only characters a to z are affected
+def ascii_upcase:
+  explode | map( if 97 <= . and . <= 122 then . - 32  else . end) | implode;
+
 # TODO: # Streaming utilities
 # TODO: def truncate_stream(stream):
 # TODO:   . as $n | null | stream | . as $input | if (.[0]|length) > $n then setpath([0];$input[0][$n:]) else empty end;

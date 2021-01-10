@@ -49,11 +49,11 @@
     - [x] utf8bytelength
     - [x] explode/implode
     - [x] ltrimstr, rtrimstr
+    - [x] ascii_downcase, ascii_upcase
     - [ ] halt, halt_error/0, halt_error/1
     - [ ] $\_\_loc\_\_
     - [ ] infinite, nan, isnan
     - [ ] split
-    - [ ] ascii_downcase, ascii_upcase
     - [ ] walk/1
     - [ ] $ENV, env
     - [ ] string interpolation
