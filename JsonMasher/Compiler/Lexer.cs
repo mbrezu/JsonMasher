@@ -247,12 +247,24 @@ namespace JsonMasher.Compiler
         {
             state.SetMark();
             bool seenDot = false;
-            bool inNumber() => (!seenDot && state.Current == '.') || Char.IsDigit(state.Current);
+            bool seenE = false;
+            bool inNumber() => (!seenDot && state.Current == '.')
+                || (!seenE && (state.Current == 'e' || state.Current == 'E'))
+                || Char.IsDigit(state.Current);
             while (!state.AtEnd && inNumber())
             {
                 if (state.Current == '.')
                 {
                     seenDot = true;
+                }
+                if (state.Current == 'e' || state.Current == 'E')
+                {
+                    seenE = true;
+                    state.Advance();
+                    if (state.Current == '-')
+                    {
+                        state.Advance();
+                    }
                 }
                 state.Advance();
             }
