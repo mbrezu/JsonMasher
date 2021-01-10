@@ -4,4 +4,4 @@ jq -n '[1, 20, 30] | max'
 
 jq -n '{ a: 1, b: 3} | group_by(.)'
 
-jq -c -n '"baobabob" | indices("ob", "ba")'
+jq -c -n '10 | pow(2; 10)'

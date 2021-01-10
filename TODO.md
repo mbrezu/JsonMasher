@@ -95,7 +95,7 @@
       - [ ] atan
       - [ ] atanh
       - [ ] cbrt
-      - [ ] ceil
+      - [x] ceil
       - [ ] cos
       - [ ] cosh
       - [ ] erf
@@ -104,7 +104,7 @@
       - [ ] exp10
       - [ ] exp2
       - [ ] expm1
-      - [ ] fabs
+      - [x] fabs
       - [x] floor
       - [ ] gamma
       - [ ] j0
@@ -118,7 +118,7 @@
       - [ ] nearbyint
       - [ ] pow10
       - [ ] rint
-      - [ ] round
+      - [x] round
       - [ ] significand
       - [ ] sin
       - [ ] sinh
@@ -126,7 +126,7 @@
       - [ ] tan
       - [ ] tanh
       - [ ] tgamma
-      - [ ] trunc
+      - [x] trunc
       - [ ] y0
       - [ ] y1
     - [ ] two input functions:
@@ -144,7 +144,7 @@
       - [ ] modf
       - [ ] nextafter
       - [ ] nexttoward
-      - [ ] pow
+      - [x] pow
       - [ ] remainder
       - [ ] scalb
       - [ ] scalbln

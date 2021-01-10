@@ -54,9 +54,21 @@ namespace JsonMasher.Mashers
             environment.SetCallable(new FunctionName("_max_by_impl", 1), MaxBy.Builtin);
             environment.SetCallable(new FunctionName("_strindices", 1), StrIndices.Builtin);
             environment.SetCallable(
-                new FunctionName("floor", 0), MathBuiltins.Function("floor", System.Math.Floor));
+                new FunctionName("floor", 0), MathBuiltins.Function_1("floor", System.Math.Floor));
             environment.SetCallable(
-                new FunctionName("sqrt", 0), MathBuiltins.Function("sqrt", System.Math.Sqrt));
+                new FunctionName("sqrt", 0), MathBuiltins.Function_1("sqrt", System.Math.Sqrt));
+            environment.SetCallable(
+                new FunctionName("sqrt", 0), MathBuiltins.Function_1("sqrt", System.Math.Sqrt));
+            environment.SetCallable(
+                new FunctionName("fabs", 0), MathBuiltins.Function_1("fabs", System.Math.Abs));
+            environment.SetCallable(
+                new FunctionName("round", 0), MathBuiltins.Function_1("round", System.Math.Round));
+            environment.SetCallable(
+                new FunctionName("ceil", 0), MathBuiltins.Function_1("ceil", System.Math.Ceiling));
+            environment.SetCallable(
+                new FunctionName("trunc", 0), MathBuiltins.Function_1("trunc", System.Math.Truncate));
+            environment.SetCallable(
+                new FunctionName("pow", 2), MathBuiltins.Function_2("pow", System.Math.Pow));
         }
 
         private static void AddCode(CallablesEnvironment environment)

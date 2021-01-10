@@ -864,6 +864,21 @@ map(select(. < 2))",
                 "bsearch(2)",
                 "[1, 2, 3, 4, 5]",
                 "[1]");
+
+            yield return new TestItem("fabs", "-100", "[100]");
+
+            yield return new TestItem("round", "11.5", "[12]");
+            yield return new TestItem("round", "11.45", "[11]");
+
+            yield return new TestItem("ceil", "11.45", "[12]");
+
+            yield return new TestItem("trunc", "11.45", "[11]");
+            yield return new TestItem("trunc", "-11.45", "[-11]");
+
+            yield return new TestItem("pow(2; 10)", "null", "[1024]");
+            yield return new TestItem("pow(10; 2)", "null", "[100]");
+            yield return new TestItem("pow(10; 2, 3)", "null", "[100, 1000]");
+            yield return new TestItem("pow(3, 4; 2, 3)", "null", "[9, 27, 16, 64]");
         }
     }
 }
