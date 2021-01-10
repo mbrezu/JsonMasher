@@ -767,6 +767,20 @@ namespace JsonMasher.Tests
             Json.Array(result).DeepEqual("[true]".AsJson()).Should().BeTrue();
         }
 
+        [Fact]
+        public void ImplodeTest()
+        {
+            // Arrange
+            var data = "[97, 98, 99, 100]".AsJson();
+            var op = new FunctionCall(Implode.Builtin);
+
+            // Act
+            var result = op.RunAsSequence(data);
+
+            // Assert
+            Json.Array(result).DeepEqual("[\"abcd\"]".AsJson()).Should().BeTrue();
+        }
+
         private static Json MakeArray()
         {
             return Json.ArrayParams(

@@ -45,13 +45,13 @@
     - [x] bsearch/1
     - [x] recurse/1, recurse/2, recurse_down
     - [x] contains, inside
-    - [ ] utf8bytelength
+    - [x] startswith, endswith
+    - [x] utf8bytelength
+    - [x] explode/implode
+    - [x] ltrimstr, rtrimstr
     - [ ] halt, halt_error/0, halt_error/1
     - [ ] $\_\_loc\_\_
     - [ ] infinite, nan, isnan
-    - [ ] startswith, endswith
-    - [ ] ltrimstr, rtrimstr
-    - [ ] explode/implode
     - [ ] split
     - [ ] ascii_downcase, ascii_upcase
     - [ ] walk/1

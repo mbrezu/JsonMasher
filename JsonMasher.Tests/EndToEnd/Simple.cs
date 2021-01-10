@@ -889,6 +889,27 @@ map(select(. < 2))",
                 "{a:1, c:3}, {a:1}, {a:2} | inside({a:1, b:2, c:3})", "null", "[true, true, false]");
             yield return new TestItem(
                 "\"ab\", \"abc\", \"ad\" | inside(\"abcd\")", "null", "[true, true, false]");
+
+            yield return new TestItem(
+                "\"abcd\" | startswith(\"ab\", \"abc\", \"ac\")", "null", "[true, true, false]");
+
+            yield return new TestItem(
+                "\"abcd\" | endswith(\"bcd\", \"cd\", \"ac\")", "null", "[true, true, false]");
+
+            yield return new TestItem(
+                "\"abcd\" | utf8bytelength", "null", "[4]");
+
+            yield return new TestItem(
+                "\"abcd\" | explode", "null", "[[97, 98, 99, 100]]");
+
+            yield return new TestItem(
+                "\"abcd\" | explode | implode", "null", "[\"abcd\"]");
+
+            yield return new TestItem(
+                "\"    abcd\" | ltrimstr(\" \")", "null", "[\"abcd\"]");
+
+            yield return new TestItem(
+                "\"abcd    \" | rtrimstr(\" \")", "null", "[\"abcd\"]");
         }
     }
 }

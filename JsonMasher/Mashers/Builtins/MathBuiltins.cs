@@ -43,7 +43,7 @@ namespace JsonMasher.Mashers.Builtins
                                 else
                                 {
                                     throw context.Error(
-                                        $"Function must {functionName} be applied to numbers, not {value2?.Type}.",
+                                        $"Function {functionName} must be applied to numbers, not {value2?.Type}.",
                                         value2);
                                 }
                             }
@@ -51,7 +51,7 @@ namespace JsonMasher.Mashers.Builtins
                         else
                         {
                             throw context.Error(
-                                $"Function must {functionName} be applied to numbers, not {value1?.Type}.",
+                                $"Function {functionName} must be applied to numbers, not {value1?.Type}.",
                                 value1);
                         }
                     }
