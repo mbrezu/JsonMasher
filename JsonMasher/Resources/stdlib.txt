@@ -185,16 +185,16 @@ def combinations(n):
     . as $dot
       | [range(n) | $dot]
       | combinations;
-# TODO: # transpose a possibly jagged matrix, quickly;
-# TODO: # rows are padded with nulls so the result is always rectangular.
-# TODO: def transpose:
-# TODO:   if . == [] then []
-# TODO:   else . as $in
-# TODO:   | (map(length) | max) as $max
-# TODO:   | length as $length
-# TODO:   | reduce range(0; $max) as $j
-# TODO:       ([]; . + [reduce range(0;$length) as $i ([]; . + [ $in[$i][$j] ] )] )
-# TODO: 	        end;
+# transpose a possibly jagged matrix, quickly;
+# rows are padded with nulls so the result is always rectangular.
+def transpose:
+  if . == [] then []
+  else . as $in
+  | (map(length) | max) as $max
+  | length as $length
+  | reduce range(0; $max) as $j
+      ([]; . + [reduce range(0;$length) as $i ([]; . + [ $in[$i][$j] ] )] )
+	        end;
 # TODO: def in(xs): . as $x | xs | has($x);
 # TODO: def inside(xs): . as $x | xs | contains($x);
 # TODO: def repeat(exp):

@@ -43,6 +43,7 @@
     - [x] min, max, min_by(path_exp), max_by(path_exp)
     - [x] indices, index, rindex
     - [x] combinations/0, combinations/1
+    - [x] transpose
     - [ ] utf8bytelength
     - [ ] halt, halt_error/0, halt_error/1
     - [ ] $\_\_loc\_\_
@@ -58,7 +59,6 @@
     - [ ] recurse/1, recurse/2, recurse_down
     - [ ] walk/1
     - [ ] $ENV, env
-    - [ ] transpose
     - [ ] bsearch/1
     - [ ] string interpolation
     - [ ] tojson, fromjson

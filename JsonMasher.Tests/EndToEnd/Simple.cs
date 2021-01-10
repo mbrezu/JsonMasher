@@ -842,6 +842,15 @@ map(select(. < 2))",
                 "rindex(\"acab\", \"ac\")",
                 "\"abacabacab\"",
                 "[6, 6]");
+
+            yield return new TestItem(
+                "transpose",
+                "[[1, 2], [3, 4]]",
+                "[[[1, 3], [2, 4]]]");
+            yield return new TestItem(
+                "transpose",
+                "[[1, 2], [3, 4], [5, 6, 7]]",
+                "[[[1, 3, 5], [2, 4, 6], [null, null, 7]]]");
         }
     }
 }
