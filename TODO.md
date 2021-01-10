@@ -47,6 +47,7 @@
     - [x] floor, sqrt
     - [x] while, until
     - [x] bsearch/1
+    - [x] recurse/1, recurse/2, recurse_down
     - [ ] utf8bytelength
     - [ ] halt, halt_error/0, halt_error/1
     - [ ] $\_\_loc\_\_
@@ -57,7 +58,6 @@
     - [ ] explode/implode
     - [ ] split
     - [ ] ascii_downcase, ascii_upcase
-    - [ ] recurse/1, recurse/2, recurse_down
     - [ ] walk/1
     - [ ] $ENV, env
     - [ ] string interpolation
@@ -87,6 +87,70 @@
     - [x] first/0, last/0, nth/1
     - [x] foreach
   - [ ] [Math](https://stedolan.github.io/jq/manual/#Math)
+    - [ ] one-input functions:
+      - [ ] acos
+      - [ ] acosh
+      - [ ] asin
+      - [ ] asinh
+      - [ ] atan
+      - [ ] atanh
+      - [ ] cbrt
+      - [ ] ceil
+      - [ ] cos
+      - [ ] cosh
+      - [ ] erf
+      - [ ] erfc
+      - [ ] exp
+      - [ ] exp10
+      - [ ] exp2
+      - [ ] expm1
+      - [ ] fabs
+      - [x] floor
+      - [ ] gamma
+      - [ ] j0
+      - [ ] j1
+      - [ ] lgamma
+      - [ ] log
+      - [ ] log10
+      - [ ] log1p
+      - [ ] log2
+      - [ ] logb
+      - [ ] nearbyint
+      - [ ] pow10
+      - [ ] rint
+      - [ ] round
+      - [ ] significand
+      - [ ] sin
+      - [ ] sinh
+      - [x] sqrt
+      - [ ] tan
+      - [ ] tanh
+      - [ ] tgamma
+      - [ ] trunc
+      - [ ] y0
+      - [ ] y1
+    - [ ] two input functions:
+      - [ ] atan2
+      - [ ] copysign
+      - [ ] drem
+      - [ ] fdim
+      - [ ] fmax
+      - [ ] fmin
+      - [ ] fmod
+      - [ ] frexp
+      - [ ] hypot
+      - [ ] jn
+      - [ ] ldexp
+      - [ ] modf
+      - [ ] nextafter
+      - [ ] nexttoward
+      - [ ] pow
+      - [ ] remainder
+      - [ ] scalb
+      - [ ] scalbln
+      - [ ] yn
+    - [ ] three input functions:
+      - [ ] fma
   - [ ] [I/O](https://stedolan.github.io/jq/manual/#IO)
   - [ ] [Streaming](https://stedolan.github.io/jq/manual/#Streaming)
   - [ ] [Assignment](https://stedolan.github.io/jq/manual/#Assignment)
