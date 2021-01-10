@@ -916,6 +916,12 @@ map(select(. < 2))",
 
             yield return new TestItem(
                 "\"ABCD\" | ascii_downcase", "null", "[\"abcd\"]");
+
+            yield return new TestItem(
+                "\"[1, 2, 3, {}]\" | fromjson", "null", "[[1, 2, 3, {}]]");
+
+            yield return new TestItem(
+                "[1, 2, 3, {}] | tojson", "null", "[\"[1, 2, 3, {}]\"]");
         }
     }
 }

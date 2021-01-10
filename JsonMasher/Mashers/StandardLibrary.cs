@@ -56,6 +56,7 @@ namespace JsonMasher.Mashers
             environment.SetCallable(new FunctionName("_max_by_impl", 1), MaxBy.Builtin);
             environment.SetCallable(new FunctionName("_strindices", 1), StrIndices.Builtin);
             environment.SetCallable(new FunctionName("contains", 1), Contains.Builtin);
+            environment.SetCallable(new FunctionName("tojson", 0), ToJson.Builtin);
             MathFunctions(environment);
             StringFunctions(environment);
         }
@@ -125,6 +126,11 @@ namespace JsonMasher.Mashers
                         }
                         return Json.String(str1);
                     }));
+            environment.SetCallable(
+                new FunctionName("fromjson", 0),
+                StringBuiltins.Function_1(
+                    "fromjson",
+                    (str1) => str1.AsJson()));
         }
 
         private static Json Explode(string str)

@@ -781,6 +781,20 @@ namespace JsonMasher.Tests
             Json.Array(result).DeepEqual("[\"abcd\"]".AsJson()).Should().BeTrue();
         }
 
+        [Fact]
+        public void ToJsonTest()
+        {
+            // Arrange
+            var data = "[1, 2, 3, {}]".AsJson();
+            var op = new FunctionCall(ToJson.Builtin);
+
+            // Act
+            var result = op.RunAsSequence(data);
+
+            // Assert
+            Json.Array(result).DeepEqual("[\"[1, 2, 3, {}]\"]".AsJson()).Should().BeTrue();
+        }
+
         private static Json MakeArray()
         {
             return Json.ArrayParams(
