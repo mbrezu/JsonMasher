@@ -4,12 +4,8 @@
   - [ ] stepping through
   - [ ] setting breakpoints
   - [ ] include in web site
-- [ ] assignments WIP
-  - [ ] more IJsonZipper implementations
-  - [ ] assignment (=, not |=) implementation
 - [ ] documentation
 - [ ] nuget packages
-- [ ] destructuring bind
 
 # Implementation status of JQ manual features
 
