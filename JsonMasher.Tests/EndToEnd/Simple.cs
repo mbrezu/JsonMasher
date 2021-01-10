@@ -881,6 +881,14 @@ map(select(. < 2))",
             yield return new TestItem("pow(3, 4; 2, 3)", "null", "[9, 27, 16, 64]");
 
             yield return new TestItem("limit(3; repeat(1))", "null", "[1, 1, 1]");
+
+            yield return new TestItem(
+                "contains([1], [1, 3], [4])", "[1, 2, 3]", "[true, true, false]");
+
+            yield return new TestItem(
+                "{a:1, c:3}, {a:1}, {a:2} | inside({a:1, b:2, c:3})", "null", "[true, true, false]");
+            yield return new TestItem(
+                "\"ab\", \"abc\", \"ad\" | inside(\"abcd\")", "null", "[true, true, false]");
         }
     }
 }

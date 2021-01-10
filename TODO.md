@@ -48,11 +48,11 @@
     - [x] while, until
     - [x] bsearch/1
     - [x] recurse/1, recurse/2, recurse_down
+    - [x] contains, inside
     - [ ] utf8bytelength
     - [ ] halt, halt_error/0, halt_error/1
     - [ ] $\_\_loc\_\_
     - [ ] infinite, nan, isnan
-    - [ ] contains, inside
     - [ ] startswith, endswith
     - [ ] ltrimstr, rtrimstr
     - [ ] explode/implode

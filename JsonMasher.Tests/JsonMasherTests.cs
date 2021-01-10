@@ -722,6 +722,51 @@ namespace JsonMasher.Tests
             Json.Array(result).DeepEqual("[[2, 6]]".AsJson()).Should().BeTrue();
         }
 
+        [Fact]
+        public void ContainsStringsTest()
+        {
+            // Arrange
+            var data = Json.String("abacabacab");
+            var op = new FunctionCall(
+                Contains.Builtin, new Literal("acab"));
+
+            // Act
+            var result = op.RunAsSequence(data);
+
+            // Assert
+            Json.Array(result).DeepEqual("[true]".AsJson()).Should().BeTrue();
+        }
+
+        [Fact]
+        public void ContainsArraysTest()
+        {
+            // Arrange
+            var data = "[1,2,3]".AsJson();
+            var op = new FunctionCall(
+                Contains.Builtin, new Literal { Value = "[1,3]".AsJson() });
+
+            // Act
+            var result = op.RunAsSequence(data);
+
+            // Assert
+            Json.Array(result).DeepEqual("[true]".AsJson()).Should().BeTrue();
+        }
+
+        [Fact]
+        public void ContainsDictionaryTest()
+        {
+            // Arrange
+            var data = "{\"a\":1,\"b\":2,\"c\":3}".AsJson();
+            var op = new FunctionCall(
+                Contains.Builtin, new Literal { Value = "{\"a\":1,\"c\":3}".AsJson() });
+
+            // Act
+            var result = op.RunAsSequence(data);
+
+            // Assert
+            Json.Array(result).DeepEqual("[true]".AsJson()).Should().BeTrue();
+        }
+
         private static Json MakeArray()
         {
             return Json.ArrayParams(
