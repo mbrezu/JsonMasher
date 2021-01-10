@@ -12,7 +12,7 @@ jq -c -n '[{a:1,b:2}] | contains({a:1})'
 
 jq -c -n '["abcd"], ["abd"] | contains(1)'
 
-jq -c -n '"abcd" | contains("ab")'
+jq -c -n '"abcd" | .[3:4] = "o"'
 
 jq -c -n '"    abcd" | ltrimstr(" ")'
 

@@ -43,7 +43,7 @@ namespace JsonMasher.Mashers.Combinators
 
         private IEnumerable<Json> MashOne(Json target, Json index, IMashContext context)
         {
-            if (target.Type != JsonValueType.Array)
+            if (target.Type != JsonValueType.Array && target.Type != JsonValueType.String)
             {
                 if (!IsOptional)
                 {
@@ -103,7 +103,7 @@ namespace JsonMasher.Mashers.Combinators
 
         private static IEnumerable<Json> ExtractLength(Json json)
         {
-            if (json.Type == JsonValueType.Array)
+            if (json.Type == JsonValueType.Array || json.Type == JsonValueType.String)
             {
                 return Json.Number(json.GetLength()).AsEnumerable();
             }

@@ -13,7 +13,9 @@ namespace JsonMasher.JsonRepresentation
         public override string GetString() => _value;
 
         public override int GetLength() => _value.Length;
-
         public override JsonPathPart GetPathPart() => new StringPathPart(_value);
+
+        public override Json GetSliceAt(int start, int end)
+            => Json.String(_value.Substring(start, end - start));
     }
 }

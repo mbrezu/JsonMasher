@@ -294,6 +294,10 @@ namespace JsonMasher.Tests.EndToEnd
                 ".[[2, 3, 4], [2, 3]]",
                 "[1, 2, 3, 4, 2, 3, 2, 3, 4]",
                 "[[1,6],[1,4,6]]");
+
+            yield return new TestItem(".[3:]", "\"1234567890\"", "[\"4567890\"]");
+            yield return new TestItem(".[-3:]", "\"1234567890\"", "[\"890\"]");
+            yield return new TestItem(".[:-4]", "\"1234567890\"", "[\"123456\"]");
         }
 
         private static IEnumerable<TestItem> IfThenElsePrograms()
