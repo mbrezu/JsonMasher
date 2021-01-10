@@ -53,6 +53,10 @@ namespace JsonMasher.Mashers
             environment.SetCallable(new FunctionName("_min_by_impl", 1), MinBy.Builtin);
             environment.SetCallable(new FunctionName("_max_by_impl", 1), MaxBy.Builtin);
             environment.SetCallable(new FunctionName("_strindices", 1), StrIndices.Builtin);
+            environment.SetCallable(
+                new FunctionName("floor", 0), MathBuiltins.Function("floor", System.Math.Floor));
+            environment.SetCallable(
+                new FunctionName("sqrt", 0), MathBuiltins.Function("sqrt", System.Math.Sqrt));
         }
 
         private static void AddCode(CallablesEnvironment environment)

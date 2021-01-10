@@ -851,6 +851,19 @@ map(select(. < 2))",
                 "transpose",
                 "[[1, 2], [3, 4], [5, 6, 7]]",
                 "[[[1, 3, 5], [2, 4, 6], [null, null, 7]]]");
+
+            yield return new TestItem("floor", "10.50", "[10]");
+
+            yield return new TestItem("sqrt", "100", "[10]");
+
+            yield return new TestItem("until(. == 3; . + 1)", "1", "[3]");
+
+            yield return new TestItem("while(. < 4; . + 1)", "1", "[1, 2, 3]");
+
+            yield return new TestItem(
+                "bsearch(2)",
+                "[1, 2, 3, 4, 5]",
+                "[1]");
         }
     }
 }

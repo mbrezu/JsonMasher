@@ -44,10 +44,12 @@
     - [x] indices, index, rindex
     - [x] combinations/0, combinations/1
     - [x] transpose
+    - [x] floor, sqrt
+    - [x] while, until
+    - [x] bsearch/1
     - [ ] utf8bytelength
     - [ ] halt, halt_error/0, halt_error/1
     - [ ] $\_\_loc\_\_
-    - [ ] floor, sqrt
     - [ ] infinite, nan, isnan
     - [ ] contains, inside
     - [ ] startswith, endswith
@@ -55,11 +57,9 @@
     - [ ] explode/implode
     - [ ] split
     - [ ] ascii_downcase, ascii_upcase
-    - [ ] while, until
     - [ ] recurse/1, recurse/2, recurse_down
     - [ ] walk/1
     - [ ] $ENV, env
-    - [ ] bsearch/1
     - [ ] string interpolation
     - [ ] tojson, fromjson
     - [ ] @text, @json, @html, @uri, @csv, @tsv, @sh, @base64, @base64d
