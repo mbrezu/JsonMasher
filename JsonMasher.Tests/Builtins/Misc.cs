@@ -150,10 +150,6 @@ namespace JsonMasher.Tests.Builtins
                 new FunctionCall(Has.Builtin, new Literal(2)),
                 "[1, 2, 3]",
                 "[true]");
-            yield return new TestItem(
-                new FunctionCall(In.Builtin, new Literal { Value = "[1, 2, 3]".AsJson() }),
-                "2",
-                "[true]");
         }
 
         private static IEnumerable<TestItem> GetSetPathTests()

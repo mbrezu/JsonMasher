@@ -38,7 +38,6 @@ namespace JsonMasher.Mashers
             environment.SetCallable(new FunctionName("sort", 0), Sort.Builtin_0);
             environment.SetCallable(new FunctionName("_sort_by_impl", 1), Sort.Builtin_1);
             environment.SetCallable(new FunctionName("has", 1), Has.Builtin);
-            environment.SetCallable(new FunctionName("in", 1), In.Builtin);
             environment.SetCallable(new FunctionName("getpath", 1), GetPath.Builtin);
             environment.SetCallable(new FunctionName("setpath", 2), SetPath.Builtin);
             environment.SetCallable(new FunctionName("delpaths", 1), DelPaths.Builtin);

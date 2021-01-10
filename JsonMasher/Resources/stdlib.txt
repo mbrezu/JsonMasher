@@ -195,7 +195,7 @@ def transpose:
   | reduce range(0; $max) as $j
       ([]; . + [reduce range(0;$length) as $i ([]; . + [ $in[$i][$j] ] )] )
 	        end;
-# TODO: def in(xs): . as $x | xs | has($x);
+def in(xs): . as $x | xs | has($x);
 # TODO: def inside(xs): . as $x | xs | contains($x);
 # TODO: def repeat(exp):
 # TODO:      def _repeat:
