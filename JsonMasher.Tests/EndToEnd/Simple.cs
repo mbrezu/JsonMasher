@@ -58,6 +58,7 @@ namespace JsonMasher.Tests.EndToEnd
                 .Concat(BindingPrograms())
                 .Concat(ProgramsWithFunctions())
                 .Concat(ReduceAndForeach())
+                .Concat(LabelBreak())
                 .Concat(StandardLibrary());
 
         private static IEnumerable<TestItem> SimplePrograms()
@@ -550,6 +551,15 @@ map(select(. < 2))",
                 "foreach .[] as $item (0; . + $item; range(.))",
                 "[1, 2, 3]",
                 "[0, 0, 1, 2, 0, 1, 2, 3, 4, 5]");
+        }
+
+        private static IEnumerable<TestItem> LabelBreak()
+        {
+            yield return new TestItem("label $out | 1,2,3,break $out,4", "null", "[1,2,3]");
+            yield return new TestItem(
+                "label $out | 1,2,3,(label $inner | break $out),4", "null", "[1,2,3]");
+            yield return new TestItem(
+                "label $out | 1,2,3,(label $inner | break $inner),4", "null", "[1,2,3,4]");
         }
 
         private static IEnumerable<TestItem> StandardLibrary()

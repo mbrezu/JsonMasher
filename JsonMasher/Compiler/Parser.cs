@@ -497,6 +497,14 @@ namespace JsonMasher.Compiler
             {
                 return ParseReduceForeach(state, true);
             }
+            else if (state.Current == Tokens.Keywords.Label)
+            {
+                return ParseLabel(state);
+            }
+            else if (state.Current == Tokens.Keywords.Break)
+            {
+                return ParseBreak(state);
+            }
             else if (state.Current == Tokens.Dot)
             {
                 return ParseDot(state);
@@ -569,6 +577,43 @@ namespace JsonMasher.Compiler
             else
             {
                 throw state.Error(Messages.Parser.UnknownConstruct);
+            }
+        }
+
+        private IJsonMasherOperator ParseLabel(State state)
+        {
+            var position = state.Position;
+            state.Match(Tokens.Keywords.Label);
+            if (state.Current is VariableIdentifier variableIdentifier)
+            {
+                state.Advance();
+                state.Match(Tokens.Pipe);
+                var body = ParseFilter(state);
+                return state.RecordPosition(new Label {
+                    Name = variableIdentifier.Id,
+                    Body = body
+                }, position);
+            }
+            else
+            {
+                throw state.ErrorVariableIdentifierExpected();
+            }
+        }
+
+        private IJsonMasherOperator ParseBreak(State state)
+        {
+            var position = state.Position;
+            state.Match(Tokens.Keywords.Break);
+            if (state.Current is VariableIdentifier variableIdentifier)
+            {
+                state.Advance();
+                return state.RecordPosition(new Break {
+                    Label = variableIdentifier.Id,
+                }, position);
+            }
+            else
+            {
+                throw state.ErrorVariableIdentifierExpected();
             }
         }
 

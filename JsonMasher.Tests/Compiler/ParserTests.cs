@@ -9,6 +9,7 @@ using JsonMasher.Mashers.Primitives;
 using Xunit;
 using Ops = JsonMasher.Mashers.Builtins;
 using JsonMasher.JsonRepresentation;
+using System;
 
 namespace JsonMasher.Tests.Compiler
 {
@@ -62,7 +63,8 @@ namespace JsonMasher.Tests.Compiler
                 .Concat(FunctionTests())
                 .Concat(AlternativeTests())
                 .Concat(TryCatchTests())
-                .Concat(ReduceForeachTests());
+                .Concat(ReduceForeachTests())
+                .Concat(LabelBreakTests());
 
         private static IEnumerable<TestItem> DotTests()
         {
@@ -716,6 +718,22 @@ namespace JsonMasher.Tests.Compiler
                     Plus.Builtin, new Identity(), new GetVariable { Name = "item" }),
                 IsForeach = true,
                 Extract = new FunctionCall(Times.Builtin, new Identity(), new Identity())
+            });
+        }
+
+        private static IEnumerable<TestItem> LabelBreakTests()
+        {
+            yield return new TestItem("label $out | break $out", new Label {
+                Name = "out",
+                Body = new Break { Label = "out" },
+            });
+            yield return new TestItem("label $out | 1, 2, break $out, 3", new Label {
+                Name = "out",
+                Body = Concat.AllParams(
+                    new Literal(1),
+                    new Literal(2),
+                    new Break { Label = "out" },
+                    new Literal(3))
             });
         }
     }

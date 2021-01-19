@@ -74,7 +74,9 @@
     - [x] !=
     - [x] alternative operator
     - [x] try-catch
-    - [ ] breaking out of control structures
+    - [x] breaking out of control structures
+      - does not check lexical visibility of labels
+      - there are probably bugs for nested labels
     - [x] error suppression
   - [ ] [Regular expressions (PCRE)](https://stedolan.github.io/jq/manual/#RegularexpressionsPCRE)
   - [ ] [Advanced features](https://stedolan.github.io/jq/manual/#Advancedfeatures)

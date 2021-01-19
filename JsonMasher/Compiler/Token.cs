@@ -103,7 +103,9 @@ namespace JsonMasher.Compiler
             Try,
             Catch,
             Reduce,
-            Foreach
+            Foreach,
+            Label,
+            Break
         }
 
         private record SimpleToken(SimpleTokenType Type): Token
@@ -229,6 +231,10 @@ namespace JsonMasher.Compiler
             public static Token Reduce => _reduce;
             private static Token _foreach = new Keyword(KeywordType.Foreach);
             public static Token Foreach => _foreach;
+            private static Token _label = new Keyword(KeywordType.Label);
+            public static Token Label => _label;
+            private static Token _break = new Keyword(KeywordType.Break);
+            public static Token Break => _break;
         }
     }
 }
