@@ -17,6 +17,7 @@ namespace JsonMasher.Compiler
             private TokenWithPos[] _tokens;
             private int _index;
             public SourceInformation SourceInformation { get; private set; }
+            private Stack<string> _labels = new();
 
             public State(string program, IEnumerable<TokenWithPos> tokens)
             {
@@ -106,11 +107,15 @@ namespace JsonMasher.Compiler
             public Exception ErrorIdentifierExpected()
                 => ErrorExpected("an identifier");
 
-            internal Exception ErrorVariableIdentifierExpected()
+            public Exception ErrorVariableIdentifierExpected()
                 => ErrorExpected("a variable identifier (e.g. '$a')");
 
-            internal Exception ErrorIdentifierOrVariableIdentifierExpected()
+            public Exception ErrorIdentifierOrVariableIdentifierExpected()
                 => ErrorExpected("an identifier or a variable identifier (e.g. '$a')");
+            
+            public void PushLabel(string label) => _labels.Push(label);
+            public void PopLabel() => _labels.Pop();
+            public bool IsLabelInScope(string label) => _labels.Contains(label);
         }
 
         public (IJsonMasherOperator, SourceInformation) Parse(string program)

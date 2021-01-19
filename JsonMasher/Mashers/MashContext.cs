@@ -13,9 +13,16 @@ namespace JsonMasher.Mashers
         public List<Json> Log { get; init; } = new();
         public int Ticks { get; set; }
         public int TickLimit { get; init; }
+        public JsonBreakException ToThrow { get; private set; }
 
         public void Tick()
         {
+            if (ToThrow != null)
+            {
+                var ex = ToThrow;
+                ToThrow = null;
+                throw ex;
+            }
             if (TickLimit != 0)
             {
                 Ticks++;
@@ -23,6 +30,11 @@ namespace JsonMasher.Mashers
         }
 
         public bool OverTickLimit() => TickLimit != 0 && Ticks > TickLimit;
+
+        internal void ThrowOnTick(JsonBreakException ex)
+        {
+            ToThrow = ex;
+        }
     }
 
     public record MashContext(ContextMutableState MutableState,
@@ -146,6 +158,11 @@ namespace JsonMasher.Mashers
             {
                 return this with { Stack = stack };
             }
+        }
+
+        public void ThrowOnTick(JsonBreakException ex)
+        {
+            MutableState.ThrowOnTick(ex);
         }
     }
 }

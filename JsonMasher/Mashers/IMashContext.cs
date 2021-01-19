@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using JsonMasher.Compiler;
 using JsonMasher.JsonRepresentation;
 using JsonMasher.Mashers.Combinators;
 
@@ -20,6 +21,7 @@ namespace JsonMasher.Mashers
         void SetCallable(string name, Callable value);
         Callable GetCallable(string name);
         Exception Error(string message, params Json[] values);
+        void ThrowOnTick(JsonBreakException ex);
         void Tick();
         JsonPath GetPathFromArray(Json pathAsJson);
     }

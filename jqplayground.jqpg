@@ -14,6 +14,5 @@ jq -c -n '["abcd"], ["abd"] | contains(1)'
 
 jq -c -n '"abcd" | .[3:4] = "o"'
 
-jq -n 'builtins'
-
+jq -n 'label $out | (label $second | 1, 2, 3, break $out, 4, 5, 6), 7'
 
