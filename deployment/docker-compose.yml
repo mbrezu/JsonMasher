@@ -2,8 +2,6 @@ version: '3'
 services:
   backend:
     restart: always
-    build:
-      context: ..
-      dockerfile: JsonMasher.Web/Dockerfile
+    image: "${DOCKER_REGISTRY}/jsonmasher.web"
     ports:
       - 127.0.0.1:9123:80
