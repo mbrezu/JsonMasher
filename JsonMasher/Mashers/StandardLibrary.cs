@@ -108,6 +108,11 @@ namespace JsonMasher.Mashers
             arity2("pow", Math.Pow);
             arity2("atan2", Math.Atan2);
             arity2("copysign", Math.CopySign);
+            arity2("hypot", (x, y) => Math.Sqrt(x * x + y * y));
+            arity2("fmin", Math.Min);
+            arity2("fmax", Math.Max);
+            arity2("fmod", (x, y) => x % y);
+            arity2("fdim", (x, y) => x > y ? x - y : 0);
 
             void arity3(string name, Func<double, double, double, double> function)
             {

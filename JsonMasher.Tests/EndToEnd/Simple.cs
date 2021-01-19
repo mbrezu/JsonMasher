@@ -960,6 +960,13 @@ map(select(. < 2))",
 
             yield return new TestItem("atan2(0;1)", "null", "[0]");
             yield return new TestItem("copysign(100;-11)", "null", "[-100]");
+            yield return new TestItem("hypot(3;4)", "null", "[5]");
+            yield return new TestItem("fmin(3;4)", "null", "[3]");
+            yield return new TestItem("fmax(3;4)", "null", "[4]");
+            yield return new TestItem("fmod(3;4)", "null", "[3]");
+            yield return new TestItem("fmod(8;3.5)", "null", "[1]");
+            yield return new TestItem("fdim(8;4)", "null", "[4]");
+            yield return new TestItem("fdim(4;8)", "null", "[0]");
 
             yield return new TestItem("fma(1;2;3)", "null", "[5]");
         }
