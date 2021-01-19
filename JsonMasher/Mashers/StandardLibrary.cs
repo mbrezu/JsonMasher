@@ -8,6 +8,7 @@ using JsonMasher.Compiler;
 using JsonMasher.JsonRepresentation;
 using JsonMasher.Mashers.Builtins;
 using JsonMasher.Mashers.Combinators;
+using static System.Math;
 
 namespace JsonMasher.Mashers
 {
@@ -63,22 +64,47 @@ namespace JsonMasher.Mashers
 
         private static void MathFunctions(CallablesEnvironment environment)
         {
-            environment.SetCallable(
-                new FunctionName("floor", 0), MathBuiltins.Function_1("floor", System.Math.Floor));
-            environment.SetCallable(
-                new FunctionName("sqrt", 0), MathBuiltins.Function_1("sqrt", System.Math.Sqrt));
-            environment.SetCallable(
-                new FunctionName("sqrt", 0), MathBuiltins.Function_1("sqrt", System.Math.Sqrt));
-            environment.SetCallable(
-                new FunctionName("fabs", 0), MathBuiltins.Function_1("fabs", System.Math.Abs));
-            environment.SetCallable(
-                new FunctionName("round", 0), MathBuiltins.Function_1("round", System.Math.Round));
-            environment.SetCallable(
-                new FunctionName("ceil", 0), MathBuiltins.Function_1("ceil", System.Math.Ceiling));
-            environment.SetCallable(
-                new FunctionName("trunc", 0), MathBuiltins.Function_1("trunc", System.Math.Truncate));
-            environment.SetCallable(
-                new FunctionName("pow", 2), MathBuiltins.Function_2("pow", System.Math.Pow));
+            void arity1(string name, Func<double, double> function)
+            {
+                environment.SetCallable(
+                    new FunctionName(name, 0), MathBuiltins.Function_1(name, function));
+            }
+
+            arity1("floor", Math.Floor);
+            arity1("sqrt", Math.Sqrt);
+            arity1("fabs", Math.Abs);
+            arity1("round", Math.Round);
+            arity1("ceil", Math.Ceiling);
+            arity1("trunc", Math.Truncate);
+            arity1("acos", Math.Acos);
+            arity1("acosh", Math.Acosh);
+            arity1("asin", Math.Asin);
+            arity1("asinh", Math.Asinh);
+            arity1("atan", Math.Atan);
+            arity1("atanh", Math.Atanh);
+            arity1("cbrt", Math.Cbrt);
+            arity1("cos", Math.Cos);
+            arity1("cosh", Math.Cosh);
+            arity1("sin", Math.Sin);
+            arity1("sinh", Math.Sinh);
+            arity1("tan", Math.Tan);
+            arity1("tanh", Math.Tanh);
+            arity1("exp", Math.Exp);
+            arity1("exp10", x => Math.Exp(Math.Log(10) * x));
+            arity1("exp2", x => Math.Exp(Math.Log(2) * x));
+            arity1("expm1", x => Math.Exp(x) - 1);
+            arity1("log", Math.Log);
+            arity1("log10", Math.Log10);
+            arity1("log2", Math.Log2);
+            arity1("log1p", x => Math.Log(x + 1));
+
+            void arity2(string name, Func<double, double, double> function)
+            {
+                environment.SetCallable(
+                    new FunctionName(name, 2), MathBuiltins.Function_2(name, function));
+            }
+
+            arity2("pow", System.Math.Pow);
         }
 
         private static void StringFunctions(CallablesEnvironment environment)

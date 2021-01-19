@@ -29,7 +29,7 @@ Some simple benchmarks in [JsonMasher.Benchmarks](JsonMasher.Benchmarks).
 
 Short answer:
 
-- some jq features; most notably, modules, regular expressions and math functions (see the TODO link below)
+- some jq features; most notably, destructuring bind, modules and regular expressions (see the TODO link below)
 - a Nuget package
 - debugging facilities (`debug` is there, but I want more)
 

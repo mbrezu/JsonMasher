@@ -869,20 +869,10 @@ map(select(. < 2))",
                 "[1, 2, 3, 4, 5]",
                 "[1]");
 
-            yield return new TestItem("fabs", "-100", "[100]");
-
-            yield return new TestItem("round", "11.5", "[12]");
-            yield return new TestItem("round", "11.45", "[11]");
-
-            yield return new TestItem("ceil", "11.45", "[12]");
-
-            yield return new TestItem("trunc", "11.45", "[11]");
-            yield return new TestItem("trunc", "-11.45", "[-11]");
-
-            yield return new TestItem("pow(2; 10)", "null", "[1024]");
-            yield return new TestItem("pow(10; 2)", "null", "[100]");
-            yield return new TestItem("pow(10; 2, 3)", "null", "[100, 1000]");
-            yield return new TestItem("pow(3, 4; 2, 3)", "null", "[9, 27, 16, 64]");
+            foreach (var item in MathFunctions())
+            {
+                yield return item;
+            }
 
             yield return new TestItem("limit(3; repeat(1))", "null", "[1, 1, 1]");
 
@@ -926,6 +916,46 @@ map(select(. < 2))",
 
             yield return new TestItem(
                 "[1, 2, 3, {}] | tojson", "null", "[\"[1, 2, 3, {}]\"]");
+        }
+
+        private static IEnumerable<TestItem> MathFunctions()
+        {
+            yield return new TestItem("fabs", "-100", "[100]");
+
+            yield return new TestItem("round", "11.5", "[12]");
+            yield return new TestItem("round", "11.45", "[11]");
+
+            yield return new TestItem("ceil", "11.45", "[12]");
+
+            yield return new TestItem("trunc", "11.45", "[11]");
+            yield return new TestItem("trunc", "-11.45", "[-11]");
+
+            yield return new TestItem("acos", "1", "[0]");
+            yield return new TestItem("acosh", "1", "[0]");
+            yield return new TestItem("asin", "0", "[0]");
+            yield return new TestItem("asinh", "0", "[0]");
+            yield return new TestItem("atan", "0", "[0]");
+            yield return new TestItem("atanh", "0", "[0]");
+            yield return new TestItem("cbrt", "27", "[3]");
+            yield return new TestItem("cos", "0", "[1]");
+            yield return new TestItem("cosh", "0", "[1]");
+            yield return new TestItem("sin", "0", "[0]");
+            yield return new TestItem("sinh", "0", "[0]");
+            yield return new TestItem("tan", "0", "[0]");
+            yield return new TestItem("tanh", "0", "[0]");
+            yield return new TestItem("exp", "0", "[1]");
+            yield return new TestItem("exp10 | . - 100 | fabs | . < 1e10", "2", "[true]");
+            yield return new TestItem("exp2 | . - 4 | fabs | . < 1e10", "2", "[true]");
+            yield return new TestItem("expm1", "0", "[0]");
+            yield return new TestItem("log", "1", "[0]");
+            yield return new TestItem("log10", "100", "[2]");
+            yield return new TestItem("log2", "8", "[3]");
+            yield return new TestItem("log1p", "0", "[0]");
+
+            yield return new TestItem("pow(2; 10)", "null", "[1024]");
+            yield return new TestItem("pow(10; 2)", "null", "[100]");
+            yield return new TestItem("pow(10; 2, 3)", "null", "[100, 1000]");
+            yield return new TestItem("pow(3, 4; 2, 3)", "null", "[9, 27, 16, 64]");
         }
     }
 }
