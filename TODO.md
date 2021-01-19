@@ -60,6 +60,13 @@
     - [ ] string interpolation
     - [ ] @text, @json, @html, @uri, @csv, @tsv, @sh, @base64, @base64d
     - [ ] dates
+      - [x] fromdateiso8601/fromdate
+      - [x] todateiso8601/todate
+      - [x] now
+      - [ ] gmtime/localtime
+      - [ ] mktime
+      - [ ] strptime
+      - [ ] strftime
     - [ ] SQL-Style Operators
     - [ ] builtins
   - [ ] [Conditionals and Comparisons](https://stedolan.github.io/jq/manual/#ConditionalsandComparisons)

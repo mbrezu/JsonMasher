@@ -52,7 +52,8 @@ namespace JsonMasher.Tests.Builtins
                 .Concat(GetSetPathTests())
                 .Concat(DelPathsTests())
                 .Concat(TypeTests())
-                .Concat(ToStringToNumberTests());
+                .Concat(ToStringToNumberTests())
+                .Concat(DateTests());
 
         private static IEnumerable<TestItem> RangeTests()
         {
@@ -196,6 +197,18 @@ namespace JsonMasher.Tests.Builtins
         {
             yield return new TestItem(new FunctionCall(Tostring.Builtin), "null", "[\"null\"]");
             yield return new TestItem(new FunctionCall(Tonumber.Builtin), "\"100\"", "[100]");
+        }
+
+        private static IEnumerable<TestItem> DateTests()
+        {
+            yield return new TestItem(
+                new FunctionCall(DateFunctions.FromDate),
+                "\"2020-01-20T10:00:30Z\"",
+                "[1579514430]");
+            yield return new TestItem(
+                new FunctionCall(DateFunctions.ToDate),
+                "1579514430",
+                "[\"2020-01-20T10:00:30.0000000+00:00\"]");
         }
     }
 }

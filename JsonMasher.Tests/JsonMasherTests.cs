@@ -795,6 +795,25 @@ namespace JsonMasher.Tests
             Json.Array(result).DeepEqual("[\"[1, 2, 3, {}]\"]".AsJson()).Should().BeTrue();
         }
 
+        [Fact]
+        public void NowTest()
+        {
+            // Arrange
+            var data = Json.Null;
+            var op = new FunctionCall(DateFunctions.Now);
+
+            // Act
+            var result = op.RunAsSequence(data);
+
+            // Assert
+            result.Count().Should().Be(1);
+            result.First().Type.Should().Be(JsonValueType.Number);
+            var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            var utcNow = DateTime.UtcNow;
+            var assertion = Math.Abs(result.First().GetNumber() - (utcNow - epoch).TotalSeconds) < 1;
+            assertion.Should().BeTrue();
+        }
+
         private static Json MakeArray()
         {
             return Json.ArrayParams(

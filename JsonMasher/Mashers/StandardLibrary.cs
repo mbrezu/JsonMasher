@@ -58,6 +58,9 @@ namespace JsonMasher.Mashers
             environment.SetCallable(new FunctionName("_strindices", 1), StrIndices.Builtin);
             environment.SetCallable(new FunctionName("contains", 1), Contains.Builtin);
             environment.SetCallable(new FunctionName("tojson", 0), ToJson.Builtin);
+            environment.SetCallable(new FunctionName("fromdateiso8601", 0), DateFunctions.FromDate);
+            environment.SetCallable(new FunctionName("todateiso8601", 0), DateFunctions.ToDate);
+            environment.SetCallable(new FunctionName("now", 0), DateFunctions.Now);
             MathFunctions(environment);
             StringFunctions(environment);
         }

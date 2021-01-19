@@ -916,6 +916,11 @@ map(select(. < 2))",
 
             yield return new TestItem(
                 "[1, 2, 3, {}] | tojson", "null", "[\"[1, 2, 3, {}]\"]");
+
+            foreach (var item in DateFunctions())
+            {
+                yield return item;
+            }
         }
 
         private static IEnumerable<TestItem> MathFunctions()
@@ -969,6 +974,18 @@ map(select(. < 2))",
             yield return new TestItem("fdim(4;8)", "null", "[0]");
 
             yield return new TestItem("fma(1;2;3)", "null", "[5]");
+        }
+
+        private static IEnumerable<TestItem> DateFunctions()
+        {
+            yield return new TestItem(
+                "fromdateiso8601", "\"2020-01-20T10:00:30Z\"", "[1579514430]");
+            yield return new TestItem(
+                "fromdate", "\"2020-01-20T10:00:30Z\"", "[1579514430]");
+            yield return new TestItem(
+                "todateiso8601", "1579514430", "[\"2020-01-20T10:00:30.0000000+00:00\"]");
+            yield return new TestItem(
+                "todate", "1579514430", "[\"2020-01-20T10:00:30.0000000+00:00\"]");
         }
     }
 }
