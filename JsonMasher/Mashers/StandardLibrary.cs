@@ -105,8 +105,9 @@ namespace JsonMasher.Mashers
                     new FunctionName(name, 2), MathBuiltins.Function_2(name, function));
             }
 
-            arity2("pow", System.Math.Pow);
-            arity2("atan2", System.Math.Atan2);
+            arity2("pow", Math.Pow);
+            arity2("atan2", Math.Atan2);
+            arity2("copysign", Math.CopySign);
 
             void arity3(string name, Func<double, double, double, double> function)
             {

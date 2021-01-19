@@ -98,7 +98,6 @@
       - [ ] y0
       - [ ] y1
     - [ ] two input functions (only missing ones listed):
-      - [ ] copysign
       - [ ] drem
       - [ ] fdim
       - [ ] fmax
