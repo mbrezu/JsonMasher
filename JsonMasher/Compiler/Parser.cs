@@ -368,10 +368,53 @@ namespace JsonMasher.Compiler
                     UseWholeValue = true
                 }, position);
             }
+            else if (state.Current == Tokens.PlusEquals)
+            {
+                return DesugarAssignment(t1, state, Plus.Builtin, position);
+            }
+            else if (state.Current == Tokens.MinusEquals)
+            {
+                return DesugarAssignment(t1, state, Minus.Builtin_2, position);
+            }
+            else if (state.Current == Tokens.TimesEquals)
+            {
+                return DesugarAssignment(t1, state, Times.Builtin, position);
+            }
+            else if (state.Current == Tokens.DivideEquals)
+            {
+                return DesugarAssignment(t1, state, Divide.Builtin, position);
+            }
+            else if (state.Current == Tokens.ModuloEquals)
+            {
+                return DesugarAssignment(t1, state, Modulo.Builtin, position);
+            }
+            else if (state.Current == Tokens.SlashSlashEquals)
+            {
+                state.Advance();
+                var t2 = ParseRelationalExpression(state);
+                return state.RecordPosition(new Assignment {
+                    PathExpression = t1,
+                    Masher = new Alternative {
+                        First = new Identity(),
+                        Second = t2
+                    },
+                }, position);
+            }
             else
             {
                 return t1;
             }
+        }
+
+        private IJsonMasherOperator DesugarAssignment(
+            IJsonMasherOperator t1, State state, Builtin builtin, int position)
+        {
+            state.Advance();
+            var t2 = ParseRelationalExpression(state);
+            return state.RecordPosition(new Assignment {
+                PathExpression = t1,
+                Masher = new FunctionCall(builtin, new Identity(), t2),
+            }, position);
         }
 
         private IJsonMasherOperator ParseRelationalExpression(State state)

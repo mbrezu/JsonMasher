@@ -86,7 +86,19 @@ namespace JsonMasher.Compiler
             [Display(Name="=")]
             Equals,
             [Display(Name="%")]
-            Modulo
+            Modulo,
+            [Display(Name="+=")]
+            PlusEquals,
+            [Display(Name="-=")]
+            MinusEquals,
+            [Display(Name="*=")]
+            TimesEquals,
+            [Display(Name="/=")]
+            DivideEquals,
+            [Display(Name="//=")]
+            SlashSlashEquals,
+            [Display(Name="%=")]
+            ModuloEquals
         }
 
         private enum KeywordType
@@ -198,6 +210,24 @@ namespace JsonMasher.Compiler
 
         private static Token _modulo = new SimpleToken(SimpleTokenType.Modulo);
         public static Token Modulo => _modulo;
+
+        private static Token _plusEquals = new SimpleToken(SimpleTokenType.PlusEquals);
+        public static Token PlusEquals => _plusEquals;
+
+        private static Token _minusEquals = new SimpleToken(SimpleTokenType.MinusEquals);
+        public static Token MinusEquals => _minusEquals;
+
+        private static Token _timesEquals = new SimpleToken(SimpleTokenType.TimesEquals);
+        public static Token TimesEquals => _timesEquals;
+        
+        private static Token _divideEquals = new SimpleToken(SimpleTokenType.DivideEquals);
+        public static Token DivideEquals => _divideEquals;
+
+        private static Token _slashSlashEquals = new SimpleToken(SimpleTokenType.SlashSlashEquals);
+        public static Token SlashSlashEquals => _slashSlashEquals;
+
+        private static Token _moduloEquals = new SimpleToken(SimpleTokenType.ModuloEquals);
+        public static Token ModuloEquals => _moduloEquals;
 
         public static Token Number(double value) => new Number(value);
         public static Token Identifier(string id) => new Identifier(id);

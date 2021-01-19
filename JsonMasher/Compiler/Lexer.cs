@@ -127,7 +127,41 @@ namespace JsonMasher.Compiler
                 }
                 else if (state.Current == '/' && state.Next == '/')
                 {
-                    yield return state.TokenWithPos(Tokens.SlashSlash, 2);
+                    state.Advance(1);
+                    if (state.Next == '=')
+                    {
+                        state.Advance(2);
+                        yield return state.TokenWithPos(Tokens.SlashSlashEquals, 3);
+                    }
+                    else
+                    {
+                        state.Advance(1);
+                        yield return state.TokenWithPos(Tokens.SlashSlash, 2);
+                    }
+                }
+                else if (state.Current == '+' && state.Next == '=')
+                {
+                    yield return state.TokenWithPos(Tokens.PlusEquals, 2);
+                    state.Advance(2);
+                }
+                else if (state.Current == '-' && state.Next == '=')
+                {
+                    yield return state.TokenWithPos(Tokens.MinusEquals, 2);
+                    state.Advance(2);
+                }
+                else if (state.Current == '*' && state.Next == '=')
+                {
+                    yield return state.TokenWithPos(Tokens.TimesEquals, 2);
+                    state.Advance(2);
+                }
+                else if (state.Current == '/' && state.Next == '=')
+                {
+                    yield return state.TokenWithPos(Tokens.DivideEquals, 2);
+                    state.Advance(2);
+                }
+                else if (state.Current == '%' && state.Next == '=')
+                {
+                    yield return state.TokenWithPos(Tokens.ModuloEquals, 2);
                     state.Advance(2);
                 }
                 else 

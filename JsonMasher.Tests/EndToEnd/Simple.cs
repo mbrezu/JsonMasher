@@ -415,6 +415,34 @@ namespace JsonMasher.Tests.EndToEnd
                 "{} | .a[100:] = [1]",
                 "null",
                 "[{\"a\": [1]}]");
+            yield return new TestItem(
+                "{ a: 1 } | .a += 1",
+                "null",
+                "[{\"a\": 2}]");
+            yield return new TestItem(
+                "{ a: 1 } | .a -= 2",
+                "null",
+                "[{\"a\": -1}]");
+            yield return new TestItem(
+                "{ a: 2 } | .a *= 2",
+                "null",
+                "[{\"a\": 4}]");
+            yield return new TestItem(
+                "{ a: 2 } | .a /= 4",
+                "null",
+                "[{\"a\": 0.5}]");
+            yield return new TestItem(
+                "{ a: 8 } | .a %= 3",
+                "null",
+                "[{\"a\": 2}]");
+            yield return new TestItem(
+                "{ a: 8 } | .a //= 3",
+                "null",
+                "[{\"a\": 8}]");
+            yield return new TestItem(
+                "{ a: null } | .a //= 3",
+                "null",
+                "[{\"a\": 3}]");
         }
 
         private static IEnumerable<TestItem> PathTests()

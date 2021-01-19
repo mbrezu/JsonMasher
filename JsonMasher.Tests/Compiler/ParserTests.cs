@@ -502,6 +502,48 @@ namespace JsonMasher.Tests.Compiler
                     new Literal(2)),
                 UseWholeValue = true
             });
+            yield return new TestItem(". += 2", new Assignment {
+                PathExpression = new Identity(),
+                Masher = new FunctionCall(
+                    Plus.Builtin,
+                    new Identity(),
+                    new Literal(2)),
+            });
+            yield return new TestItem(". -= 2", new Assignment {
+                PathExpression = new Identity(),
+                Masher = new FunctionCall(
+                    Minus.Builtin_2,
+                    new Identity(),
+                    new Literal(2)),
+            });
+            yield return new TestItem(". *= 2", new Assignment {
+                PathExpression = new Identity(),
+                Masher = new FunctionCall(
+                    Times.Builtin,
+                    new Identity(),
+                    new Literal(2)),
+            });
+            yield return new TestItem(". /= 2", new Assignment {
+                PathExpression = new Identity(),
+                Masher = new FunctionCall(
+                    Divide.Builtin,
+                    new Identity(),
+                    new Literal(2)),
+            });
+            yield return new TestItem(". %= 2", new Assignment {
+                PathExpression = new Identity(),
+                Masher = new FunctionCall(
+                    Modulo.Builtin,
+                    new Identity(),
+                    new Literal(2)),
+            });
+            yield return new TestItem(". //= 2", new Assignment {
+                PathExpression = new Identity(),
+                Masher = new Alternative {
+                    First = new Identity(),
+                    Second = new Literal(2)
+                }
+            });
         }
 
         private static IEnumerable<TestItem> VariablesTest()

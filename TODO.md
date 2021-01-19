@@ -124,5 +124,11 @@
   - [ ] [Assignment](https://stedolan.github.io/jq/manual/#Assignment)
     - [x] |=
     - [x] =
-    - [ ] op=
+    - [x] op=
+      - [x] +=
+      - [x] -=
+      - [x] *=
+      - [x] /=
+      - [x] %=
+      - [x] //=
   - [ ] [Modules](https://stedolan.github.io/jq/manual/#Modules)
