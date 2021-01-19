@@ -65,8 +65,8 @@
       - [x] now
       - [ ] gmtime/localtime
       - [ ] mktime
-      - [ ] strptime
-      - [ ] strftime
+      - [x] strptime, but using C# format strings
+      - [x] strftime, but using C# format strings
     - [ ] SQL-Style Operators
     - [ ] builtins
   - [ ] [Conditionals and Comparisons](https://stedolan.github.io/jq/manual/#ConditionalsandComparisons)

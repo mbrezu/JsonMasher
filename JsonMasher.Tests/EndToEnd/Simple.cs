@@ -986,6 +986,14 @@ map(select(. < 2))",
                 "todateiso8601", "1579514430", "[\"2020-01-20T10:00:30.0000000+00:00\"]");
             yield return new TestItem(
                 "todate", "1579514430", "[\"2020-01-20T10:00:30.0000000+00:00\"]");
+            yield return new TestItem(
+                "fromdateiso8601 | strftime(\"o\")",
+                "\"2020-01-20T10:00:30Z\"",
+                "[\"2020-01-20T10:00:30.0000000+00:00\"]");
+            yield return new TestItem(
+                "strptime(\"yyyy-MM-dd zzz\") - (\"2020-01-20T00:00:00Z\" | fromdate)",
+                "\"2020-01-20 +00:00\"",
+                "[0]");
         }
     }
 }

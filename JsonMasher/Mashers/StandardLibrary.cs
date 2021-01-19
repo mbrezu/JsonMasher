@@ -61,6 +61,8 @@ namespace JsonMasher.Mashers
             environment.SetCallable(new FunctionName("fromdateiso8601", 0), DateFunctions.FromDate);
             environment.SetCallable(new FunctionName("todateiso8601", 0), DateFunctions.ToDate);
             environment.SetCallable(new FunctionName("now", 0), DateFunctions.Now);
+            environment.SetCallable(new FunctionName("strftime", 1), DateFunctions.Strftime);
+            environment.SetCallable(new FunctionName("strptime", 1), DateFunctions.Strptime);
             MathFunctions(environment);
             StringFunctions(environment);
         }

@@ -14,6 +14,6 @@ jq -c -n '["abcd"], ["abd"] | contains(1)'
 
 jq -c -n '"abcd" | .[3:4] = "o"'
 
-jq -c -n 'now'
+jq -c -n '(now | gmtime), (now | localtime), now, (now | gmtime | mktime)'
 
 
