@@ -25,7 +25,7 @@ namespace JsonMasher.Mashers.Combinators
             {
                 if (ex.Label != Name)
                 {
-                    context.ThrowOnTick(ex);
+                    throw new JsonMasherException("Breaking out of nested labels not supported.");
                 }
             }
             return result;

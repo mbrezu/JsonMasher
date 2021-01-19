@@ -75,7 +75,7 @@
     - [x] alternative operator
     - [x] try-catch
     - [x] breaking out of control structures
-      - there are probably bugs for nested labels
+      - jumping out of nested labels not supported (i.e. label $outer | label $inner | break $outer)
     - [x] error suppression
   - [ ] [Regular expressions (PCRE)](https://stedolan.github.io/jq/manual/#RegularexpressionsPCRE)
   - [ ] [Advanced features](https://stedolan.github.io/jq/manual/#Advancedfeatures)

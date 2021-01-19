@@ -21,7 +21,6 @@ namespace JsonMasher.Mashers
         void SetCallable(string name, Callable value);
         Callable GetCallable(string name);
         Exception Error(string message, params Json[] values);
-        void ThrowOnTick(JsonBreakException ex);
         void Tick();
         JsonPath GetPathFromArray(Json pathAsJson);
     }

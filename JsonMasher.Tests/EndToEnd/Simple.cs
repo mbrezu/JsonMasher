@@ -557,11 +557,9 @@ map(select(. < 2))",
         {
             yield return new TestItem("label $out | 1,2,3,break $out,4", "null", "[1,2,3]");
             yield return new TestItem(
-                "label $out | 1,2,3,(label $inner | break $out),4", "null", "[1,2,3]");
-            yield return new TestItem(
-                "label $out | 1,2,3,(label $inner | def x: break $out; x),4", "null", "[1,2,3]");
-            yield return new TestItem(
                 "label $out | 1,2,3,(label $inner | break $inner),4", "null", "[1,2,3,4]");
+            yield return new TestItem(
+                "label $out | 1,2,3,(label $inner | def x: break $inner; x),4", "null", "[1,2,3,4]");
         }
 
         private static IEnumerable<TestItem> StandardLibrary()

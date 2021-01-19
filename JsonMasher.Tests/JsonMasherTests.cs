@@ -838,34 +838,7 @@ namespace JsonMasher.Tests
         }
 
         [Fact]
-        public void LabelBreakNestedTest()
-        {
-            // Arrange
-            var data = Json.Null;
-            var op = new Label {
-                Name = "out",
-                Body = Concat.AllParams(
-                    new Literal(1),
-                    new Literal(2),
-                    new Literal(3),
-                    new Label
-                    {
-                        Name = "inner",
-                        Body = new Break { Label = "out" }
-                    },
-                    new Literal(4)
-                )
-            };
-
-            // Act
-            var result = op.RunAsSequence(data);
-
-            // Assert
-            Json.Array(result).DeepEqual("[1,2,3]".AsJson()).Should().BeTrue();
-        }
-
-        [Fact]
-        public void LabelBreakNestedTest2()
+        public void LabelBreakPseudoNestedTest()
         {
             // Arrange
             var data = Json.Null;
