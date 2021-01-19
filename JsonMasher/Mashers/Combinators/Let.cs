@@ -1,24 +1,29 @@
 using System.Collections.Generic;
 using JsonMasher.JsonRepresentation;
+using JsonMasher.Mashers.Combinators.LetMatchers;
 
 namespace JsonMasher.Mashers.Combinators
 {
     public class Let : IJsonMasherOperator, IPathGenerator
     {
-        public string Name { get; init; }
+        public IMatcher Matcher { get; init; }
         public IJsonMasherOperator Value { get; init; }
         public IJsonMasherOperator Body { get; init; }
 
         public IEnumerable<PathAndValue> GeneratePaths(
             JsonPath pathSoFar, Json json, IMashContext context)
         {
-            var newContext = context.PushVariablesFrame().PushStack(this);
-            newContext.Tick();
+            context = context.PushStack(this);
+            context.Tick();
             if (Body is IPathGenerator pathGenerator)
             {
-                foreach (var jsonValue in Value.Mash(json, newContext))
+                foreach (var jsonValue in Value.Mash(json, context))
                 {
-                    newContext.SetVariable(Name, jsonValue);
+                    var newContext = context.PushVariablesFrame();
+                    foreach (var match in Matcher.GetMatches(jsonValue))
+                    {
+                        newContext.SetVariable(match.Name, match.Value);
+                    }
                     foreach (var result in pathGenerator.GeneratePaths(pathSoFar, json, newContext))
                     {
                         yield return result;
@@ -27,18 +32,21 @@ namespace JsonMasher.Mashers.Combinators
             }
             else
             {
-                throw newContext.PushStack(Body).Error("Not a path expression.");
+                throw context.PushStack(Body).Error("Not a path expression.");
             }
         }
 
         public IEnumerable<Json> Mash(Json json, IMashContext context)
         {
             context = context.PushStack(this);
-            var newContext = context.PushVariablesFrame();
-            newContext.Tick();
+            context.Tick();
             foreach (var jsonValue in Value.Mash(json, context))
             {
-                newContext.SetVariable(Name, jsonValue);
+                var newContext = context.PushVariablesFrame();
+                foreach (var match in Matcher.GetMatches(jsonValue))
+                {
+                    newContext.SetVariable(match.Name, match.Value);
+                }
                 foreach (var result in Body.Mash(json, newContext))
                 {
                     yield return result;

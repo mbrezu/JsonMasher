@@ -6,6 +6,7 @@ using JsonMasher.Mashers.Combinators;
 using JsonMasher.Mashers.Builtins;
 using JsonMasher.Mashers.Primitives;
 using JsonMasher.JsonRepresentation;
+using JsonMasher.Mashers.Combinators.LetMatchers;
 
 namespace JsonMasher.Compiler
 {
@@ -225,7 +226,7 @@ namespace JsonMasher.Compiler
             var firstWrapper = letWrappers.First();
             var remainingLetWrappers = letWrappers.Skip(1);
             return new Let {
-                Name = firstWrapper,
+                Matcher = new AllMatcher(firstWrapper),
                 Value = new FunctionCall(new FunctionName(firstWrapper, 0)),
                 Body = ApplyLetWrappers(state, remainingLetWrappers, body)
             };
@@ -315,7 +316,7 @@ namespace JsonMasher.Compiler
                     state.Match(Tokens.Pipe);
                     var body = ParseFilter(state);
                     return state.RecordPosition(new Let {
-                        Name = identifier.Id,
+                        Matcher = new AllMatcher(identifier.Id),
                         Value = t1,
                         Body = body
                     }, position);

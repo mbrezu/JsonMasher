@@ -7,6 +7,7 @@ using Xunit;
 using JsonMasher.JsonRepresentation;
 using JsonMasher.Compiler;
 using System;
+using JsonMasher.Mashers.Combinators.LetMatchers;
 
 namespace JsonMasher.Tests
 {
@@ -408,7 +409,7 @@ namespace JsonMasher.Tests
             var data = MakeArray();
             var op = new Let { 
                 Value = new Identity(),
-                Name = "var",
+                Matcher = new AllMatcher("var"),
                 Body = new GetVariable { Name = "var" }
             };
 
@@ -427,7 +428,7 @@ namespace JsonMasher.Tests
             var op = new ConstructArray{
                 Elements = new Let { 
                     Value = new Enumerate(),
-                    Name = "var",
+                    Matcher = new AllMatcher("var"),
                     Body = new GetVariable { Name = "var" }
                 }
             }; 

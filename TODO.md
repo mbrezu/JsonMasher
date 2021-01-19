@@ -90,8 +90,8 @@
     - [x] first/1, last/1, nth/2
     - [x] first/0, last/0, nth/1
     - [x] foreach
-  - [ ] [Math](https://stedolan.github.io/jq/manual/#Math)
-    - [ ] one-input functions (only missing ones listed):
+  - [x] [Math](https://stedolan.github.io/jq/manual/#Math)
+    - [x] one-input functions (only missing ones listed):
       - [ ] erf
       - [ ] erfc
       - [ ] gamma
@@ -105,7 +105,7 @@
       - [ ] tgamma
       - [ ] y0
       - [ ] y1
-    - [ ] two input functions (only missing ones listed):
+    - [x] two input functions (only missing ones listed):
       - [ ] drem
       - [ ] frexp
       - [ ] jn
