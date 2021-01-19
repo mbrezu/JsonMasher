@@ -921,6 +921,8 @@ map(select(. < 2))",
             {
                 yield return item;
             }
+
+            yield return new TestItem("builtins[:10] | length", "null", "[10]");
         }
 
         private static IEnumerable<TestItem> MathFunctions()

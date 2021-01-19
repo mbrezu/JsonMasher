@@ -44,6 +44,8 @@ namespace JsonMasher.Mashers
             }
         }
 
+        public IEnumerable<FunctionName> GetFunctionNames() => _callables.Keys;
+
         public Callable GetCallable(FunctionName name)
         {
             if (name.Arity == 0)

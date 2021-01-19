@@ -8,7 +8,6 @@ using JsonMasher.Compiler;
 using JsonMasher.JsonRepresentation;
 using JsonMasher.Mashers.Builtins;
 using JsonMasher.Mashers.Combinators;
-using static System.Math;
 
 namespace JsonMasher.Mashers
 {
@@ -65,6 +64,13 @@ namespace JsonMasher.Mashers
             environment.SetCallable(new FunctionName("strptime", 1), DateFunctions.Strptime);
             MathFunctions(environment);
             StringFunctions(environment);
+            environment.SetCallable(new FunctionName("builtins", 0), new Builtin((mashers, json, context) => {
+                var builtins = environment
+                    .GetFunctionNames()
+                    .OrderBy(fn => fn.Name)
+                    .Select(fn => Json.String($"{fn.Name}/{fn.Arity}"));
+                return Json.Array(builtins).AsEnumerable();
+            }, 0));
         }
 
         private static void MathFunctions(CallablesEnvironment environment)

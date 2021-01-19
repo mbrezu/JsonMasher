@@ -68,7 +68,7 @@
       - [x] strptime, but using C# format strings
       - [x] strftime, but using C# format strings
     - [ ] SQL-Style Operators
-    - [ ] builtins
+    - [x] builtins
   - [ ] [Conditionals and Comparisons](https://stedolan.github.io/jq/manual/#ConditionalsandComparisons)
     - [x] if/then/else/elif/end
     - [x] !=
