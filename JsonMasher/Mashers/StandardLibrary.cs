@@ -97,6 +97,7 @@ namespace JsonMasher.Mashers
             arity1("log10", Math.Log10);
             arity1("log2", Math.Log2);
             arity1("log1p", x => Math.Log(x + 1));
+            arity1("pow10", x => Math.Pow(10, x));
 
             void arity2(string name, Func<double, double, double> function)
             {

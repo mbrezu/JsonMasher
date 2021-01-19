@@ -951,6 +951,7 @@ map(select(. < 2))",
             yield return new TestItem("log10", "100", "[2]");
             yield return new TestItem("log2", "8", "[3]");
             yield return new TestItem("log1p", "0", "[0]");
+            yield return new TestItem("pow10", "2", "[100]");
 
             yield return new TestItem("pow(2; 10)", "null", "[1024]");
             yield return new TestItem("pow(10; 2)", "null", "[100]");

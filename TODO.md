@@ -92,7 +92,6 @@
       - [ ] lgamma
       - [ ] logb
       - [ ] nearbyint
-      - [ ] pow10
       - [ ] rint
       - [ ] significand
       - [ ] tgamma
