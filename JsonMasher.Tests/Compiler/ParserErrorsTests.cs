@@ -206,6 +206,15 @@ Line 1:             ^^^^^
 Line 1:        ^
 "
                 ));
+            yield return new TestItem(
+                "break $out",
+                "Label $out is not in scope.",
+                new PositionInformation(
+                    1, 7,
+                    @"Line 1: break $out
+Line 1:       ^^^^
+"
+                ));
         }
 
         private bool VerifyException(

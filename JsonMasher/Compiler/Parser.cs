@@ -112,7 +112,10 @@ namespace JsonMasher.Compiler
 
             public Exception ErrorIdentifierOrVariableIdentifierExpected()
                 => ErrorExpected("an identifier or a variable identifier (e.g. '$a')");
-            
+
+            public Exception ErrorLabelNotInScope(string id)
+                => Error($"Label ${id} is not in scope.");
+
             public void PushLabel(string label) => _labels.Push(label);
             public void PopLabel() => _labels.Pop();
             public bool IsLabelInScope(string label) => _labels.Contains(label);
@@ -588,7 +591,9 @@ namespace JsonMasher.Compiler
             {
                 state.Advance();
                 state.Match(Tokens.Pipe);
-                var body = ParseFilter(state);
+                state.PushLabel(variableIdentifier.Id);
+                var body = ParseDefinitionOrFilter(state);
+                state.PopLabel();
                 return state.RecordPosition(new Label {
                     Name = variableIdentifier.Id,
                     Body = body
@@ -606,6 +611,10 @@ namespace JsonMasher.Compiler
             state.Match(Tokens.Keywords.Break);
             if (state.Current is VariableIdentifier variableIdentifier)
             {
+                if (!state.IsLabelInScope(variableIdentifier.Id))
+                {
+                    throw state.ErrorLabelNotInScope(variableIdentifier.Id);
+                }
                 state.Advance();
                 return state.RecordPosition(new Break {
                     Label = variableIdentifier.Id,
