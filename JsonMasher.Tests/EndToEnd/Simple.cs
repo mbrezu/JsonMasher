@@ -957,6 +957,10 @@ map(select(. < 2))",
             yield return new TestItem("pow(10; 2)", "null", "[100]");
             yield return new TestItem("pow(10; 2, 3)", "null", "[100, 1000]");
             yield return new TestItem("pow(3, 4; 2, 3)", "null", "[9, 27, 16, 64]");
+
+            yield return new TestItem("atan2(0;1)", "null", "[0]");
+
+            yield return new TestItem("fma(1;2;3)", "null", "[5]");
         }
     }
 }

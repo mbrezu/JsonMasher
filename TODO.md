@@ -98,7 +98,6 @@
       - [ ] y0
       - [ ] y1
     - [ ] two input functions (only missing ones listed):
-      - [ ] atan2
       - [ ] copysign
       - [ ] drem
       - [ ] fdim
@@ -116,8 +115,8 @@
       - [ ] scalb
       - [ ] scalbln
       - [ ] yn
-    - [ ] three input functions:
-      - [ ] fma
+    - [x] three input functions:
+      - [x] fma
   - [ ] [I/O](https://stedolan.github.io/jq/manual/#IO)
   - [ ] [Streaming](https://stedolan.github.io/jq/manual/#Streaming)
   - [ ] [Assignment](https://stedolan.github.io/jq/manual/#Assignment)

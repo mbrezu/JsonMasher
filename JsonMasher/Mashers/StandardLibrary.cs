@@ -106,6 +106,15 @@ namespace JsonMasher.Mashers
             }
 
             arity2("pow", System.Math.Pow);
+            arity2("atan2", System.Math.Atan2);
+
+            void arity3(string name, Func<double, double, double, double> function)
+            {
+                environment.SetCallable(
+                    new FunctionName(name, 3), MathBuiltins.Function_3(name, function));
+            }
+
+            arity3("fma", Math.FusedMultiplyAdd);
         }
 
         private static void StringFunctions(CallablesEnvironment environment)
