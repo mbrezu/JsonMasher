@@ -44,6 +44,10 @@ JsonMasher is about 1.5 times slower than jq, but these are only a handful of mi
 I made no attempt at optimization and instead wrote the simplest code I could. So the performance
 seems surprisingly good to me, so far. I guess this means the JIT people did an amazing job :-)
 
+Possible issues:
+- some allocations that could be eliminated (e.g. for the simplest case of variable binding);
+- use of exceptions for `try/catch`, `label/break` and `?//`.
+
 ## License
 
 [2-clause BSD](https://en.wikipedia.org/wiki/BSD_licenses#2-clause_license_.28.22Simplified_BSD_License.22_or_.22FreeBSD_License.22.29), see the [LICENSE](./LICENSE) file.

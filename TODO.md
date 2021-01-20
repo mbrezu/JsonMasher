@@ -69,7 +69,7 @@
       - [x] strftime, but using C# format strings
     - [ ] SQL-Style Operators
     - [x] builtins
-  - [ ] [Conditionals and Comparisons](https://stedolan.github.io/jq/manual/#ConditionalsandComparisons)
+  - [x] [Conditionals and Comparisons](https://stedolan.github.io/jq/manual/#ConditionalsandComparisons)
     - [x] if/then/else/elif/end
     - [x] !=
     - [x] alternative operator
@@ -77,7 +77,8 @@
     - [x] breaking out of control structures
       - jumping out of nested labels not supported (i.e. label $outer | label $inner | break $outer)
     - [x] error suppression
-  - [ ] [Regular expressions (PCRE)](https://stedolan.github.io/jq/manual/#RegularexpressionsPCRE)
+  - [x] [Regular expressions (PCRE)](https://stedolan.github.io/jq/manual/#RegularexpressionsPCRE)
+    - not PCRE, but instead the flavor of regular expressions supported by .NET
   - [x] [Advanced features](https://stedolan.github.io/jq/manual/#Advancedfeatures)
     - [x] Variable / Symbolic Binding Operator
     - [x] Destructuring Alternative Operator: ?//

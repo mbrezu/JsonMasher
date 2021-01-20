@@ -1013,6 +1013,11 @@ map(select(. < 2))",
             }
 
             yield return new TestItem("builtins[:10] | length", "null", "[10]");
+
+            foreach (var item in RegexFunctions())
+            {
+                yield return item;
+            }
         }
 
         private static IEnumerable<TestItem> MathFunctions()
@@ -1088,6 +1093,18 @@ map(select(. < 2))",
                 "strptime(\"yyyy-MM-dd zzz\") - (\"2020-01-20T00:00:00Z\" | fromdate)",
                 "\"2020-01-20 +00:00\"",
                 "[0]");
+        }
+
+        private static IEnumerable<TestItem> RegexFunctions()
+        {
+            yield return new TestItem(
+                "[match(\"th\"; \"g\")] | length", "\"this is the test string\"", "[2]");
+            yield return new TestItem(
+                "[match(\"th\"; \"\")] | length", "\"this is the test string\"", "[1]");
+            yield return new TestItem(
+                "[match(\"th\")] | length", "\"this is the test string\"", "[1]");
+            yield return new TestItem(
+                "test(\"th\")", "\"this is the test string\"", "[true]");
         }
     }
 }

@@ -7,7 +7,6 @@ using Xunit;
 using JsonMasher.JsonRepresentation;
 using JsonMasher.Compiler;
 using System;
-using JsonMasher.Mashers.Combinators.LetMatchers;
 
 namespace JsonMasher.Tests
 {

@@ -72,6 +72,7 @@ namespace JsonMasher.Mashers
                     .Select(fn => Json.String($"{fn.Name}/{fn.Arity}"));
                 return Json.Array(builtins).AsEnumerable();
             }, 0));
+            environment.SetCallable(new FunctionName("_match_impl", 3), RegexMatch.Builtin);
         }
 
         private static void MathFunctions(CallablesEnvironment environment)
