@@ -82,12 +82,7 @@
     - [x] error suppression
   - [ ] [Regular expressions (PCRE)](https://stedolan.github.io/jq/manual/#RegularexpressionsPCRE)
   - [ ] [Advanced features](https://stedolan.github.io/jq/manual/#Advancedfeatures)
-    - [ ] Variable / Symbolic Binding Operator
-      - [x] without destructuring
-      - [ ] with destructuring
-        - [x] basic array/object destructuring support (no parsing)
-        - [x] parsing for array/object destructuring
-        - [ ] looping over multiple key values when destructuring an object
+    - [x] Variable / Symbolic Binding Operator
     - [ ] Destructuring Alternative Operator: ?//
     - [x] Defining functions
     - [x] reduce

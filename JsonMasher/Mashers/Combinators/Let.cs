@@ -19,14 +19,17 @@ namespace JsonMasher.Mashers.Combinators
             {
                 foreach (var jsonValue in Value.Mash(json, context))
                 {
-                    var newContext = context.PushVariablesFrame();
-                    foreach (var match in Matcher.GetMatches(jsonValue, newContext))
+                    foreach (var matchSet in Matcher.GetMatches(jsonValue, context))
                     {
-                        newContext.SetVariable(match.Name, match.Value);
-                    }
-                    foreach (var result in pathGenerator.GeneratePaths(pathSoFar, json, newContext))
-                    {
-                        yield return result;
+                        var newContext = context.PushVariablesFrame();
+                        foreach (var match in matchSet.Matches)
+                        {
+                            newContext.SetVariable(match.Name, match.Value);
+                        }
+                        foreach (var result in pathGenerator.GeneratePaths(pathSoFar, json, newContext))
+                        {
+                            yield return result;
+                        }
                     }
                 }
             }
@@ -42,14 +45,17 @@ namespace JsonMasher.Mashers.Combinators
             context.Tick();
             foreach (var jsonValue in Value.Mash(json, context))
             {
-                var newContext = context.PushVariablesFrame();
-                foreach (var match in Matcher.GetMatches(jsonValue, context))
+                foreach (var matchSet in Matcher.GetMatches(jsonValue, context))
                 {
-                    newContext.SetVariable(match.Name, match.Value);
-                }
-                foreach (var result in Body.Mash(json, newContext))
-                {
-                    yield return result;
+                    var newContext = context.PushVariablesFrame();
+                    foreach (var match in matchSet.Matches)
+                    {
+                        newContext.SetVariable(match.Name, match.Value);
+                    }
+                    foreach (var result in Body.Mash(json, newContext))
+                    {
+                        yield return result;
+                    }
                 }
             }
         }

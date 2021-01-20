@@ -14,25 +14,44 @@ namespace JsonMasher.Mashers.Combinators.LetMatchers
 
         public ObjectMatcher(params ObjectMatcherProperty[] properties) => _properties = properties;
 
-        public IEnumerable<LetMatch> GetMatches(Json value, IMashContext context)
+        public IEnumerable<MatchSet> GetMatches(Json value, IMashContext context)
         {
             if (value == null || value.Type != JsonValueType.Object)
             {
                 throw context.Error($"Expected an object, not {value?.Type}", value);
             }
-            foreach (var property in _properties)
+            return GetMatchesImpl(value, context, new List<LetMatch>(), 0);
+        }
+
+        private IEnumerable<MatchSet> GetMatchesImpl(
+            Json value, IMashContext context, List<LetMatch> matches, int level)
+        {
+            if (level == _properties.Length)
             {
-                var key = property.Operator.Mash(value, context).First(); // TODO: this needs to loop over all possible values
-                if (key.Type != JsonValueType.String)
+                yield return new MatchSet(matches.ToList());
+            }
+            else
+            {
+                var property = _properties[level];
+                foreach (var key in property.Operator.Mash(value, context))
                 {
-                    throw context.Error($"Expected a string, not {key?.Type}", key);
-                }
-                var propertyValue = value.ContainsKey(key.GetString())
-                    ? value.GetElementAt(key.GetString())
-                    : Json.Null;
-                foreach (var match in property.Matcher.GetMatches(propertyValue, context))
-                {
-                    yield return match;
+                    if (key.Type != JsonValueType.String)
+                    {
+                        throw context.Error($"Expected a string, not {key?.Type}", key);
+                    }
+                    var propertyValue = value.ContainsKey(key.GetString())
+                        ? value.GetElementAt(key.GetString())
+                        : Json.Null;
+                    foreach (var matchSet in property.Matcher.GetMatches(propertyValue, context))
+                    {
+                        var oldLength = matches.Count;
+                        matches.AddRange(matchSet.Matches);
+                        foreach (var resultSet in GetMatchesImpl(value, context, matches, level + 1))
+                        {
+                            yield return resultSet;
+                        }
+                        matches.RemoveRange(oldLength, matches.Count - oldLength);
+                    }
                 }
             }
         }

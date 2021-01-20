@@ -18,5 +18,9 @@ jq -n 'label $out | (label $second | 1, 2, 3, def x: break $out; x, 4, 5, 6), 7'
 
 jq -n '{a:1,b:2} | . as {("a" + "", "b"):$a} ?// {b:$a} | $a'
 
+jq -n '[{a:1,b:2},3] | . as [{("a" + "", "b"):$a}, $c] | [$a, $c]'
+
 jq -n '{} | . as [$a, $b] | [$a, $b]'
+
+jq -n '{a:1} | . as {"a":$a} | $a'
 

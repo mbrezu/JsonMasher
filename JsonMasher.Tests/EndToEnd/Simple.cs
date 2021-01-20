@@ -313,6 +313,14 @@ namespace JsonMasher.Tests.EndToEnd
                 ". as {a:$a, b:[$b, $c]} | [$a, $b, $c]",
                 "{\"a\": 1, \"b\": [2, 3]}",
                 "[[1, 2, 3]]");
+            yield return new TestItem(
+                ". as {(\"a\", \"b\"):$a} | $a",
+                "{\"a\": 1, \"b\": 2}",
+                "[1, 2]");
+            yield return new TestItem(
+                ". as [{(\"a\", \"b\"):$a}, {(\"c\", \"d\"):$b}] | [$a, $b]",
+                "[{\"a\": 1, \"b\": 2}, {\"c\": 3, \"d\": 4}]",
+                "[[1, 3], [1, 4], [2, 3], [2, 4]]");
         }
 
         private static IEnumerable<TestItem> IfThenElsePrograms()

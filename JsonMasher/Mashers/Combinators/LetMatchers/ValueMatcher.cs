@@ -8,9 +8,12 @@ namespace JsonMasher.Mashers.Combinators.LetMatchers
         public string Name { get; init; }
         public ValueMatcher(string name) => Name = name;
 
-        public IEnumerable<LetMatch> GetMatches(Json value, IMashContext _)
+        public IEnumerable<MatchSet> GetMatches(Json value, IMashContext _)
         {
-            return new LetMatch(Name, value).AsEnumerable();
+            var matches = new List<LetMatch> {
+                new LetMatch(Name, value)
+            };
+            return new MatchSet(matches).AsEnumerable();
         }
     }
 }

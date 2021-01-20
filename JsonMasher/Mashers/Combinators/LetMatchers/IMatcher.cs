@@ -4,9 +4,10 @@ using JsonMasher.JsonRepresentation;
 namespace JsonMasher.Mashers.Combinators.LetMatchers
 {
     public record LetMatch(string Name, Json Value);
+    public record MatchSet(IReadOnlyCollection<LetMatch> Matches);
 
     public interface IMatcher
     {
-        IEnumerable<LetMatch> GetMatches(Json value, IMashContext context);
+        IEnumerable<MatchSet> GetMatches(Json value, IMashContext context);
     }
 }

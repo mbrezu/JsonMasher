@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using JsonMasher.JsonRepresentation;
 
 namespace JsonMasher.Mashers.Combinators.LetMatchers
@@ -10,18 +11,34 @@ namespace JsonMasher.Mashers.Combinators.LetMatchers
 
         public ArrayMatcher(params IMatcher[] elements) => _elements = elements;
 
-        public IEnumerable<LetMatch> GetMatches(Json value, IMashContext context)
+        public IEnumerable<MatchSet> GetMatches(Json value, IMashContext context)
         {
             if (value == null || value.Type != JsonValueType.Array)
             {
                 throw context.Error($"Expected an array, not {value?.Type}", value);
             }
-            for (int i = 0; i < _elements.Length; i++)
+            return GetMatchesImpl(value, context, new List<LetMatch>(), 0);
+        }
+
+        private IEnumerable<MatchSet> GetMatchesImpl(
+            Json value, IMashContext context, List<LetMatch> matches, int level)
+        {
+            if (level == _elements.Length)
             {
-                var elementValue = i < value.GetLength() ? value.GetElementAt(i) : Json.Null;
-                foreach (var match in _elements[i].GetMatches(elementValue, context))
+                yield return new MatchSet(matches.ToList());
+            }
+            else
+            {
+                var elementValue = level < value.GetLength() ? value.GetElementAt(level) : Json.Null;
+                foreach (var matchSet in _elements[level].GetMatches(elementValue, context))
                 {
-                    yield return match;
+                    var oldLength = matches.Count;
+                    matches.AddRange(matchSet.Matches);
+                    foreach (var resultSet in GetMatchesImpl(value, context, matches, level + 1))
+                    {
+                        yield return resultSet;
+                    }
+                    matches.RemoveRange(oldLength, matches.Count - oldLength);
                 }
             }
         }
