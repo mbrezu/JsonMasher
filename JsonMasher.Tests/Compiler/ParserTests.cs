@@ -610,6 +610,12 @@ namespace JsonMasher.Tests.Compiler
                 Value = new Identity(),
                 Body = new Identity()
             });
+            yield return new TestItem(". as {$a} | .", new Let {
+                Matcher = new ObjectMatcher(
+                    new ObjectMatcherProperty(new Literal("a"), new ValueMatcher("a"))),
+                Value = new Identity(),
+                Body = new Identity()
+            });
         }
 
         private static IEnumerable<TestItem> PipeTests()

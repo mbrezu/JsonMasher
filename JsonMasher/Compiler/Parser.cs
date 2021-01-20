@@ -393,9 +393,18 @@ namespace JsonMasher.Compiler
                 {
                     keyOp = ParseTerm(state);
                 }
-                state.Match(Tokens.Colon);
-                var matcher = ParseMatcher(state);
-                properties.Add(new ObjectMatcherProperty(keyOp, matcher));
+                if ((state.Current == Tokens.Comma || state.Current == Tokens.CloseBrace) && keyOp is GetVariable getVariable)
+                {
+                    properties.Add(new ObjectMatcherProperty(
+                        new Literal(getVariable.Name),
+                        new ValueMatcher(getVariable.Name)));
+                }
+                else
+                {
+                    state.Match(Tokens.Colon);
+                    var matcher = ParseMatcher(state);
+                    properties.Add(new ObjectMatcherProperty(keyOp, matcher));
+                }
                 if (state.Current == Tokens.Comma)
                 {
                     state.Advance();

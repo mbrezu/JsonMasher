@@ -306,6 +306,14 @@ namespace JsonMasher.Tests.EndToEnd
                 "{\"a\": 1, \"b\": 2}",
                 "[[1, 2]]");
             yield return new TestItem(
+                ". as {$a} | [$a]",
+                "{\"a\": 1, \"b\": 2}",
+                "[[1]]");
+            yield return new TestItem(
+                ". as {$a, $b} | [$a, $b]",
+                "{\"a\": 1, \"b\": 2}",
+                "[[1, 2]]");
+            yield return new TestItem(
                 ". as [$b, $a] | [$a, $b]",
                 "[1, 2]",
                 "[[2, 1]]");
