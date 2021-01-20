@@ -52,6 +52,7 @@ namespace JsonMasher.Tests.EndToEnd
         private static IEnumerable<TestItem> GetTestData()
             => Enumerable.Empty<TestItem>()
                 .Concat(SimplePrograms())
+                .Concat(LetPrograms())
                 .Concat(AssignmentPrograms())
                 .Concat(PathTests())
                 .Concat(IfThenElsePrograms())
@@ -89,16 +90,6 @@ namespace JsonMasher.Tests.EndToEnd
 
             yield return new TestItem(
                 ".a.b | . + 2",
-                "{ \"a\": { \"b\": 1, \"c\": 2 }, \"d\": 2}",
-                "[3]");
-
-            yield return new TestItem(
-                ".a.b as $test | $test",
-                "{ \"a\": { \"b\": 1, \"c\": 2 }, \"d\": 2}",
-                "[1]");
-
-            yield return new TestItem(
-                ".a.b as $test | $test | $test + 2",
                 "{ \"a\": { \"b\": 1, \"c\": 2 }, \"d\": 2}",
                 "[3]");
 
@@ -255,6 +246,38 @@ namespace JsonMasher.Tests.EndToEnd
                 "[\"a\", \"c\"]",
                 "[true, false]");
             yield return new TestItem(
+                ".[[2]]",
+                "[1, 2, 3, 4, 2]",
+                "[[1, 4]]");
+            yield return new TestItem(
+                ".[[2, 3]]",
+                "[1, 2, 3, 4, 2]",
+                "[[1]]");
+            yield return new TestItem(
+                ".[[2, 3]]",
+                "[1, 2, 3, 4, 2, 2, 3]",
+                "[[1, 5]]");
+            yield return new TestItem(
+                ".[[2, 3, 4], [2, 3]]",
+                "[1, 2, 3, 4, 2, 3, 2, 3, 4]",
+                "[[1,6],[1,4,6]]");
+
+            yield return new TestItem(".[3:]", "\"1234567890\"", "[\"4567890\"]");
+            yield return new TestItem(".[-3:]", "\"1234567890\"", "[\"890\"]");
+            yield return new TestItem(".[:-4]", "\"1234567890\"", "[\"123456\"]");
+        }
+
+        private static IEnumerable<TestItem> LetPrograms()
+        {
+            yield return new TestItem(
+                ".a.b as $test | $test",
+                "{ \"a\": { \"b\": 1, \"c\": 2 }, \"d\": 2}",
+                "[1]");
+            yield return new TestItem(
+                ".a.b as $test | $test | $test + 2",
+                "{ \"a\": { \"b\": 1, \"c\": 2 }, \"d\": 2}",
+                "[3]");
+            yield return new TestItem(
                 ". as $array | $array[1]",
                 "[1, 2, 3]",
                 "[2]");
@@ -278,27 +301,18 @@ namespace JsonMasher.Tests.EndToEnd
                 ". as $object | \"b\" | $object[\"b\"]",
                 "{\"a\": 1, \"b\": 2}",
                 "[2]");
-            
             yield return new TestItem(
-                ".[[2]]",
-                "[1, 2, 3, 4, 2]",
-                "[[1, 4]]");
+                ". as {a:$a, b:$b} | [$a, $b]",
+                "{\"a\": 1, \"b\": 2}",
+                "[[1, 2]]");
             yield return new TestItem(
-                ".[[2, 3]]",
-                "[1, 2, 3, 4, 2]",
-                "[[1]]");
+                ". as [$b, $a] | [$a, $b]",
+                "[1, 2]",
+                "[[2, 1]]");
             yield return new TestItem(
-                ".[[2, 3]]",
-                "[1, 2, 3, 4, 2, 2, 3]",
-                "[[1, 5]]");
-            yield return new TestItem(
-                ".[[2, 3, 4], [2, 3]]",
-                "[1, 2, 3, 4, 2, 3, 2, 3, 4]",
-                "[[1,6],[1,4,6]]");
-
-            yield return new TestItem(".[3:]", "\"1234567890\"", "[\"4567890\"]");
-            yield return new TestItem(".[-3:]", "\"1234567890\"", "[\"890\"]");
-            yield return new TestItem(".[:-4]", "\"1234567890\"", "[\"123456\"]");
+                ". as {a:$a, b:[$b, $c]} | [$a, $b, $c]",
+                "{\"a\": 1, \"b\": [2, 3]}",
+                "[[1, 2, 3]]");
         }
 
         private static IEnumerable<TestItem> IfThenElsePrograms()

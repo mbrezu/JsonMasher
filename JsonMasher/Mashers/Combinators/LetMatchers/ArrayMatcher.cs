@@ -6,6 +6,7 @@ namespace JsonMasher.Mashers.Combinators.LetMatchers
     public class ArrayMatcher : IMatcher
     {
         IMatcher[] _elements;
+        public IReadOnlyCollection<IMatcher> Elements => _elements;
 
         public ArrayMatcher(params IMatcher[] elements) => _elements = elements;
 

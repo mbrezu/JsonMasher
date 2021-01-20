@@ -10,6 +10,7 @@ namespace JsonMasher.Mashers.Combinators.LetMatchers
     {
 
         private ObjectMatcherProperty[] _properties;
+        public IReadOnlyCollection<ObjectMatcherProperty> Properties => _properties;
 
         public ObjectMatcher(params ObjectMatcherProperty[] properties) => _properties = properties;
 

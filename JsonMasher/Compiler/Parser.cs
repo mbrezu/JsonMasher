@@ -310,26 +310,84 @@ namespace JsonMasher.Compiler
             if (state.Current == Tokens.Keywords.As)
             {
                 state.Advance();
-                if (state.Current is VariableIdentifier identifier)
-                {
-                    state.Advance();
-                    state.Match(Tokens.Pipe);
-                    var body = ParseFilter(state);
-                    return state.RecordPosition(new Let {
-                        Matcher = new ValueMatcher(identifier.Id),
-                        Value = t1,
-                        Body = body
-                    }, position);
-                }
-                else
-                {
-                    throw state.ErrorVariableIdentifierExpected();
-                }
+                var matcher = ParseMatcher(state);
+                state.Match(Tokens.Pipe);
+                var body = ParseFilter(state);
+                return state.RecordPosition(new Let {
+                    Matcher = matcher,
+                    Value = t1,
+                    Body = body
+                }, position);
             }
             else
             {
                 return t1;
             }
+        }
+
+        private IMatcher ParseMatcher(State state)
+        {
+            if (state.Current is VariableIdentifier identifier)
+            {
+                state.Advance();
+                return new ValueMatcher(identifier.Id);
+            }
+            else if (state.Current == Tokens.OpenSquareParen)
+            {
+                return ParseArrayMatcher(state);
+            }
+            else if (state.Current == Tokens.OpenBrace)
+            {
+                return ParseObjectMatcher(state);
+            }
+            else
+            {
+                throw state.Error(Messages.Parser.MatcherExpected);
+            }
+        }
+
+        private IMatcher ParseArrayMatcher(State state)
+        {
+            state.Match(Tokens.OpenSquareParen);
+            List<IMatcher> matchers = new();
+            while (!state.AtEnd && state.Current != Tokens.CloseSquareParen)
+            {
+                matchers.Add(ParseMatcher(state));
+                if (state.Current == Tokens.Comma)
+                {
+                    state.Advance();
+                }
+            }
+            state.Match(Tokens.CloseSquareParen);
+            return new ArrayMatcher(matchers.ToArray());
+        }
+
+        private IMatcher ParseObjectMatcher(State state)
+        {
+            state.Match(Tokens.OpenBrace);
+            List<ObjectMatcherProperty> properties = new();
+            while (!state.AtEnd && state.Current != Tokens.CloseBrace)
+            {
+                IJsonMasherOperator keyOp = null;
+                if (state.Current is Identifier identifier)
+                {
+                    state.Advance();
+                    keyOp = new Literal(identifier.Id);
+                }
+                else
+                {
+                    keyOp = ParseTerm(state);
+                }
+                state.Match(Tokens.Colon);
+                var matcher = ParseMatcher(state);
+                properties.Add(new ObjectMatcherProperty(keyOp, matcher));
+                if (state.Current == Tokens.Comma)
+                {
+                    state.Advance();
+                }
+            }
+            state.Match(Tokens.CloseBrace);
+            return new ObjectMatcher(properties.ToArray());
         }
 
         private IJsonMasherOperator ParseRelationalLowerExpression(State state)
@@ -938,11 +996,6 @@ namespace JsonMasher.Compiler
                 if (state.Current is Identifier identifier)
                 {
                     key = new Literal(identifier.Id);
-                    state.Advance();
-                }
-                else if (state.Current is String str)
-                {
-                    key = new Literal(str.Value);
                     state.Advance();
                 }
                 else

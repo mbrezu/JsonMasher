@@ -126,14 +126,14 @@ Line 1:            ^
                 ));
             yield return new TestItem(
                 "1 as",
-                "Expected a variable identifier (e.g. '$a'), but reached end of input.",
+                Messages.Parser.MatcherExpected,
                 new PositionInformation(
                     1, 5,
                     @""
                 ));
             yield return new TestItem(
                 "1 as a",
-                "Expected a variable identifier (e.g. '$a'), but got 'a'.",
+                Messages.Parser.MatcherExpected,
                 new PositionInformation(
                     1, 6,
                     @"Line 1: 1 as a

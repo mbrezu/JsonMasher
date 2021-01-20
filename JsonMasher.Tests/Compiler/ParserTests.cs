@@ -40,6 +40,8 @@ namespace JsonMasher.Tests.Compiler
                     .ComparingByValue<Builtin>()
                     .ComparingByMembers<PropertyDescriptor>()
                     .ComparingByMembers<FunctionName>()
+                    .ComparingByMembers<ObjectMatcherProperty>()
+                    .ComparingByMembers<ObjectMatcher>()
                     .ComparingByValue<Enumerate>()
                     .ComparingByValue<Identity>());
         }
@@ -558,6 +560,35 @@ namespace JsonMasher.Tests.Compiler
                 Body = new Identity()
             });
             yield return new TestItem("$test", new GetVariable { Name = "test" });
+            yield return new TestItem(". as [$a, $b] | .", new Let {
+                Matcher = new ArrayMatcher(
+                    new ValueMatcher("a"),
+                    new ValueMatcher("b")),
+                Value = new Identity(),
+                Body = new Identity()
+            });
+            yield return new TestItem(". as [$a, $b, [$c]] | .", new Let {
+                Matcher = new ArrayMatcher(
+                    new ValueMatcher("a"),
+                    new ValueMatcher("b"),
+                    new ArrayMatcher(new ValueMatcher("c"))),
+                Value = new Identity(),
+                Body = new Identity()
+            });
+            yield return new TestItem(". as {a: $a} | .", new Let {
+                Matcher = new ObjectMatcher(
+                    new ObjectMatcherProperty(new Literal("a"), new ValueMatcher("a"))),
+                Value = new Identity(),
+                Body = new Identity()
+            });
+            yield return new TestItem(". as {a: $a, b: [$c]} | .", new Let {
+                Matcher = new ObjectMatcher(
+                    new ObjectMatcherProperty(new Literal("a"), new ValueMatcher("a")),
+                    new ObjectMatcherProperty(new Literal("b"),
+                        new ArrayMatcher(new ValueMatcher("c")))),
+                Value = new Identity(),
+                Body = new Identity()
+            });
         }
 
         private static IEnumerable<TestItem> PipeTests()

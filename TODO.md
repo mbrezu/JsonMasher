@@ -10,6 +10,9 @@
 # Implementation status of JQ manual features
 
 - [ ] jq manual
+  - [ ] miscellaneous
+    - [ ] shortcut: `{foo}` means `{foo: .foo}`
+    - [ ] shortcut: `{$foo}` means `{foo:$foo}`
   - [x] [Basic Filters](https://stedolan.github.io/jq/manual/#Basicfilters)
   - [x] [Types and Values](https://stedolan.github.io/jq/manual/#TypesandValues)
   - [ ] [Builtin operators and functions](https://stedolan.github.io/jq/manual/#Builtinoperatorsandfunctions)
@@ -83,7 +86,7 @@
       - [x] without destructuring
       - [ ] with destructuring
         - [x] basic array/object destructuring support (no parsing)
-        - [ ] parsing for array/object destructuring
+        - [x] parsing for array/object destructuring
         - [ ] looping over multiple key values when destructuring an object
     - [ ] Destructuring Alternative Operator: ?//
     - [x] Defining functions
@@ -124,14 +127,5 @@
       - [x] fma
   - [ ] [I/O](https://stedolan.github.io/jq/manual/#IO)
   - [ ] [Streaming](https://stedolan.github.io/jq/manual/#Streaming)
-  - [ ] [Assignment](https://stedolan.github.io/jq/manual/#Assignment)
-    - [x] |=
-    - [x] =
-    - [x] op=
-      - [x] +=
-      - [x] -=
-      - [x] *=
-      - [x] /=
-      - [x] %=
-      - [x] //=
+  - [x] [Assignment](https://stedolan.github.io/jq/manual/#Assignment)
   - [ ] [Modules](https://stedolan.github.io/jq/manual/#Modules)

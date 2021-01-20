@@ -14,6 +14,7 @@ namespace JsonMasher
             public const string EmptyParameterList = "Remove the '()'.";
             public const string UnknownConstruct = "Unknown construct.";
             public const string FilterExpected = "Filter expected.";
+            public const string MatcherExpected = "Expected a matcher (e.g. '$a' or '[$a, $b]').";
         }
     }
 }
