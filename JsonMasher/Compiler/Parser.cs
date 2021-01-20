@@ -310,7 +310,7 @@ namespace JsonMasher.Compiler
             if (state.Current == Tokens.Keywords.As)
             {
                 state.Advance();
-                var matcher = ParseMatcher(state);
+                var matcher = ParseAlternativeMatcher(state);
                 state.Match(Tokens.Pipe);
                 var body = ParseFilter(state);
                 return state.RecordPosition(new Let {
@@ -318,6 +318,21 @@ namespace JsonMasher.Compiler
                     Value = t1,
                     Body = body
                 }, position);
+            }
+            else
+            {
+                return t1;
+            }
+        }
+
+        private IMatcher ParseAlternativeMatcher(State state)
+        {
+            var t1 = ParseMatcher(state);
+            if (state.Current == Tokens.QuestionSlashSlash)
+            {
+                state.Advance();
+                var t2 = ParseAlternativeMatcher(state);
+                return new AlternativeMatcher { First = t1, Second = t2 };
             }
             else
             {

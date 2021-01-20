@@ -98,7 +98,9 @@ namespace JsonMasher.Compiler
             [Display(Name="//=")]
             SlashSlashEquals,
             [Display(Name="%=")]
-            ModuloEquals
+            ModuloEquals,
+            [Display(Name="?//")]
+            QuestionSlashSlash
         }
 
         private enum KeywordType
@@ -228,6 +230,9 @@ namespace JsonMasher.Compiler
 
         private static Token _moduloEquals = new SimpleToken(SimpleTokenType.ModuloEquals);
         public static Token ModuloEquals => _moduloEquals;
+
+        private static Token _questionSlashSlash = new SimpleToken(SimpleTokenType.QuestionSlashSlash);
+        public static Token QuestionSlashSlash => _questionSlashSlash;
 
         public static Token Number(double value) => new Number(value);
         public static Token Identifier(string id) => new Identifier(id);

@@ -81,9 +81,9 @@
       - jumping out of nested labels not supported (i.e. label $outer | label $inner | break $outer)
     - [x] error suppression
   - [ ] [Regular expressions (PCRE)](https://stedolan.github.io/jq/manual/#RegularexpressionsPCRE)
-  - [ ] [Advanced features](https://stedolan.github.io/jq/manual/#Advancedfeatures)
+  - [x] [Advanced features](https://stedolan.github.io/jq/manual/#Advancedfeatures)
     - [x] Variable / Symbolic Binding Operator
-    - [ ] Destructuring Alternative Operator: ?//
+    - [x] Destructuring Alternative Operator: ?//
     - [x] Defining functions
     - [x] reduce
     - [x] isempty

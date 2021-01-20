@@ -22,6 +22,7 @@ namespace JsonMasher.Compiler
 
             public char Current => _program[_index];
             public char? Next => _index + 1 >= _program.Length ? null : _program[_index + 1];
+            public char? NextNext => _index + 2 >= _program.Length ? null : _program[_index + 2];
 
             public void SkipWhiteSpaceAndComments()
             {
@@ -237,8 +238,7 @@ namespace JsonMasher.Compiler
                             state.Advance();
                             break;
                         case '?':
-                            yield return state.TokenWithPos(Tokens.Question);
-                            state.Advance();
+                            yield return QuestionToken(state);
                             break;
                         case '=':
                             yield return state.TokenWithPos(Tokens.Equals);
@@ -254,6 +254,20 @@ namespace JsonMasher.Compiler
                     }
                 }
                 state.SkipWhiteSpaceAndComments();
+            }
+        }
+
+        private TokenWithPos QuestionToken(State state)
+        {
+            if (state.Next == '/' && state.NextNext == '/')
+            {
+                state.Advance(3);
+                return state.TokenWithPos(Tokens.QuestionSlashSlash);
+            }
+            else
+            {
+                state.Advance();
+                return state.TokenWithPos(Tokens.Question);
             }
         }
 

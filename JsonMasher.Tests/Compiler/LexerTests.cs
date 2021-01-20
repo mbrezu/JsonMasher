@@ -78,6 +78,7 @@ namespace JsonMasher.Tests.Compiler
             yield return new TestItem("+= -=", TokensParams(Tokens.PlusEquals, Tokens.MinusEquals));
             yield return new TestItem("*= /=", TokensParams(Tokens.TimesEquals, Tokens.DivideEquals));
             yield return new TestItem("%= //=", TokensParams(Tokens.ModuloEquals, Tokens.SlashSlashEquals));
+            yield return new TestItem("?//", TokensParams(Tokens.QuestionSlashSlash));
         }
 
         private static IEnumerable<TestItem> CommentsTests()
