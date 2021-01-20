@@ -46,6 +46,7 @@ namespace JsonMasher.Mashers
             environment.SetCallable(new FunctionName("delpaths", 1), DelPaths.Builtin);
             environment.SetCallable(new FunctionName("type", 0), JsonType.Builtin);
             environment.SetCallable(new FunctionName("isinfinite", 0), IsInfinite.Builtin);
+            environment.SetCallable(new FunctionName("isnan", 0), IsNan.Builtin);
             environment.SetCallable(new FunctionName("isnormal", 0), IsNormal.Builtin);
             environment.SetCallable(new FunctionName("tostring", 0), Tostring.Builtin);
             environment.SetCallable(new FunctionName("tonumber", 0), Tonumber.Builtin);
@@ -109,6 +110,16 @@ namespace JsonMasher.Mashers
             arity1("log2", Math.Log2);
             arity1("log1p", x => Math.Log(x + 1));
             arity1("pow10", x => Math.Pow(10, x));
+
+            void arity1Generator(string name, Func<double> function)
+            {
+                environment.SetCallable(
+                    new FunctionName(name, 0),
+                    new Builtin((_, _, _) => Json.Number(function()).AsEnumerable(), 0));
+            }
+
+            arity1Generator("nan", () => double.NaN);
+            arity1Generator("infinite", () => double.PositiveInfinity);
 
             void arity2(string name, Func<double, double, double> function)
             {

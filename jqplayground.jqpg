@@ -27,3 +27,5 @@ jq -n '[1] | . as {"a":$a} ?// $b | [$a, $b]'
 jq -n '$a'
 
 jq -n '{a:1,b:2,c:3} | {a, c}'
+
+jq -n 'infinite | isinfinite'

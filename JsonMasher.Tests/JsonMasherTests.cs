@@ -827,6 +827,25 @@ namespace JsonMasher.Tests
             Json.Array(result).DeepEqual("[1,2,3,4]".AsJson()).Should().BeTrue();
         }
 
+        [Fact]
+        public void IsNanTest()
+        {
+            // Arrange
+            var data = Json.ArrayParams(
+                Json.Number(double.NaN),
+                Json.Number(0));
+            var op = Compose.AllParams(
+                new Enumerate(),
+                new FunctionCall(IsNan.Builtin)
+            );
+
+            // Act
+            var result = op.RunAsSequence(data);
+
+            // Assert
+            Json.Array(result).DeepEqual("[true, false]".AsJson()).Should().BeTrue();
+        }
+
         private static Json MakeArray() => "[1,2,3]".AsJson();
 
         private static Json MakeObject()

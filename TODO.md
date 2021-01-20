@@ -51,9 +51,9 @@
     - [x] ltrimstr, rtrimstr
     - [x] ascii_downcase, ascii_upcase
     - [x] tojson, fromjson
+    - [x] infinite, nan, isnan
     - [ ] halt, halt_error/0, halt_error/1
     - [ ] $\_\_loc\_\_
-    - [ ] infinite, nan, isnan
     - [ ] split
     - [ ] walk/1
     - [ ] $ENV, env
