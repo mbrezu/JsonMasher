@@ -10,8 +10,6 @@
 # Implementation status of JQ manual features
 
 - [ ] jq manual
-  - [ ] miscellaneous
-    - [ ] shortcut: `{foo}` means `{foo: .foo}`
   - [x] [Basic Filters](https://stedolan.github.io/jq/manual/#Basicfilters)
   - [x] [Types and Values](https://stedolan.github.io/jq/manual/#TypesandValues)
   - [ ] [Builtin operators and functions](https://stedolan.github.io/jq/manual/#Builtinoperatorsandfunctions)

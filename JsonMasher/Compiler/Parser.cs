@@ -1026,9 +1026,18 @@ namespace JsonMasher.Compiler
                 {
                     key = ParseTerm(state);
                 }
-                state.Match(Tokens.Colon);
-                var value = ParseFilterNoComma(state);
-                result.Add(new PropertyDescriptor(key, value));
+                if ((state.Current == Tokens.Comma || state.Current == Tokens.CloseBrace) 
+                    && key is Literal literal
+                    && literal.Value.Type == JsonValueType.String)
+                {
+                    result.Add(new PropertyDescriptor(key, new StringSelector { Key = literal.Value.GetString() }));
+                }
+                else
+                {
+                    state.Match(Tokens.Colon);
+                    var value = ParseFilterNoComma(state);
+                    result.Add(new PropertyDescriptor(key, value));
+                }
                 if (state.Current == Tokens.Comma)
                 {
                     state.Advance();

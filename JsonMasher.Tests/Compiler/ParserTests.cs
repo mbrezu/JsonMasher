@@ -249,6 +249,17 @@ namespace JsonMasher.Tests.Compiler
                 new PropertyDescriptor(
                     new Literal("a"), 
                     new Identity())));
+            yield return new TestItem("{a}", new ConstructObject(
+                new PropertyDescriptor(
+                    new Literal("a"), 
+                    new StringSelector { Key = "a"})));
+            yield return new TestItem("{a,b}", new ConstructObject(
+                new PropertyDescriptor(
+                    new Literal("a"), 
+                    new StringSelector { Key = "a"}),
+                new PropertyDescriptor(
+                    new Literal("b"), 
+                    new StringSelector { Key = "b"})));
             yield return new TestItem("{a:1}", new ConstructObject(
                 new PropertyDescriptor(
                     new Literal("a"), 
