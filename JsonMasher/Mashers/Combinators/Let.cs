@@ -20,7 +20,7 @@ namespace JsonMasher.Mashers.Combinators
                 foreach (var jsonValue in Value.Mash(json, context))
                 {
                     var newContext = context.PushVariablesFrame();
-                    foreach (var match in Matcher.GetMatches(jsonValue))
+                    foreach (var match in Matcher.GetMatches(jsonValue, newContext))
                     {
                         newContext.SetVariable(match.Name, match.Value);
                     }
@@ -43,7 +43,7 @@ namespace JsonMasher.Mashers.Combinators
             foreach (var jsonValue in Value.Mash(json, context))
             {
                 var newContext = context.PushVariablesFrame();
-                foreach (var match in Matcher.GetMatches(jsonValue))
+                foreach (var match in Matcher.GetMatches(jsonValue, context))
                 {
                     newContext.SetVariable(match.Name, match.Value);
                 }

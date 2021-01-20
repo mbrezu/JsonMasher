@@ -226,7 +226,7 @@ namespace JsonMasher.Compiler
             var firstWrapper = letWrappers.First();
             var remainingLetWrappers = letWrappers.Skip(1);
             return new Let {
-                Matcher = new AllMatcher(firstWrapper),
+                Matcher = new ValueMatcher(firstWrapper),
                 Value = new FunctionCall(new FunctionName(firstWrapper, 0)),
                 Body = ApplyLetWrappers(state, remainingLetWrappers, body)
             };
@@ -316,7 +316,7 @@ namespace JsonMasher.Compiler
                     state.Match(Tokens.Pipe);
                     var body = ParseFilter(state);
                     return state.RecordPosition(new Let {
-                        Matcher = new AllMatcher(identifier.Id),
+                        Matcher = new ValueMatcher(identifier.Id),
                         Value = t1,
                         Body = body
                     }, position);

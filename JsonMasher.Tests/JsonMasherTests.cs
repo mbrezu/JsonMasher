@@ -403,44 +403,6 @@ namespace JsonMasher.Tests
         }
 
         [Fact]
-        public void LetAndGetVariableTest()
-        {
-            // Arrange
-            var data = MakeArray();
-            var op = new Let { 
-                Value = new Identity(),
-                Matcher = new AllMatcher("var"),
-                Body = new GetVariable { Name = "var" }
-            };
-
-            // Act
-            var result = op.RunAsScalar(data);
-
-            // Assert
-            result.DeepEqual(data).Should().BeTrue();
-        }
-
-        [Fact]
-        public void LetAndGetVariableSequenceTest()
-        {
-            // Arrange
-            var data = MakeArray();
-            var op = new ConstructArray{
-                Elements = new Let { 
-                    Value = new Enumerate(),
-                    Matcher = new AllMatcher("var"),
-                    Body = new GetVariable { Name = "var" }
-                }
-            }; 
-
-            // Act
-            var result = op.RunAsScalar(data);
-
-            // Assert
-            result.DeepEqual(data).Should().BeTrue();
-        }
-
-        [Fact]
         public void IfThenElseTrue()
         {
             // Arrange
@@ -865,14 +827,7 @@ namespace JsonMasher.Tests
             Json.Array(result).DeepEqual("[1,2,3,4]".AsJson()).Should().BeTrue();
         }
 
-        private static Json MakeArray()
-        {
-            return Json.ArrayParams(
-                Json.Number(1),
-                Json.Number(2),
-                Json.Number(3)
-            );
-        }
+        private static Json MakeArray() => "[1,2,3]".AsJson();
 
         private static Json MakeObject()
         {
@@ -883,25 +838,6 @@ namespace JsonMasher.Tests
             );
         }
 
-        private static Json MakeNestedArray()
-        {
-            return Json.ArrayParams(
-                Json.ArrayParams(
-                    Json.Number(1),
-                    Json.Number(2),
-                    Json.Number(3)
-                ),
-                Json.ArrayParams(
-                    Json.Number(4),
-                    Json.Number(5),
-                    Json.Number(6)
-                ),
-                Json.ArrayParams(
-                    Json.Number(7),
-                    Json.Number(8),
-                    Json.Number(9)
-                )
-            );
-        }
+        private static Json MakeNestedArray() => "[[1,2,3],[4,5,6],[7,8,9]]".AsJson();
     }
 }

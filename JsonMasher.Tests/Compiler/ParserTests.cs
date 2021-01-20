@@ -550,7 +550,7 @@ namespace JsonMasher.Tests.Compiler
         private static IEnumerable<TestItem> VariablesTest()
         {
             yield return new TestItem(". + 2 as $test | .", new Let {
-                Matcher = new AllMatcher("test"),
+                Matcher = new ValueMatcher("test"),
                 Value = new FunctionCall(
                     Plus.Builtin,
                     new Identity(),
@@ -626,7 +626,7 @@ namespace JsonMasher.Tests.Compiler
                     Name = "test",
                     Arguments = new List<string> { "a" },
                     Body = new Let {
-                        Matcher = new AllMatcher("a"),
+                        Matcher = new ValueMatcher("a"),
                         Value = new FunctionCall(new FunctionName("a" ,0)),
                         Body = new FunctionCall(
                             Plus.Builtin,
@@ -653,10 +653,10 @@ namespace JsonMasher.Tests.Compiler
                     Name = "point",
                     Arguments = new List<string> { "x", "y" },
                     Body = new Let {
-                        Matcher = new AllMatcher("x"),
+                        Matcher = new ValueMatcher("x"),
                         Value = new FunctionCall(new FunctionName("x", 0)),
                         Body = new Let {
-                            Matcher = new AllMatcher("y"),
+                            Matcher = new ValueMatcher("y"),
                             Value = new FunctionCall(new FunctionName("y", 0)),
                             Body = new ConstructArray {
                                 Elements = Concat.AllParams(

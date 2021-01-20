@@ -82,6 +82,9 @@
     - [ ] Variable / Symbolic Binding Operator
       - [x] without destructuring
       - [ ] with destructuring
+        - [x] basic array/object destructuring support (no parsing)
+        - [ ] parsing for array/object destructuring
+        - [ ] looping over multiple key values when destructuring an object
     - [ ] Destructuring Alternative Operator: ?//
     - [x] Defining functions
     - [x] reduce
