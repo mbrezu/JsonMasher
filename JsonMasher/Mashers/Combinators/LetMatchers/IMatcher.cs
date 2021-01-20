@@ -9,5 +9,6 @@ namespace JsonMasher.Mashers.Combinators.LetMatchers
     public interface IMatcher
     {
         IEnumerable<MatchSet> GetMatches(Json value, IMashContext context);
+        IEnumerable<string> GetAllNames();
     }
 }

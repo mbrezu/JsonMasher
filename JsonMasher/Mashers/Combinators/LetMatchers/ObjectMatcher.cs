@@ -55,5 +55,16 @@ namespace JsonMasher.Mashers.Combinators.LetMatchers
                 }
             }
         }
+
+        public IEnumerable<string> GetAllNames()
+        {
+            foreach (var property in _properties)
+            {
+                foreach (var name in property.Matcher.GetAllNames())
+                {
+                    yield return name;
+                }
+            }
+        }
     }
 }

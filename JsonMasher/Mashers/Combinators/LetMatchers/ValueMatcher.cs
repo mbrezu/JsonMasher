@@ -15,5 +15,10 @@ namespace JsonMasher.Mashers.Combinators.LetMatchers
             };
             return new MatchSet(matches).AsEnumerable();
         }
+
+        public IEnumerable<string> GetAllNames()
+        {
+            yield return Name;
+        }
     }
 }
