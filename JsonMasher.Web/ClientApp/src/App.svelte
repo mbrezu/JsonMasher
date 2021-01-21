@@ -79,7 +79,7 @@
     <SeparatorH />
 </ContainerH>
 
-<style>
+<style lang="scss">
     .subtitle {
         padding: 5px;
         background: lightyellow;
