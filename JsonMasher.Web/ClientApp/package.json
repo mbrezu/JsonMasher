@@ -1,50 +1,29 @@
 {
-  "name": "jsonmasher.web",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "merge": "^1.2.1",
-    "oidc-client": "^1.9.0",
-    "react": "^16.0.0",
-    "react-dom": "^16.0.0",
-    "react-router-bootstrap": "^0.25.0",
-    "react-router-dom": "^5.1.2",
-    "react-scripts": "^3.4.1",
-    "reactstrap": "^8.4.1",
-    "rimraf": "^2.6.2"
+  "name": "svelte-app",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "rollup -c",
+    "dev": "rollup -c -w",
+    "start": "sirv public",
+    "validate": "svelte-check"
   },
   "devDependencies": {
-    "ajv": "^6.9.1",
-    "cross-env": "^5.2.0",
-    "typescript": "^3.7.5",
-    "eslint": "^6.8.0",
-    "eslint-config-react-app": "^5.2.0",
-    "eslint-plugin-flowtype": "^4.6.0",
-    "eslint-plugin-import": "^2.20.1",
-    "eslint-plugin-jsx-a11y": "^6.2.3",
-    "eslint-plugin-react": "^7.18.3",
-    "nan": "^2.14.1"
+    "@rollup/plugin-commonjs": "^17.0.0",
+    "@rollup/plugin-node-resolve": "^11.0.0",
+    "rollup": "^2.3.4",
+    "rollup-plugin-css-only": "^3.1.0",
+    "rollup-plugin-livereload": "^2.0.0",
+    "rollup-plugin-svelte": "^7.0.0",
+    "rollup-plugin-terser": "^7.0.0",
+    "svelte": "^3.0.0",
+    "svelte-check": "^1.0.0",
+    "svelte-preprocess": "^4.0.0",
+    "@rollup/plugin-typescript": "^6.0.0",
+    "typescript": "^3.9.3",
+    "tslib": "^2.0.0",
+    "@tsconfig/svelte": "^1.0.0"
   },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
-  "scripts": {
-    "start": "rimraf ./build && react-scripts start",
-    "build": "react-scripts build",
-    "test": "cross-env CI=true react-scripts test --env=jsdom",
-    "eject": "react-scripts eject",
-    "lint": "eslint ./src/"
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+  "dependencies": {
+    "sirv-cli": "^1.0.0"
   }
 }
