@@ -2,14 +2,14 @@
     const projectUrl = "https://github.com/mbrezu/JsonMasher";
 </script>
 
-<div class="title">
+<div>
     <a href={projectUrl}><h1>Json Masher</h1></a>
     <a href={projectUrl}>{projectUrl}</a> - a .NET 5 implementation of
     <a href="https://stedolan.github.io/jq/">jq</a>
 </div>
 
 <style>
-    .title {
+    div {
         padding: 5px;
         background: lightblue;
     }

@@ -1,7 +1,7 @@
-<div class="separatorv"/>
+<div/>
 
 <style>
-.separatorv {
-	height: 20px;
-}
+    div {
+        height: 20px;
+    }
 </style>

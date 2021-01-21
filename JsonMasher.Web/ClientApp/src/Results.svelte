@@ -2,6 +2,7 @@
     import ContainerV from "./ContainerV.svelte";
     import SeparatorV from "./SeparatorV.svelte";
     import OutputArea from "./OutputArea.svelte";
+
     export let stdout: string;
     export let stderr: string;
 </script>

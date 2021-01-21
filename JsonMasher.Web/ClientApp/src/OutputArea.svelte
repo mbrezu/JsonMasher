@@ -1,19 +1,15 @@
 <script lang="ts">
+    import Subtitle from "./Subtitle.svelte";
+
     export let title: string;
     export let value: string;
 </script>
 
-<div class="subtitle">
-    <h3>{title}</h3>
-</div>
-<textarea class="fillall" readOnly {value} />
+<Subtitle {title}/>
+<textarea readOnly {value} />
 
 <style>
-    .subtitle {
-        padding: 5px;
-        background: lightyellow;
-    }
-    .fillall {
+    textarea {
         width: 100%;
         height: 100%;
     }

@@ -1,9 +1,9 @@
-<div class="containerh">
+<div>
     <slot></slot>
 </div>
 
 <style>
-    .containerh {
+    div {
         width: 100%;
         height: 100%;
         display: flex;

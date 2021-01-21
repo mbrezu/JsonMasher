@@ -9,6 +9,7 @@
     import Results from "./Results.svelte";
     import { examples } from "./examples";
     import { onMount } from "svelte";
+    import Subtitle from "./Subtitle.svelte";
 
     const localStorageKey = "program+input";
 
@@ -19,7 +20,8 @@
     let slurp = false;
 
     onMount(() => {
-        const initialContent = JSON.parse(localStorage.getItem(localStorageKey)) || {};
+        const initialContent =
+            JSON.parse(localStorage.getItem(localStorageKey)) || {};
         program = initialContent.program || examples[0].program;
         input = initialContent.input || examples[0].input;
         slurp = initialContent.slurp || false;
@@ -51,18 +53,20 @@
 <ContainerH>
     <SeparatorH />
     <ContainerV>
-        <SeparatorV/>
+        <SeparatorV />
         <Header />
         <ContainerH>
             <ContainerV>
-                <div class="subtitle">
-                    <h3>Program:</h3>
-                </div>
+                <Subtitle title="Program:" />
                 <div class="flexRow">
                     <Examples {examples} onSelectExample={selectExample} />
                     <div class="filler" />
                     <div class="fixed">
-                        <input name="slurp" type="checkbox" bind:checked={slurp} />
+                        <input
+                            name="slurp"
+                            type="checkbox"
+                            bind:checked={slurp}
+                        />
                         <label for="slurp">Slurp (wrap input in array)</label>
                         &nbsp;|&nbsp;
                         <button on:click={run}>Run</button>
@@ -80,10 +84,6 @@
 </ContainerH>
 
 <style lang="scss">
-    .subtitle {
-        padding: 5px;
-        background: lightyellow;
-    }
     .flexRow {
         display: flex;
         flex-direction: row;

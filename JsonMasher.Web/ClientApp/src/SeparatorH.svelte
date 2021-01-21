@@ -1,7 +1,7 @@
-<div class="separatorh"/>
+<div/>
 
 <style>
-    .separatorh {
+    div {
         width: 20px;
     }
 </style>
