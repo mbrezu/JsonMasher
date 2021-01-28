@@ -29,7 +29,7 @@ Some simple benchmarks in [JsonMasher.Benchmarks](JsonMasher.Benchmarks).
 
 Short answer:
 
-- some jq features; most notably, modules and regular expressions (see the TODO link below)
+- some jq features; most notably, modules (see the TODO link below)
 - debugging facilities (`debug` is there, but I want more)
 
 Long answer: [TODO JQ manual](TODO.md#implementation-status-of-jq-manual-features). Also see
