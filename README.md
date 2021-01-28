@@ -29,8 +29,7 @@ Some simple benchmarks in [JsonMasher.Benchmarks](JsonMasher.Benchmarks).
 
 Short answer:
 
-- some jq features; most notably, destructuring bind, modules and regular expressions (see the TODO link below)
-- a Nuget package
+- some jq features; most notably, modules and regular expressions (see the TODO link below)
 - debugging facilities (`debug` is there, but I want more)
 
 Long answer: [TODO JQ manual](TODO.md#implementation-status-of-jq-manual-features). Also see
@@ -39,7 +38,7 @@ examples in [jsonmasher.mbrezu.me](https://jsonmasher.mbrezu.me) for what is imp
 ## Performance
 
 With the simple benchmarks in [JsonMasher.Benchmarks](JsonMasher.Benchmarks), it seems that
-JsonMasher is about 1.5 times slower than jq, but these are only a handful of microbenchmarks...
+JsonMasher is about 1.5-2 times slower than jq, but these are only a handful of microbenchmarks...
 
 I made no attempt at optimization and instead wrote the simplest code I could. So the performance
 seems surprisingly good to me, so far. I guess this means the JIT people did an amazing job :-)

@@ -2,6 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
+    <PackageId>JsonMasher</PackageId>
+    <Version>0.0.1</Version>
+    <Authors>Miron Brezuleanu</Authors>
+    <PackageLicenseExpression>BSD-2-Clause</PackageLicenseExpression>
+    <IncludeSource>true</IncludeSource>
+    <RepositoryUrl>https://github.com/mbrezu/JsonMasher</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
