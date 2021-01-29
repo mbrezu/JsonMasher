@@ -1,6 +1,5 @@
-FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
-RUN curl --silent --location https://deb.nodesource.com/setup_14.x | bash -
-RUN apt-get install --yes nodejs
+FROM mcr.microsoft.com/dotnet/sdk:5.0-alpine AS build
+RUN apk add --update nodejs npm
 WORKDIR /app
 COPY . .
 WORKDIR /app/JsonMasher.Web
