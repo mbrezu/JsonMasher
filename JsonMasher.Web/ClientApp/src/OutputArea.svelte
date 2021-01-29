@@ -5,12 +5,19 @@
     export let value: string;
 </script>
 
-<Subtitle {title}/>
-<textarea readOnly {value} />
+<div class="container">
+    <Subtitle {title}/>
+    <textarea readOnly {value} />
+</div>
 
 <style>
-    textarea {
+    .container {
+        display: grid;
         width: 100%;
         height: 100%;
+        grid-template-rows: auto 1fr;
+    }
+    textarea {
+        resize: none;
     }
 </style>

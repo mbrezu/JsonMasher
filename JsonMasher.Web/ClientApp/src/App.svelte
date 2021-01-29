@@ -1,15 +1,11 @@
 <script lang="ts">
-    import ContainerH from "./ContainerH.svelte";
-    import ContainerV from "./ContainerV.svelte";
-    import SeparatorH from "./SeparatorH.svelte";
     import Header from "./Header.svelte";
-    import SeparatorV from "./SeparatorV.svelte";
     import Examples from "./Examples.svelte";
     import InputArea from "./InputArea.svelte";
-    import Results from "./Results.svelte";
     import { examples } from "./examples";
     import { onMount } from "svelte";
     import Subtitle from "./Subtitle.svelte";
+    import OutputArea from "./OutputArea.svelte";
 
     const localStorageKey = "program+input";
 
@@ -27,7 +23,7 @@
         slurp = initialContent.slurp || false;
     });
 
-    const selectExample = (example: any) => {
+    const onSelectExample = (example: any) => {
         input = example.input;
         program = example.program;
         slurp = false;
@@ -50,57 +46,75 @@
     };
 </script>
 
-<ContainerH>
-    <SeparatorH />
-    <ContainerV>
-        <SeparatorV />
+<div class="container">
+    <div class="header">
         <Header />
-        <ContainerH>
-            <ContainerV>
-                <Subtitle title="Program:" />
-                <div class="flexRow">
-                    <Examples {examples} onSelectExample={selectExample} />
-                    <div class="filler" />
-                    <div class="fixed">
-                        <input
-                            name="slurp"
-                            type="checkbox"
-                            bind:checked={slurp}
-                        />
-                        <label for="slurp">Slurp (wrap input in array)</label>
-                        &nbsp;|&nbsp;
-                        <button on:click={run}>Run</button>
-                    </div>
-                </div>
-                <textarea class="fillall" bind:value={program} />
-                <InputArea title="Input:" bind:value={input} />
-                <SeparatorV />
-            </ContainerV>
-            <SeparatorH />
-            <Results {stdout} {stderr} />
-        </ContainerH>
-    </ContainerV>
-    <SeparatorH />
-</ContainerH>
+    </div>
+    <div class="program">
+        <Subtitle title="Program:" />
+        <div class="programSettings">
+            <Examples {examples} {onSelectExample} />
+            <div/>
+            <div>
+                <input
+                    name="slurp"
+                    type="checkbox"
+                    bind:checked={slurp}
+                />
+                <label for="slurp">Slurp (wrap input in array)</label>
+                &nbsp;|&nbsp;
+                <button on:click={run}>Run</button>
+            </div>
+        </div>
+        <textarea bind:value={program} />
+    </div>
+    <div class="input">
+        <InputArea title="Input:" bind:value={input} />
+    </div>
+    <div class="stdout">
+        <OutputArea title={"Output:"} value={stdout} />
+    </div>
+    <div class="stderr">
+        <OutputArea title={"Debugging:"} value={stderr} />
+    </div>
+</div>
 
 <style lang="scss">
-    .flexRow {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        margin-top: 5px;
-        margin-bottom: 5px;
+    .container {
+        display: grid;
+        padding: 10px;
+        grid-gap: 10px;
+        height: calc(100% - 20px);
+        width: calc(100% - 20px);
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto 1fr 1fr;
+        grid-template-areas: 
+            "header header"
+            "program stdout"
+            "input stderr";
     }
-    .fillall {
-        width: 100%;
-        height: 100%;
+    .header {
+        grid-area: header;
     }
-
-    .filler {
-        flex-grow: 1;
+    .program {
+        grid-area: program;
+        display: grid;
+        grid-template-rows: auto auto 1fr;
     }
-
-    .fixed {
-        flex-grow: 0;
+    .programSettings {
+        display: grid;
+        grid-template-columns: auto 1fr auto;
+    }
+    .input {
+        grid-area: input;
+    }
+    .stdout {
+        grid-area: stdout;
+    }
+    .stderr {
+        grid-area: stderr;
+    }
+    textarea {
+        resize: none;
     }
 </style>

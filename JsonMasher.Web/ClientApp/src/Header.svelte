@@ -10,7 +10,7 @@
 
 <style>
     div {
-        padding: 5px;
         background: lightblue;
+        padding: 10px;
     }
 </style>

@@ -8,7 +8,6 @@
 
 <style>
     div {
-        padding: 5px;
         background: lightyellow;
     }
 </style>
