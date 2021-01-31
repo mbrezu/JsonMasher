@@ -6,7 +6,9 @@ namespace JsonMasher.JsonRepresentation
 {
     class JsonArray : Json
     {
-        ImmutableList<Json> _values;
+        protected ImmutableList<Json> _values;
+
+        public JsonArray() => _values = ImmutableList<Json>.Empty;
 
         public JsonArray(IEnumerable<Json> values)
         {

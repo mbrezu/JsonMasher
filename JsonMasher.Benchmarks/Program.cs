@@ -9,6 +9,7 @@ namespace JsonMasher.Benchmarks
         ParserBenchmark _parserBenchmark;
         MasherBenchmark _masherBenchmarkRange;
         MasherBenchmark _masherBenchmarkRecurse;
+        MasherBenchmark _masherBenchmarkReduce;
 
         public Benchmarks()
         {
@@ -16,6 +17,7 @@ namespace JsonMasher.Benchmarks
             _parserBenchmark = new();
             _masherBenchmarkRange = new(@"range(1000000) | . + 2 | empty");
             _masherBenchmarkRecurse = new(@"[range(2000)] | map([range(.)]) | recurse | empty");
+            _masherBenchmarkReduce = new(@"[range(1000)] | map([range(.)]) | flatten | length");
         }
 
         [Benchmark]
@@ -41,6 +43,7 @@ namespace JsonMasher.Benchmarks
         {
             _masherBenchmarkRange.MashWithDebug();
         }
+
         [Benchmark]
 
         public void RecurseMasherWithoutDebug()
@@ -52,6 +55,18 @@ namespace JsonMasher.Benchmarks
         public void RecurseMasherWithDebug()
         {
             _masherBenchmarkRecurse.MashWithDebug();
+        }
+
+        [Benchmark]
+        public void ReduceMasherWithoutDebug()
+        {
+            _masherBenchmarkReduce.MashWithoutDebug();
+        }
+
+        [Benchmark]
+        public void ReduceMasherWithDebug()
+        {
+            _masherBenchmarkReduce.MashWithDebug();
         }
     }
 

@@ -18,7 +18,7 @@ namespace JsonMasher.Mashers.Builtins
                 (JsonValueType.String, JsonValueType.String)
                     => Json.String(t1.GetString() + t2.GetString()),
                 (JsonValueType.Array, JsonValueType.Array)
-                    => Json.Array(t1.EnumerateArray().Concat(t2.EnumerateArray())),
+                    => JsonArraySum.Plus(t1, t2),
                 (JsonValueType.Object, JsonValueType.Object)
                     => Update(t1 as JsonObject, t2 as JsonObject),
                 _ => throw context.Error($"Can't add {t1.Type} and {t2.Type}.", t1, t2)
