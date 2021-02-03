@@ -54,8 +54,8 @@
     - [x] infinite, nan, isnan
     - [ ] halt, halt_error/0, halt_error/1
     - [ ] $\_\_loc\_\_
-    - [ ] split
-    - [ ] walk/1
+    - [x] split
+    - [x] walk/1
     - [ ] $ENV, env
     - [ ] string interpolation
     - [ ] @text, @json, @html, @uri, @csv, @tsv, @sh, @base64, @base64d

@@ -1018,6 +1018,11 @@ map(select(. < 2))",
             {
                 yield return item;
             }
+
+            yield return new TestItem(
+                "walk(if type == \"number\" then . + 1 else . end)",
+                "{\"a\": 1, \"b\": false, \"c\": [2, 3, true]}", 
+                "[{\"a\": 2, \"b\": false, \"c\": [3, 4, true]}]");
         }
 
         private static IEnumerable<TestItem> MathFunctions()

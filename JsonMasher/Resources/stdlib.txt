@@ -257,16 +257,16 @@ def bsearch($target):
       end
   end;
 
-# TODO: # Apply f to composite entities recursively, and to atoms
-# TODO: def walk(f):
-# TODO:   . as $in
-# TODO:   | if type == "object" then
-# TODO:       reduce keys_unsorted[] as $key
-# TODO:         ( {}; . + { ($key):  ($in[$key] | walk(f)) } ) | f
-# TODO:   elif type == "array" then map( walk(f) ) | f
-# TODO:   else f
-# TODO:   end;
-# TODO: 
+# Apply f to composite entities recursively, and to atoms
+def walk(f):
+  . as $in
+  | if type == "object" then
+      reduce keys_unsorted[] as $key
+        ( {}; . + { ($key):  ($in[$key] | walk(f)) } ) | f
+  elif type == "array" then map( walk(f) ) | f
+  else f
+  end;
+
 # TODO: # SQL-ish operators here:
 # TODO: def INDEX(stream; idx_expr):
 # TODO:   reduce stream as $row ({}; .[$row|idx_expr|tostring] = $row);
