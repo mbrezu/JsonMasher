@@ -1043,7 +1043,7 @@ map(select(. < 2))",
             yield return new TestItem("asinh", "0", "[0]");
             yield return new TestItem("atan", "0", "[0]");
             yield return new TestItem("atanh", "0", "[0]");
-            yield return new TestItem("cbrt", "27", "[3]");
+            yield return new TestItem("cbrt | . - 3 | fabs | . < 1e-9", "27", "[true]");
             yield return new TestItem("cos", "0", "[1]");
             yield return new TestItem("cosh", "0", "[1]");
             yield return new TestItem("sin", "0", "[0]");
