@@ -1,4 +1,4 @@
-using FluentAssertions;
+using Shouldly;
 using JsonMasher.Mashers.Combinators;
 using JsonMasher.Mashers.Builtins;
 using JsonMasher.Mashers.Primitives;
@@ -22,7 +22,7 @@ namespace JsonMasher.Tests.Builtins
             // Assert
             Json.Array(result)
                 .DeepEqual(Utils.JsonNumberArray(1.0/2))
-                .Should().BeTrue();
+                .ShouldBe(true);
         }
     }
 }

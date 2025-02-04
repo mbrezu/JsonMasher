@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using FluentAssertions;
+using Shouldly;
 using JsonMasher.Mashers;
 using JsonMasher.Mashers.Combinators;
 using JsonMasher.Mashers.Builtins;
@@ -26,7 +26,7 @@ namespace JsonMasher.Tests.Builtins
             // Assert
             Json.Array(result)
                 .DeepEqual(output.AsJson())
-                .Should().BeTrue();
+                .ShouldBe(true);
         }
 
         public static IEnumerable<object[]> TestData

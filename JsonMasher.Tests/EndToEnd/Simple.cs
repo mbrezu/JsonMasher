@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using FluentAssertions;
+using Shouldly;
 using JsonMasher.Compiler;
 using JsonMasher.JsonRepresentation;
 using JsonMasher.Mashers;
@@ -40,12 +40,12 @@ namespace JsonMasher.Tests.EndToEnd
             // Assert
             Json.Array(result.sequence)
                 .DeepEqual(expectedOutputJson.AsJson())
-                .Should().BeTrue();
+                .ShouldBe(true);
             if (expectedStdErrJson != null)
             {
                 Json.Array(result.context.Log)
                     .DeepEqual(expectedStdErrJson.AsJson())
-                    .Should().BeTrue();
+                    .ShouldBe(true);
             }
         }
 
@@ -719,15 +719,15 @@ map(select(. < 2))",
             yield return new TestItem("..", "[1,2]", "[[1, 2], 1, 2]");
             yield return new TestItem(
                 "..",
-                "{\"a\": 1, \"b\": 2}", 
+                "{\"a\": 1, \"b\": 2}",
                 "[{\"a\": 1, \"b\": 2}, 1, 2]");
             yield return new TestItem(
                 "..",
-                "{\"a\": 1, \"b\": [1, 2]}", 
+                "{\"a\": 1, \"b\": [1, 2]}",
                 "[{\"a\": 1, \"b\": [1, 2]}, 1, [1, 2], 1, 2]");
             yield return new TestItem(
                 "type",
-                "{\"a\": 1, \"b\": [1, 2]}", 
+                "{\"a\": 1, \"b\": [1, 2]}",
                 "[\"object\"]");
             yield return new TestItem(
                 ".[] | arrays", "[1, [1], [1, 2], \"test\"]", "[[1], [1, 2]]");
@@ -1021,7 +1021,7 @@ map(select(. < 2))",
 
             yield return new TestItem(
                 "walk(if type == \"number\" then . + 1 else . end)",
-                "{\"a\": 1, \"b\": false, \"c\": [2, 3, true]}", 
+                "{\"a\": 1, \"b\": false, \"c\": [2, 3, true]}",
                 "[{\"a\": 2, \"b\": false, \"c\": [3, 4, true]}]");
         }
 

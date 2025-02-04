@@ -1,4 +1,4 @@
-using FluentAssertions;
+using Shouldly;
 using JsonMasher.Mashers.Combinators;
 using JsonMasher.Mashers.Builtins;
 using JsonMasher.Mashers.Primitives;
@@ -22,7 +22,7 @@ namespace JsonMasher.Tests.Builtins
             // Assert
             Json.Array(result)
                 .DeepEqual(Utils.JsonNumberArray(2))
-                .Should().BeTrue();
+                .ShouldBe(true);
         }
 
         [Fact]
@@ -40,7 +40,7 @@ namespace JsonMasher.Tests.Builtins
             // Assert
             Json.Array(result)
                 .DeepEqual(Utils.JsonNumberArray(2, 4, 6))
-                .Should().BeTrue();
+                .ShouldBe(true);
         }
 
         [Fact]
@@ -56,7 +56,7 @@ namespace JsonMasher.Tests.Builtins
             // Assert
             Json.Array(result)
                 .DeepEqual(Utils.JsonNumberArray(2, 3, 4, 3, 4, 5, 4, 5, 6))
-                .Should().BeTrue();
+                .ShouldBe(true);
         }
 
         [Fact]
@@ -72,7 +72,7 @@ namespace JsonMasher.Tests.Builtins
             // Assert
             Json.Array(result)
                 .DeepEqual(Json.ArrayParams(Utils.JsonNumberArray(1, 1)))
-                .Should().BeTrue();
+                .ShouldBe(true);
         }
 
         [Fact]
@@ -88,7 +88,7 @@ namespace JsonMasher.Tests.Builtins
             // Assert
             Json.Array(result)
                 .DeepEqual(Json.ArrayParams(Json.String("aa")))
-                .Should().BeTrue();
+                .ShouldBe(true);
         }
 
         [Fact]
@@ -97,8 +97,8 @@ namespace JsonMasher.Tests.Builtins
             // Arrange
             var data = Json.ObjectParams(new JsonProperty("a", Json.Number(1)));
             var op = new FunctionCall(
-                Plus.Builtin, 
-                new Identity(), 
+                Plus.Builtin,
+                new Identity(),
                 new Literal { Value = Json.ObjectParams(new JsonProperty("b", Json.Number(2))) });
 
             // Act
@@ -108,7 +108,7 @@ namespace JsonMasher.Tests.Builtins
             var expectedValue = Json.ArrayParams(Json.ObjectParams(
                 new JsonProperty("a", Json.Number(1)),
                 new JsonProperty("b", Json.Number(2))));
-            Json.Array(result).DeepEqual(expectedValue).Should().BeTrue();
+            Json.Array(result).DeepEqual(expectedValue).ShouldBe(true);
         }
     }
 }

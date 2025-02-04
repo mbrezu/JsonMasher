@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
-using FluentAssertions;
 using JsonMasher.Compiler;
+using Shouldly;
 using Xunit;
 
 namespace JsonMasher.Tests.Compiler
@@ -14,7 +14,8 @@ namespace JsonMasher.Tests.Compiler
             // Arrange
             var program = "def map(x): .[] @";
             var lexer = new Lexer();
-            var expectedHighlights = @"Line 1: def map(x): .[] @
+            var expectedHighlights =
+                @"Line 1: def map(x): .[] @
 Line 1:                 ^
 ";
 
@@ -22,20 +23,21 @@ Line 1:                 ^
             Action action = () => lexer.Tokenize(program).ToList();
 
             // Assert
-            action
-                .Should().Throw<JsonMasherException>()
-                .Where(e => VerifyException(
-                    e, Messages.Lexer.UnexpectedCharacter, 1, 17, expectedHighlights));
+            action.ShouldThrow<JsonMasherException>(e =>
+                VerifyException(e, Messages.Lexer.UnexpectedCharacter, 1, 17, expectedHighlights)
+            );
         }
 
         [Fact]
         public void UnexpectedEndOfInputInString()
         {
             // Arrange
-            var program = @"
+            var program =
+                @"
 ""abc";
             var lexer = new Lexer();
-            var expectedHighlights = @"Line 2: ""abc
+            var expectedHighlights =
+                @"Line 2: ""abc
 Line 2:     ^
 ";
 
@@ -43,10 +45,9 @@ Line 2:     ^
             Action action = () => lexer.Tokenize(program).ToList();
 
             // Assert
-            action
-                .Should().Throw<JsonMasherException>()
-                .Where(e => VerifyException(
-                    e, Messages.Lexer.EoiInsideString, 2, 5, expectedHighlights));
+            action.ShouldThrow<JsonMasherException>(e =>
+                VerifyException(e, Messages.Lexer.EoiInsideString, 2, 5, expectedHighlights)
+            );
         }
 
         [Fact]
@@ -55,7 +56,8 @@ Line 2:     ^
             // Arrange
             var program = "\"blabla\\k\"";
             var lexer = new Lexer();
-            var expectedHighlights = @"Line 1: ""blabla\k""
+            var expectedHighlights =
+                @"Line 1: ""blabla\k""
 Line 1: ^^^^^^^^^^
 ";
 
@@ -63,19 +65,23 @@ Line 1: ^^^^^^^^^^
             Action action = () => lexer.Tokenize(program).ToList();
 
             // Assert
-            action
-                .Should().Throw<JsonMasherException>()
-                .Where(e => VerifyException(
-                    e, Messages.Lexer.InvalidEscapeSequence, 1, 1, expectedHighlights));
+            action.ShouldThrow<JsonMasherException>(e =>
+                VerifyException(e, Messages.Lexer.InvalidEscapeSequence, 1, 1, expectedHighlights)
+            );
         }
 
         private bool VerifyException(
-            JsonMasherException e, string message, int line, int column, string highlights)
+            JsonMasherException e,
+            string message,
+            int line,
+            int column,
+            string highlights
+        )
         {
-            e.Message.Should().Be(message);
-            e.Line.Should().Be(line);
-            e.Column.Should().Be(column);
-            e.Highlights.CleanCR().Should().Be(highlights.CleanCR());
+            e.Message.ShouldBe(message);
+            e.Line.ShouldBe(line);
+            e.Column.ShouldBe(column);
+            e.Highlights.CleanCR().ShouldBe(highlights.CleanCR());
             return true;
         }
     }

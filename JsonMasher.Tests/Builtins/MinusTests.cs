@@ -1,4 +1,4 @@
-using FluentAssertions;
+using Shouldly;
 using JsonMasher.Mashers.Combinators;
 using JsonMasher.Mashers.Builtins;
 using JsonMasher.Mashers.Primitives;
@@ -20,7 +20,7 @@ namespace JsonMasher.Tests.Builtins
             var result = op.RunAsSequence(data);
 
             // Assert
-            Json.Array(result).DeepEqual(Utils.JsonNumberArray(1)).Should().BeTrue();
+            Json.Array(result).DeepEqual(Utils.JsonNumberArray(1)).ShouldBe(true);
         }
 
         [Fact]
@@ -31,7 +31,7 @@ namespace JsonMasher.Tests.Builtins
             var op = new Compose {
                 First = new FunctionCall(
                     Minus.Builtin_2,
-                    new Literal { 
+                    new Literal {
                         Value = Utils.JsonNumberArray(1, 2, 3)
                     },
                     new Literal {
@@ -46,7 +46,7 @@ namespace JsonMasher.Tests.Builtins
             // Assert
             Json.Array(result)
                 .DeepEqual(Utils.JsonNumberArray(1, 2))
-                .Should().BeTrue();
+                .ShouldBe(true);
         }
     }
 }

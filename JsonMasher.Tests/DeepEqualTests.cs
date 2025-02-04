@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using FluentAssertions;
+using Shouldly;
 using JsonMasher.JsonRepresentation;
 using Xunit;
 
@@ -23,7 +23,7 @@ namespace JsonMasher.Tests
             var result = d1.DeepEqual(d2);
 
             // Assert
-            result.Should().Be(areEqual);
+            result.ShouldBe(areEqual);
         }
         private static IEnumerable<TestItem> GetTestData()
             => BasicTests()

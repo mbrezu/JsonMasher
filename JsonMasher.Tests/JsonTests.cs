@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using FluentAssertions;
+using Shouldly;
 using JsonMasher.JsonRepresentation;
 using Xunit;
 
@@ -27,7 +27,7 @@ namespace JsonMasher.Tests
             var result = data.ToString();
 
             // Assert
-            result.Should().Be(expectedOutput);
+            result.ShouldBe(expectedOutput);
         }
 
         private static IEnumerable<TestItem> GetTestData()

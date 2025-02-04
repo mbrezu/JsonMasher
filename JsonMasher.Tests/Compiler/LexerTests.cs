@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
-using FluentAssertions;
 using JsonMasher.Compiler;
+using Shouldly;
 using Xunit;
 
 namespace JsonMasher.Tests.Compiler
@@ -10,8 +10,8 @@ namespace JsonMasher.Tests.Compiler
     {
         private record TestItem(string program, List<Token> expectedTokens);
 
-        public static IEnumerable<object[]> TestData
-            => GetTestData().Select(item => new object[] { item.program, item.expectedTokens });
+        public static IEnumerable<object[]> TestData =>
+            GetTestData().Select(item => new object[] { item.program, item.expectedTokens });
 
         [Theory]
         [MemberData(nameof(TestData))]
@@ -24,13 +24,12 @@ namespace JsonMasher.Tests.Compiler
             var result = lexer.Tokenize(program).Select(t => t.Token);
 
             // Assert
-            result.Should().BeEquivalentTo(
-                expectedTokens, 
-                options => options.RespectingRuntimeTypes().WithStrictOrdering());
+            result.ShouldBe(expectedTokens);
         }
 
-        private static IEnumerable<TestItem> GetTestData()
-            => Enumerable.Empty<TestItem>()
+        private static IEnumerable<TestItem> GetTestData() =>
+            Enumerable
+                .Empty<TestItem>()
                 .Concat(SimpleTokensTests())
                 .Concat(CommentsTests())
                 .Concat(NumberTests())
@@ -49,45 +48,55 @@ namespace JsonMasher.Tests.Compiler
             yield return new TestItem("  .. ..", TokensParams(Tokens.DotDot, Tokens.DotDot));
             yield return new TestItem("  ( )", TokensParams(Tokens.OpenParen, Tokens.CloseParen));
             yield return new TestItem(
-                "  ] [", TokensParams(Tokens.CloseSquareParen, Tokens.OpenSquareParen));
-            yield return new TestItem(
-                "  { }", TokensParams(Tokens.OpenBrace, Tokens.CloseBrace));
+                "  ] [",
+                TokensParams(Tokens.CloseSquareParen, Tokens.OpenSquareParen)
+            );
+            yield return new TestItem("  { }", TokensParams(Tokens.OpenBrace, Tokens.CloseBrace));
             yield return new TestItem("|", TokensParams(Tokens.Pipe));
             yield return new TestItem(
-                ", : ;", TokensParams(Tokens.Comma, Tokens.Colon, Tokens.Semicolon));
+                ", : ;",
+                TokensParams(Tokens.Comma, Tokens.Colon, Tokens.Semicolon)
+            );
             yield return new TestItem(
-                "+ - *", TokensParams(Tokens.Plus, Tokens.Minus, Tokens.Times));
+                "+ - *",
+                TokensParams(Tokens.Plus, Tokens.Minus, Tokens.Times)
+            );
+            yield return new TestItem("== +", TokensParams(Tokens.EqualsEquals, Tokens.Plus));
+            yield return new TestItem("!= +", TokensParams(Tokens.NotEquals, Tokens.Plus));
+            yield return new TestItem("|= +", TokensParams(Tokens.PipeEquals, Tokens.Plus));
+            yield return new TestItem("/ +", TokensParams(Tokens.Divide, Tokens.Plus));
+            yield return new TestItem("> <", TokensParams(Tokens.GreaterThan, Tokens.LessThan));
             yield return new TestItem(
-                "== +", TokensParams(Tokens.EqualsEquals, Tokens.Plus));
+                "<= >=",
+                TokensParams(Tokens.LessThanOrEqual, Tokens.GreaterThanOrEqual)
+            );
             yield return new TestItem(
-                "!= +", TokensParams(Tokens.NotEquals, Tokens.Plus));
-            yield return new TestItem(
-                "|= +", TokensParams(Tokens.PipeEquals, Tokens.Plus));
-            yield return new TestItem(
-                "/ +", TokensParams(Tokens.Divide, Tokens.Plus));
-            yield return new TestItem(
-                "> <", TokensParams(Tokens.GreaterThan, Tokens.LessThan));
-            yield return new TestItem(
-                "<= >=", TokensParams(Tokens.LessThanOrEqual, Tokens.GreaterThanOrEqual));
-            yield return new TestItem(
-                "? >=", TokensParams(Tokens.Question, Tokens.GreaterThanOrEqual));
-            yield return new TestItem(
-                "? //", TokensParams(Tokens.Question, Tokens.SlashSlash));
+                "? >=",
+                TokensParams(Tokens.Question, Tokens.GreaterThanOrEqual)
+            );
+            yield return new TestItem("? //", TokensParams(Tokens.Question, Tokens.SlashSlash));
             yield return new TestItem("=", TokensParams(Tokens.Equals));
             yield return new TestItem("%", TokensParams(Tokens.Modulo));
             yield return new TestItem("+= -=", TokensParams(Tokens.PlusEquals, Tokens.MinusEquals));
-            yield return new TestItem("*= /=", TokensParams(Tokens.TimesEquals, Tokens.DivideEquals));
-            yield return new TestItem("%= //=", TokensParams(Tokens.ModuloEquals, Tokens.SlashSlashEquals));
+            yield return new TestItem(
+                "*= /=",
+                TokensParams(Tokens.TimesEquals, Tokens.DivideEquals)
+            );
+            yield return new TestItem(
+                "%= //=",
+                TokensParams(Tokens.ModuloEquals, Tokens.SlashSlashEquals)
+            );
             yield return new TestItem("?//", TokensParams(Tokens.QuestionSlashSlash));
         }
 
         private static IEnumerable<TestItem> CommentsTests()
         {
+            yield return new TestItem("<= # >=", TokensParams(Tokens.LessThanOrEqual));
             yield return new TestItem(
-                "<= # >=", TokensParams(Tokens.LessThanOrEqual));
-            yield return new TestItem(
-                @"<= # comment 
->=", TokensParams(Tokens.LessThanOrEqual, Tokens.GreaterThanOrEqual));
+                @"<= # comment
+>=",
+                TokensParams(Tokens.LessThanOrEqual, Tokens.GreaterThanOrEqual)
+            );
         }
 
         private static IEnumerable<TestItem> NumberTests()
@@ -99,11 +108,14 @@ namespace JsonMasher.Tests.Compiler
             yield return new TestItem(" 102 ", TokensParams(Tokens.Number(102)));
             yield return new TestItem(" 102.3 ", TokensParams(Tokens.Number(102.3)));
             yield return new TestItem(
-                " 102.3.. ", TokensParams(Tokens.Number(102.3), Tokens.DotDot));
+                " 102.3.. ",
+                TokensParams(Tokens.Number(102.3), Tokens.DotDot)
+            );
             yield return new TestItem(
-                " .5 .2 ", TokensParams(Tokens.Number(.5), Tokens.Number(.2)));
-            yield return new TestItem(
-                " 1e-20", TokensParams(Tokens.Number(1e-20)));
+                " .5 .2 ",
+                TokensParams(Tokens.Number(.5), Tokens.Number(.2))
+            );
+            yield return new TestItem(" 1e-20", TokensParams(Tokens.Number(1e-20)));
         }
 
         private static IEnumerable<TestItem> IdentfierTests()
@@ -114,11 +126,13 @@ namespace JsonMasher.Tests.Compiler
             yield return new TestItem(" _a1", TokensParams(Tokens.Identifier("_a1")));
             yield return new TestItem(" snake_case", TokensParams(Tokens.Identifier("snake_case")));
             yield return new TestItem(
-                " snake_case, PascalCase   \t", 
+                " snake_case, PascalCase   \t",
                 TokensParams(
                     Tokens.Identifier("snake_case"),
                     Tokens.Comma,
-                    Tokens.Identifier("PascalCase")));
+                    Tokens.Identifier("PascalCase")
+                )
+            );
             yield return new TestItem(" $test", TokensParams(Tokens.VariableIdentifier("test")));
         }
 
@@ -145,46 +159,55 @@ namespace JsonMasher.Tests.Compiler
         {
             yield return new TestItem(" \"a\" ", TokensParams(Tokens.String("a")));
             yield return new TestItem(
-                " \"some string {}{-\" ", TokensParams(Tokens.String("some string {}{-")));
+                " \"some string {}{-\" ",
+                TokensParams(Tokens.String("some string {}{-"))
+            );
             yield return new TestItem(
-                " \"some string {}{-\".. ", 
-                TokensParams(
-                    Tokens.String("some string {}{-"),
-                    Tokens.DotDot));
+                " \"some string {}{-\".. ",
+                TokensParams(Tokens.String("some string {}{-"), Tokens.DotDot)
+            );
             yield return new TestItem(
-                " 23 def  \t\n\"some string {}{-\". ", 
+                " 23 def  \t\n\"some string {}{-\". ",
                 TokensParams(
                     Tokens.Number(23),
                     Tokens.Keywords.Def,
                     Tokens.String("some string {}{-"),
-                    Tokens.Dot));
+                    Tokens.Dot
+                )
+            );
             yield return new TestItem(
-                @" ""escaped \"" double quotes""", 
-                TokensParams(Tokens.String("escaped \" double quotes")));
+                @" ""escaped \"" double quotes""",
+                TokensParams(Tokens.String("escaped \" double quotes"))
+            );
             yield return new TestItem(
-                @" ""escapes 1 \n""", 
-                TokensParams(Tokens.String("escapes 1 \n")));
+                @" ""escapes 1 \n""",
+                TokensParams(Tokens.String("escapes 1 \n"))
+            );
         }
 
         private static IEnumerable<TestItem> Tests()
         {
             yield return new TestItem(
-                ".[] | ..", 
+                ".[] | ..",
                 TokensParams(
                     Tokens.Dot,
                     Tokens.OpenSquareParen,
                     Tokens.CloseSquareParen,
                     Tokens.Pipe,
-                    Tokens.DotDot));
+                    Tokens.DotDot
+                )
+            );
             yield return new TestItem(
-                "[ range(3) ]", 
+                "[ range(3) ]",
                 TokensParams(
                     Tokens.OpenSquareParen,
                     Tokens.Identifier("range"),
                     Tokens.OpenParen,
                     Tokens.Number(3),
                     Tokens.CloseParen,
-                    Tokens.CloseSquareParen));
+                    Tokens.CloseSquareParen
+                )
+            );
         }
 
         private static List<Token> TokensParams(params Token[] tokens) => tokens.ToList();

@@ -1,4 +1,4 @@
-using FluentAssertions;
+using Shouldly;
 using JsonMasher.JsonRepresentation;
 using JsonMasher.Mashers.Combinators;
 using JsonMasher.Mashers.Primitives;
@@ -13,7 +13,7 @@ namespace JsonMasher.Tests
         {
             // Arrange
             var data = "[1, 2, 3]".AsJson();
-            var op = new SliceSelector { 
+            var op = new SliceSelector {
                 From = new Literal(1),
                 To = new Literal(3)
             };
@@ -24,7 +24,7 @@ namespace JsonMasher.Tests
             // Assert
             Json.Array(result)
                 .DeepEqual("[[2, 3]]".AsJson())
-                .Should().BeTrue();
+                .ShouldBe(true);
         }
 
         [Fact]
@@ -32,7 +32,7 @@ namespace JsonMasher.Tests
         {
             // Arrange
             var data = "[1, 2, 3]".AsJson();
-            var op = new SliceSelector { 
+            var op = new SliceSelector {
                 From = new Literal(-3),
                 To = new Literal(-1)
             };
@@ -43,7 +43,7 @@ namespace JsonMasher.Tests
             // Assert
             Json.Array(result)
                 .DeepEqual("[[1, 2]]".AsJson())
-                .Should().BeTrue();
+                .ShouldBe(true);
         }
 
         [Fact]
@@ -51,7 +51,7 @@ namespace JsonMasher.Tests
         {
             // Arrange
             var data = "{}".AsJson();
-            var op = new SliceSelector { 
+            var op = new SliceSelector {
                 From = new Literal(1),
                 To = new Literal(3),
                 IsOptional = true
@@ -63,7 +63,7 @@ namespace JsonMasher.Tests
             // Assert
             Json.Array(result)
                 .DeepEqual("[]".AsJson())
-                .Should().BeTrue();
+                .ShouldBe(true);
         }
 
         [Fact]
@@ -71,7 +71,7 @@ namespace JsonMasher.Tests
         {
             // Arrange
             var data = "[1, 2, 3]".AsJson();
-            var op = new SliceSelector { 
+            var op = new SliceSelector {
                 From = new Literal(1),
             };
 
@@ -81,7 +81,7 @@ namespace JsonMasher.Tests
             // Assert
             Json.Array(result)
                 .DeepEqual("[[2, 3]]".AsJson())
-                .Should().BeTrue();
+                .ShouldBe(true);
         }
 
         [Fact]
@@ -89,7 +89,7 @@ namespace JsonMasher.Tests
         {
             // Arrange
             var data = "[1, 2, 3]".AsJson();
-            var op = new SliceSelector { 
+            var op = new SliceSelector {
                 From = new Literal(1),
             };
 
@@ -99,7 +99,7 @@ namespace JsonMasher.Tests
             // Assert
             Json.Array(result)
                 .DeepEqual("[[2, 3]]".AsJson())
-                .Should().BeTrue();
+                .ShouldBe(true);
         }
 
         [Fact]
@@ -107,7 +107,7 @@ namespace JsonMasher.Tests
         {
             // Arrange
             var data = "[1, 2, 3]".AsJson();
-            var op = new SliceSelector { 
+            var op = new SliceSelector {
                 From = new Literal(-2),
             };
 
@@ -117,7 +117,7 @@ namespace JsonMasher.Tests
             // Assert
             Json.Array(result)
                 .DeepEqual("[[2, 3]]".AsJson())
-                .Should().BeTrue();
+                .ShouldBe(true);
         }
 
         [Fact]
@@ -125,7 +125,7 @@ namespace JsonMasher.Tests
         {
             // Arrange
             var data = "[1, 2, 3]".AsJson();
-            var op = new SliceSelector { 
+            var op = new SliceSelector {
                 To = new Literal(-2),
             };
 
@@ -135,7 +135,7 @@ namespace JsonMasher.Tests
             // Assert
             Json.Array(result)
                 .DeepEqual("[[1]]".AsJson())
-                .Should().BeTrue();
+                .ShouldBe(true);
         }
     }
 }

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
-using FluentAssertions;
+using Shouldly;
 using JsonMasher.JsonRepresentation;
 using Xunit;
 using JsonProperty = JsonMasher.JsonRepresentation.JsonProperty;
@@ -26,7 +26,7 @@ namespace JsonMasher.Tests
             var result = jsonElement.AsJson();
 
             // Assert
-            result.DeepEqual(expectation).Should().BeTrue();
+            result.DeepEqual(expectation).ShouldBe(true);
         }
 
         private static IEnumerable<TestItem> GetTestData()

@@ -1,4 +1,4 @@
-using FluentAssertions;
+using Shouldly;
 using JsonMasher.JsonRepresentation;
 using JsonMasher.Mashers.Builtins;
 using JsonMasher.Mashers.Combinators;
@@ -15,9 +15,9 @@ namespace JsonMasher.Tests
             // Arrange
             var data = Json.String("this is the test string");
             var op = new FunctionCall(
-                RegexMatch.Builtin, 
-                new Literal("th"), 
-                new Literal("g"), 
+                RegexMatch.Builtin,
+                new Literal("th"),
+                new Literal("g"),
                 new Literal { Value = Json.False });
 
             // Act
@@ -27,7 +27,7 @@ namespace JsonMasher.Tests
             var expectedJson = @"
 [{""offset"":0,""length"":2,""string"":""th"",""captures"":[]},
  {""offset"":8,""length"":2,""string"":""th"",""captures"":[]}]";
-            result.DeepEqual(expectedJson.AsJson()).Should().BeTrue();
+            result.DeepEqual(expectedJson.AsJson()).ShouldBe(true);
         }
 
         [Fact]
@@ -36,9 +36,9 @@ namespace JsonMasher.Tests
             // Arrange
             var data = Json.String("this is the test string");
             var op = new FunctionCall(
-                RegexMatch.Builtin, 
-                new Literal("(t)(h)"), 
-                new Literal { Value = Json.Null }, 
+                RegexMatch.Builtin,
+                new Literal("(t)(h)"),
+                new Literal { Value = Json.Null },
                 new Literal { Value = Json.False });
 
             // Act
@@ -55,7 +55,7 @@ namespace JsonMasher.Tests
     { ""offset"": 1, ""length"": 1, ""string"": ""h"", ""name"": ""2"" }
   ]
 }]";
-            result.DeepEqual(expectedJson.AsJson()).Should().BeTrue();
+            result.DeepEqual(expectedJson.AsJson()).ShouldBe(true);
         }
 
         [Fact]
@@ -64,9 +64,9 @@ namespace JsonMasher.Tests
             // Arrange
             var data = Json.String("this is the test string");
             var op = new FunctionCall(
-                RegexMatch.Builtin, 
-                new Literal("th"), 
-                new Literal { Value = Json.Null }, 
+                RegexMatch.Builtin,
+                new Literal("th"),
+                new Literal { Value = Json.Null },
                 new Literal { Value = Json.False });
 
             // Act
@@ -75,7 +75,7 @@ namespace JsonMasher.Tests
             // Assert
             var expectedJson = @"
 [{""offset"":0,""length"":2,""string"":""th"",""captures"":[]}]";
-            result.DeepEqual(expectedJson.AsJson()).Should().BeTrue();
+            result.DeepEqual(expectedJson.AsJson()).ShouldBe(true);
         }
 
         [Fact]
@@ -84,16 +84,16 @@ namespace JsonMasher.Tests
             // Arrange
             var data = Json.String("this is the test string");
             var op = new FunctionCall(
-                RegexMatch.Builtin, 
-                new Literal("th"), 
-                new Literal { Value = Json.Null }, 
+                RegexMatch.Builtin,
+                new Literal("th"),
+                new Literal { Value = Json.Null },
                 new Literal { Value = Json.True });
 
             // Act
             var result = op.RunAsScalar(data);
 
             // Assert
-            result.DeepEqual("true".AsJson()).Should().BeTrue();
+            result.DeepEqual("true".AsJson()).ShouldBe(true);
         }
 
         [Fact]
@@ -102,9 +102,9 @@ namespace JsonMasher.Tests
             // Arrange
             var data = Json.String("THis");
             var op = new FunctionCall(
-                RegexMatch.Builtin, 
-                new Literal("th"), 
-                new Literal("i"), 
+                RegexMatch.Builtin,
+                new Literal("th"),
+                new Literal("i"),
                 new Literal { Value = Json.False });
 
             // Act
@@ -113,7 +113,7 @@ namespace JsonMasher.Tests
             // Assert
             var expectedJson = @"
 [{""offset"":0,""length"":2,""string"":""TH"",""captures"":[]}]";
-            result.DeepEqual(expectedJson.AsJson()).Should().BeTrue();
+            result.DeepEqual(expectedJson.AsJson()).ShouldBe(true);
         }
 
         [Fact]
@@ -122,9 +122,9 @@ namespace JsonMasher.Tests
             // Arrange
             var data = Json.String("TH\nis");
             var op = new FunctionCall(
-                RegexMatch.Builtin, 
-                new Literal("h.i"), 
-                new Literal("im"), 
+                RegexMatch.Builtin,
+                new Literal("h.i"),
+                new Literal("im"),
                 new Literal { Value = Json.False });
 
             // Act
@@ -132,7 +132,7 @@ namespace JsonMasher.Tests
 
             // Assert
             var expectedJson = "[{\"offset\":1,\"length\":3,\"string\":\"H\\ni\",\"captures\":[]}]";
-            result.DeepEqual(expectedJson.AsJson()).Should().BeTrue();
+            result.DeepEqual(expectedJson.AsJson()).ShouldBe(true);
         }
 
         [Fact]
@@ -141,16 +141,16 @@ namespace JsonMasher.Tests
             // Arrange
             var data = Json.String("this");
             var op = new FunctionCall(
-                RegexMatch.Builtin, 
-                new Literal(""), 
-                new Literal("n"), 
+                RegexMatch.Builtin,
+                new Literal(""),
+                new Literal("n"),
                 new Literal { Value = Json.False });
 
             // Act
             var result = op.RunAsSequence(data);
 
             // Assert
-            Json.Array(result).DeepEqual("[]".AsJson()).Should().BeTrue();
+            Json.Array(result).DeepEqual("[]".AsJson()).ShouldBe(true);
         }
 
         [Fact]
@@ -159,16 +159,16 @@ namespace JsonMasher.Tests
             // Arrange
             var data = Json.String("th\nis");
             var op = new FunctionCall(
-                RegexMatch.Builtin, 
-                new Literal("th$"), 
-                new Literal("s"), 
+                RegexMatch.Builtin,
+                new Literal("th$"),
+                new Literal("s"),
                 new Literal { Value = Json.False });
 
             // Act
             var result = op.RunAsSequence(data);
 
             // Assert
-            Json.Array(result).DeepEqual("[]".AsJson()).Should().BeTrue();
+            Json.Array(result).DeepEqual("[]".AsJson()).ShouldBe(true);
         }
 
         [Fact]
@@ -177,9 +177,9 @@ namespace JsonMasher.Tests
             // Arrange
             var data = Json.String("th\nis");
             var op = new FunctionCall(
-                RegexMatch.Builtin, 
-                new Literal("th$"), 
-                new Literal(""), 
+                RegexMatch.Builtin,
+                new Literal("th$"),
+                new Literal(""),
                 new Literal { Value = Json.False });
 
             // Act
@@ -187,7 +187,7 @@ namespace JsonMasher.Tests
 
             // Assert
             var expectedJson = "[{\"captures\": [], \"length\": 2, \"offset\": 0, \"string\": \"th\"}]";
-            result.DeepEqual(expectedJson.AsJson()).Should().BeTrue();
+            result.DeepEqual(expectedJson.AsJson()).ShouldBe(true);
         }
 
         [Fact]
@@ -196,9 +196,9 @@ namespace JsonMasher.Tests
             // Arrange
             var data = Json.String("this");
             var op = new FunctionCall(
-                RegexMatch.Builtin, 
-                new Literal("th is"), 
-                new Literal("x"), 
+                RegexMatch.Builtin,
+                new Literal("th is"),
+                new Literal("x"),
                 new Literal { Value = Json.False });
 
             // Act
@@ -206,7 +206,7 @@ namespace JsonMasher.Tests
 
             // Assert
             var expectedJson = "[{\"offset\":0,\"length\":4,\"string\":\"this\",\"captures\":[]}]";
-            result.DeepEqual(expectedJson.AsJson()).Should().BeTrue();
+            result.DeepEqual(expectedJson.AsJson()).ShouldBe(true);
         }
     }
 }

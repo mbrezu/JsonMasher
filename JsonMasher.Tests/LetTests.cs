@@ -1,4 +1,4 @@
-using FluentAssertions;
+using Shouldly;
 using JsonMasher.Mashers.Combinators;
 using JsonMasher.Mashers.Combinators.LetMatchers;
 using JsonMasher.Mashers.Primitives;
@@ -24,7 +24,7 @@ namespace JsonMasher.Tests
             var result = op.RunAsScalar(data);
 
             // Assert
-            result.DeepEqual(data).Should().BeTrue();
+            result.DeepEqual(data).ShouldBe(true);
         }
 
         [Fact]
@@ -46,7 +46,7 @@ namespace JsonMasher.Tests
             var result = op.RunAsScalar(data);
 
             // Assert
-            result.DeepEqual(data).Should().BeTrue();
+            result.DeepEqual(data).ShouldBe(true);
         }
 
         [Fact]
@@ -76,7 +76,7 @@ namespace JsonMasher.Tests
             var result = op.RunAsScalar(data);
 
             // Assert
-            result.DeepEqual("[1,2,3,null]".AsJson()).Should().BeTrue();
+            result.DeepEqual("[1,2,3,null]".AsJson()).ShouldBe(true);
         }
 
         [Fact]
@@ -104,7 +104,7 @@ namespace JsonMasher.Tests
             var result = op.RunAsScalar(data);
 
             // Assert
-            result.DeepEqual("[1,2,null]".AsJson()).Should().BeTrue();
+            result.DeepEqual("[1,2,null]".AsJson()).ShouldBe(true);
         }
 
         [Fact]
@@ -135,7 +135,7 @@ namespace JsonMasher.Tests
             var result = op.RunAsScalar(data);
 
             // Assert
-            result.DeepEqual("[1,2,3]".AsJson()).Should().BeTrue();
+            result.DeepEqual("[1,2,3]".AsJson()).ShouldBe(true);
         }
 
         [Fact]
@@ -168,7 +168,7 @@ namespace JsonMasher.Tests
             var result = op.RunAsScalar(data);
 
             // Assert
-            result.DeepEqual("[1,2,3]".AsJson()).Should().BeTrue();
+            result.DeepEqual("[1,2,3]".AsJson()).ShouldBe(true);
         }
 
         [Fact]
@@ -204,7 +204,7 @@ namespace JsonMasher.Tests
             var result = op.RunAsScalar(data);
 
             // Assert
-            result.DeepEqual("[1,2,3]".AsJson()).Should().BeTrue();
+            result.DeepEqual("[1,2,3]".AsJson()).ShouldBe(true);
         }
 
         [Fact]
@@ -241,7 +241,7 @@ namespace JsonMasher.Tests
             var result = op.RunAsScalar(data);
 
             // Assert
-            result.DeepEqual("[1,2,3,null]".AsJson()).Should().BeTrue();
+            result.DeepEqual("[1,2,3,null]".AsJson()).ShouldBe(true);
         }
 
         [Fact]
@@ -277,7 +277,7 @@ namespace JsonMasher.Tests
             var result = op.RunAsScalar(data);
 
             // Assert
-            result.DeepEqual("[1,2,3]".AsJson()).Should().BeTrue();
+            result.DeepEqual("[1,2,3]".AsJson()).ShouldBe(true);
         }
 
         [Fact]
@@ -315,7 +315,7 @@ namespace JsonMasher.Tests
             var result = op.RunAsScalar(data);
 
             // Assert
-            result.DeepEqual("[1,2,3,null]".AsJson()).Should().BeTrue();
+            result.DeepEqual("[1,2,3,null]".AsJson()).ShouldBe(true);
         }
     }
 }

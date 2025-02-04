@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using FluentAssertions;
+using Shouldly;
 using JsonMasher.JsonRepresentation;
 using JsonMasher.Mashers;
 using JsonMasher.Mashers.Builtins;
@@ -27,12 +27,12 @@ namespace JsonMasher.Tests.Builtins
             // Assert
             Json.Array(result)
                 .DeepEqual(output.AsJson())
-                .Should().BeTrue();
+                .ShouldBe(true);
             if (stdErr != null)
             {
                 Json.Array(context.Log)
                     .DeepEqual(stdErr.AsJson())
-                    .Should().BeTrue();
+                    .ShouldBe(true);
             }
         }
 
@@ -63,7 +63,7 @@ namespace JsonMasher.Tests.Builtins
                 "[0, 1, 2]");
             yield return new TestItem(
                 new FunctionCall(
-                    Range.Builtin_1, 
+                    Range.Builtin_1,
                     Concat.AllParams(new Literal(3), new Literal(4))),
                 "null",
                 "[0, 1, 2, 0, 1, 2, 3]");
@@ -157,13 +157,13 @@ namespace JsonMasher.Tests.Builtins
         {
             yield return new TestItem(
                 new FunctionCall(
-                    GetPath.Builtin, 
+                    GetPath.Builtin,
                     new Literal { Value = Json.ArrayParams(Json.Number(0), Json.Number(1)) }),
                 "[[1, 2], 3]",
                 "[2]");
             yield return new TestItem(
                 new FunctionCall(
-                    SetPath.Builtin, 
+                    SetPath.Builtin,
                     new Literal { Value = Json.ArrayParams(Json.Number(0), Json.Number(1)) },
                     new Literal(100)),
                 "[[1, 100], 3]",
@@ -174,9 +174,9 @@ namespace JsonMasher.Tests.Builtins
         {
             yield return new TestItem(
                 new FunctionCall(
-                    DelPaths.Builtin, 
+                    DelPaths.Builtin,
                     new Literal { Value = Json.ArrayParams(
-                        Json.ArrayParams(Json.Number(2)), 
+                        Json.ArrayParams(Json.Number(2)),
                         Json.ArrayParams(Json.Number(1))) }),
                 "[1, 2, 3]",
                 "[[1]]");
