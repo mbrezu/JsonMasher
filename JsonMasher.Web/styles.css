@@ -22,3 +22,11 @@ body {
     @apply underline;
     @apply text-blue-700;
 }
+
+.parent.htmx-request .trigger {
+    display: none;
+}
+
+.parent.htmx-request .indicator {
+    display: block;
+}

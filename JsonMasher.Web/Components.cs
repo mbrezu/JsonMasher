@@ -25,15 +25,17 @@ public static class Components
                 "Program:",
                 H(
                     "div",
-                    Class("flex gap-2 items-baseline"),
+                    Class("flex gap-2 items-baseline parent"),
+                    A("id", "trigger-parent"),
                     H(
                         "select",
                         A("id", "exampleProgram"),
                         A("hx-trigger", "change"),
                         A("hx-post", "/exampleProgramChanged"),
                         A("hx-params", "exampleProgram"),
+                        A("hx-indicator", "#trigger-parent"),
                         Name("exampleProgram"),
-                        Class("p-2 rounded-sm"),
+                        Class("p-2 rounded-sm trigger"),
                         Examples.ExampleNames.Select(name =>
                             H(
                                 "option",
@@ -45,6 +47,7 @@ public static class Components
                     ),
                     H(
                         "label",
+                        Class("trigger"),
                         H(
                             "input",
                             Class("mr-2"),
@@ -54,7 +57,20 @@ public static class Components
                         ),
                         "Slurp"
                     ),
-                    H("button", Class("border border-gray-200 py-2 px-4 rounded-sm"), "Run")
+                    H(
+                        "button",
+                        A("hx-post", "/"),
+                        A("hx-indicator", "#trigger-parent"),
+                        Class("border border-gray-200 py-2 px-4 rounded-sm trigger"),
+                        "Run"
+                    ),
+                    H(
+                        "div",
+                        Class(
+                            "hidden indicator p-2 border border-gray-200 rounded-sm bg-orange-300"
+                        ),
+                        "Loading..."
+                    )
                 ),
                 TextArea("program", program)
             ),
