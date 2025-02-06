@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+    font-family: 'inter';
+    src: url('Inter-VariableFont_opsz,wght.ttf') format('truetype');
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'inter';
+    src: url('Inter-Italic-VariableFont_opsz,wght.ttf') format('truetype');
+    font-style: italic;
+}
+
+body {
+    font-family: 'inter', sans-serif;
+}
+
+.link {
+    @apply underline;
+    @apply text-blue-700;
+}
